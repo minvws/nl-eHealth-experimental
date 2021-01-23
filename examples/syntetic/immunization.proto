@@ -1,0 +1,93 @@
+syntax = "proto2";
+
+package covid_immunization;
+
+message Coding {
+  optional string system = 1;
+  optional string code = 2;
+  optional string display = 3;
+}
+
+message Immunization {
+  optional string resourceType = 1;
+  optional string id = 2;
+  message Identifier {
+    optional string system = 1;
+    optional string value = 2;
+  }
+  optional Identifier identifier = 3;
+  optional string status = 4;
+  message VaccineCode {
+    optional Coding coding = 1;
+    optional string text = 2;
+  }
+  optional VaccineCode vaccineCode = 5;
+  message Patient {
+    optional string reference = 1;
+  }
+  optional Patient patient = 6;
+  message Encounter {
+    optional string reference = 1;
+  }
+  optional Encounter encounter = 7;
+  optional string occurrenceDateTime = 8;
+  optional bool primarySource = 9;
+  message Location {
+    optional string reference = 1;
+  }
+  optional Location location = 10;
+  message Manufacturer {
+    optional string reference = 1;
+  }
+  optional Manufacturer manufacturer = 11;
+  optional string lotNumber = 12;
+  optional string expirationDate = 13;
+  message Site {
+    optional Coding coding = 1;
+  }
+  optional Site site = 14;
+  message Route {
+    optional Coding coding = 1;
+  }
+  optional Route route = 15;
+  message DoseQuantity {
+    optional int32 value = 1;
+    optional string system = 2;
+    optional string code = 3;
+  }
+  optional DoseQuantity doseQuantity = 16;
+  message Performer {
+    message Function {
+      optional Coding coding = 1;
+    }
+    message Actor {
+      optional string reference = 1;
+    }
+    optional Function function = 1;
+    optional Actor actor = 2;
+  }
+  optional Performer performer = 17;
+  message Note {
+    optional string text = 1;
+  }
+  optional Note note = 18;
+  message ReasonCode {
+    optional Coding coding = 1;
+  }
+  optional ReasonCode reasonCode = 19;
+  optional bool isSubpotent = 20;
+  message Education {
+    optional string documentType = 1;
+    optional string publicationDate = 2;
+    optional string presentationDate = 3;
+  }
+  optional Education education = 21;
+  message ProgramEligibility {
+    optional Coding coding = 1;
+  }
+  optional ProgramEligibility programEligibility = 22;
+  message FundingSource {
+    optional Coding coding = 1;
+  }
+  optional FundingSource fundingSource = 23;
+}
