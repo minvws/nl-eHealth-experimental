@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bundle xmlns="http://hl7.org/fhir">
+	<type value="collection" />
+	<!-- We should specify how to model Certificate, something like -->
+	<entry>
+		<resource>
+            <type value="Vaccination Certificate" />
+            <identifier>
+                <system value="urn:oid:1.2.203.24341.1.20.2" />  <!-- OID need to be defined -->
+                <value value="V1CZ454557891308174803488707671418" />
+            </identifier>
+			<issuer>
+				<identifier>
+					<system value="urn:oid:1.2.203" />
+					<value value="24341" />
+					<display value="Ministry of Health of the Czech Republic" />
+				</identifier>
+            </issuer>
+            <validityPeriod>
+                <start value="2021-12-26"/>
+                <end value="2022-12-26"/>
+            </validityPeriod>
+		</resource>
+	</entry>
+	<entry>
+		<resource>
+			<Patient>
+				<id value="P" />
+				<identifier>
+					<type>
+						<coding>
+							<system value="http://terminology.hl7.org/CodeSystem/v2-0203" />
+							<code value="NIIP" />
+						</coding>
+					</type>
+					<system value="urn:oid:1.2.203.24341.1.20.2" />
+					<value value="740512852" />
+				</identifier>
+				<identifier>
+					<type>
+						<coding>
+							<system value="http://terminology.hl7.org/CodeSystem/v2-0203" />
+							<code value="NIDC" />
+							<!-- National ID card Number, new code should be added! -->
+						</coding>
+					</type>
+					<system value="urn:oid:1.2.203.24341.1.20.9.1" />
+					<value value="A225961454" />
+				</identifier>
+				<identifier>
+					<type>
+						<coding>
+							<system value="http://terminology.hl7.org/CodeSystem/v2-0203" />
+							<code value="PPN" />
+						</coding>
+					</type>
+					<system value="urn:oid:2.16.840.1.113883.4.330.203" />
+					<value value="5484136" />
+				</identifier>
+				<name>
+					<family value="Očkovaný" />
+					<given value="František" />
+				</name>
+				<birthDate value="2000-03-21" />
+			</Patient>
+		</resource>
+		<resource>
+			<Location>
+				<id value="L1" />
+				<identifier>
+					<type>
+						<coding>
+							<system value="http://terminology.hl7.org/CodeSystem/v2-0203" />
+							<code value="XX" />
+							<!-- type code should be revised -->
+						</coding>
+					</type>
+					<system value="urn:oid:1.3.154" />
+					<value value="00879444" />
+				</identifier>
+				<name value="Nemocnice na Františku" />
+				<telecom>
+					<system value="phone" />
+					<value value="+420123456789" />
+				</telecom>
+				<address>
+					<line value="Na Františku 847/8" />
+					<postalCode value="110 00" />
+					<city value="Staré Město" />
+				</address>
+			</Location>
+		</resource>
+		<resource>
+			<Immunization>
+				<id value="I1" />
+				<status value="completed" />
+				<vaccineCode>
+					<coding>
+						<system value="http://snomed.info/sct" />
+						<code value="1119349007" />
+					</coding>
+					<text value="Severe acute respiratory syndrome coronavirus 2 mRNA only vaccine product" />
+				</vaccineCode>
+				<note value="Comirnaty" />
+				<patient>
+					<reference value="#p" />
+				</patient>
+				<occurrenceDateTime value="2021-12-02" />
+				<location>
+					<reference value="#L1" />
+				</location>
+				<manufacturer>
+					<reference display="BioNTech Manufacturing GmbH" />
+				</manufacturer>
+				<lotNumber value="B1235742" />
+				<performer>
+					<function>
+						<coding>
+							<system value="http://terminology.hl7.org/CodeSystem/v2-0443" />
+							<code value="AP" />
+						</coding>
+					</function>
+					<actor>
+						<reference display="MUDr. Aleš Procházka" />
+					</actor>
+				</performer>
+				<protocolApplied>
+					<targetDisease>
+						<coding>
+							<system value="http://snomed.info/sct" />
+							<code value="840533007" />
+						</coding>
+					</targetDisease>
+					<doseNumberPositiveInt value="1" />
+					<seriesDosesString value="2" />
+				</protocolApplied>
+			</Immunization>
+		</resource>
+		<resource>
+			<Immunization>
+				<id value="I2" />
+				<status value="completed" />
+				<vaccineCode>
+					<coding>
+						<system value="http://snomed.info/sct" />
+						<code value="1119349007" />
+					</coding>
+					<text value="Severe acute respiratory syndrome coronavirus 2 mRNA only vaccine product" />
+				</vaccineCode>
+				<note value="Comirnaty" />
+				<patient>
+					<reference value="#P" />
+				</patient>
+				<occurrenceDateTime value="2021-12-26" />
+				<location>
+					<reference value="#L1" />
+				</location>
+				<manufacturer>
+					<reference display="BioNTech Manufacturing GmbH" />
+				</manufacturer>
+				<lotNumber value="D5423452" />
+				<performer>
+					<function>
+						<coding>
+							<system value="http://terminology.hl7.org/CodeSystem/v2-0443" />
+							<code value="AP" />
+						</coding>
+					</function>
+					<actor>
+						<reference display="MUDr. Jan Novák" />
+					</actor>
+				</performer>
+				<protocolApplied>
+					<targetDisease>
+						<coding>
+							<system value="http://snomed.info/sct" />
+							<code value="840533007" />
+						</coding>
+					</targetDisease>
+					<doseNumberPositiveInt value="2" />
+					<seriesDosesString value="2" />
+				</protocolApplied>
+			</Immunization>
+		</resource>
+	</entry>
+</Bundle>
