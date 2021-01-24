@@ -1,0 +1,80 @@
+message MSG {
+optional string resourcetype = 1;
+optional string timestamp = 2;
+message ENTRY {
+message RESOURCE {
+optional string status = 1;
+optional string confidentiality = 2;
+message AUTHOR {
+optional string display = 1;
+}
+repeated AUTHOR author = 3;
+optional string resourcetype = 4;
+message CUSTODIAN {
+optional string reference = 1;
+}
+optional CUSTODIAN custodian = 5;
+message ATTESTER {
+message PARTY {
+optional string reference = 1;
+}
+optional PARTY party = 1;
+optional string mode = 2;
+optional string time = 3;
+}
+repeated ATTESTER attester = 6;
+optional string title = 7;
+message SECTION {
+message ENTRY {
+optional string reference = 1;
+}
+repeated ENTRY entry = 1;
+message CODE {
+message CODING {
+optional string code = 1;
+optional string system = 2;
+optional string display = 3;
+}
+repeated CODING coding = 1;
+}
+optional CODE code = 2;
+optional string title = 3;
+}
+repeated SECTION section = 8;
+optional string date = 9;
+message IDENTIFIER {
+optional string system = 1;
+optional string value = 2;
+}
+optional IDENTIFIER identifier = 10;
+message TYPE {
+message CODING {
+optional string code = 1;
+optional string system = 2;
+optional string display = 3;
+}
+repeated CODING coding = 1;
+}
+optional TYPE type = 11;
+optional string id = 12;
+message SUBJECT {
+optional string reference = 1;
+}
+optional SUBJECT subject = 13;
+}
+optional RESOURCE resource = 1;
+optional string fullurl = 2;
+}
+repeated ENTRY entry = 3;
+message IDENTIFIER {
+optional string system = 1;
+optional string value = 2;
+message PERIOD {
+optional string start = 1;
+}
+optional PERIOD period = 3;
+}
+optional IDENTIFIER identifier = 4;
+optional string type = 5;
+optional string id = 6;
+}
