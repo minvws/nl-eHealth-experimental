@@ -65,10 +65,6 @@
                 }
               ]
             },
-            "text" : {
-              "status" : "generated",
-              "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n&#9;&#9;&#9;&#9;&#9;&#9;&#9;<table>\n&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;<thead>\n&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;<tr>\n&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;<th>Date</th>\n&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;<th>Product</th>\n&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;<th>Vaccine</th>\n&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;<th>Dose</th>\n&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;</tr>\n&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;</thead>\n&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;<tbody>\n&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;<tr>\n&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;<td>2020-12-02</td>\n&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;<td>Comirnaty</td>\n&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;<td>COVID-19 mRNA Vaccine</td>\n&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;<td>1/2</td>\n&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;</tr>\n&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;<tr>\n&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;<td>2020-12-23</td>\n&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;<td>Comirnaty</td>\n&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;<td>COVID-19 mRNA Vaccine</td>\n&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;<td>2/2</td>\n&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;</tr>\n&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;</tbody>\n&#9;&#9;&#9;&#9;&#9;&#9;&#9;</table>\n&#9;&#9;&#9;&#9;&#9;&#9;</div>"
-            },
             "entry" : [
               {
                 "reference" : "urn:uuid:c220e36c-eb67-4fc4-9ba1-2fabc52acec6"
@@ -174,58 +170,6 @@
               }
             ],
             "doseNumberPositiveInt" : 1,
-            "seriesDosesString" : "2"
-          }
-        ]
-      }
-    },
-    {
-      "fullUrl" : "urn:uuid:47524493-846a-4a26-bae2-4ab03e60f02e",
-      "resource" : {
-        "resourceType" : "Immunization",
-        "id" : "47524493-846a-4a26-bae2-4ab03e60f02e",
-        "status" : "completed",
-        "vaccineCode" : {
-          "coding" : [
-            {
-              "system" : "http://snomed.info/sct",
-              "code" : "1119349007",
-              "display" : "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 messenger ribonucleic acid"
-            }
-          ],
-          "text" : "Comirnaty"
-        },
-        "patient" : {
-          "reference" : "urn:uuid:2b90dd2b-2dab-4c75-9bb9-a355e07401e8"
-        },
-        "occurrenceDateTime" : "2020-12-23",
-        "location" : {
-          "reference" : "urn:uuid:55a5c5b1-4ec1-4d60-b4b2-ff5a84a41fd8"
-        },
-        "manufacturer" : {
-          "display" : "BioNTech Manufacturing GmbH"
-        },
-        "lotNumber" : "D5423452",
-        "performer" : [
-          {
-            "actor" : {
-              "display" : "MUDr. Jan Novák"
-            }
-          }
-        ],
-        "protocolApplied" : [
-          {
-            "targetDisease" : [
-              {
-                "coding" : [
-                  {
-                    "system" : "http://snomed.info/sct",
-                    "code" : "840533007"
-                  }
-                ]
-              }
-            ],
-            "doseNumberPositiveInt" : 2,
             "seriesDosesString" : "2"
           }
         ]
