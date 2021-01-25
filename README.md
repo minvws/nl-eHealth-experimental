@@ -8,7 +8,6 @@ licenses, code of conduct, contacts and processes are described in
 
    https://github.com/minvws/nl-covid19-notification-app-coordination.
 
-
 # licences
 The code in this repository is under the EUPL/1.2 license unless 
 otherwise indicated. See license [in PDF format](license.pdf) or [in text format](license.txt).

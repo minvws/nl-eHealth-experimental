@@ -6,8 +6,8 @@ PYTHON=${PYTHON:-/opt/local/bin/python2.7}
 test -d pbjson || git clone  git clone git@github.com:yinqiwen/pbjson.git
 test -d protobuf-json || git@github.com:dpp-name/protobuf-json.git
 
-echo "file	                        | plain	   | compressed"
-echo "----------------------------------|----------|-----------------"
+echo "file	                     | proto    | plain	   | compressed"
+echo "-----------------------------|----------|----------|-----------------"
 for i in *.json
 do
 	rm -f msg*
@@ -30,12 +30,14 @@ do
         PYTHONPATH=.:protobuf-json /opt/local/bin/python2.7 ./json2pb.py  "$i" > "$j.pb"
 
 	# FInally show the various file sizes.
+	JJ=$j
 	for ex in pb json xml
 	do
 		if test -f "$j.$ex"; then
 			PLAIN=$(cat "$j.$ex" | wc -c)
 			COMP=$(cat "$j.$ex" | xz --compress  -e | wc -c)
-			echo "$j / $ex	| $PLAIN |	$COMP"
+			echo "$JJ | $ex	| $PLAIN |	$COMP"
+			JJ="                            "
 		fi
 	done
 done
