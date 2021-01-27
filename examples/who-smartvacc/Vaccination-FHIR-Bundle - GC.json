@@ -1,0 +1,205 @@
+{
+  "resourceType" : "Bundle",
+  "id" : "svc-Bundle-01",
+  "identifier" : {
+    "system" : "urn:oid:1.2.203.24341.1.20.2",
+    "value" : "V1CZ454557891308174803488707671418",
+    "period" : {
+      "start" : "2020-12-27T14:30:00+01:00"
+    }
+  },
+  "type" : "document",
+  "timestamp" : "2020-12-27T14:30:00+01:00",
+  "entry" : [
+    {
+      "fullUrl" : "urn:uuid:30551ce1-5a28-4356-b684-1e639094ad4d",
+      "resource" : {
+        "resourceType" : "Composition",
+        "id" : "30551ce1-5a28-4356-b684-1e639094ad4d",
+        "identifier" : {
+          "system" : "urn:oid:2.16.724.4.8.10.200.10",
+          "value" : "3f69e0a5-2177-4540-baab-7a5d0877428f"
+        },
+        "status" : "final",
+        "type" : {
+          "coding" : [
+            {
+              "system" : "http://loinc.org",
+              "code" : "11369-6",
+              "display" : "Hx of Immunization"
+            }
+          ]
+        },
+        "subject" : {
+          "reference" : "urn:uuid:2b90dd2b-2dab-4c75-9bb9-a355e07401e8"
+        },
+        "date" : "2020-12-27T14:30:00+01:00",
+        "author" : [
+          {
+            "display" : "MUDr. Aleš Procházka"
+          }
+        ],
+        "title" : "Vaccine Certificate July 20, 2017 14:30",
+        "confidentiality" : "N",
+        "attester" : [
+          {
+            "mode" : "legal",
+            "time" : "2020-12-27T14:30:00+01:00",
+            "party" : {
+              "reference" : "urn:uuid:45a5c5b1-4ec1-4d60-b4b2-ff5a84a41fd7"
+            }
+          }
+        ],
+        "custodian" : {
+          "reference" : "urn:uuid:45a5c5b1-4ec1-4d60-b4b2-ff5a84a41fd7"
+        },
+        "section" : [
+          {
+            "title" : "Vaccinations",
+            "code" : {
+              "coding" : [
+                {
+                  "system" : "http://loinc.org",
+                  "code" : "11369-6",
+                  "display" : "Hx of Immunization"
+                }
+              ]
+            },
+            "entry" : [
+              {
+                "reference" : "urn:uuid:c220e36c-eb67-4fc4-9ba1-2fabc52acec6"
+              },
+              {
+                "reference" : "urn:uuid:47524493-846a-4a26-bae2-4ab03e60f02e"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl" : "urn:uuid:2b90dd2b-2dab-4c75-9bb9-a355e07401e8",
+      "resource" : {
+        "resourceType" : "Patient",
+        "id" : "2b90dd2b-2dab-4c75-9bb9-a355e07401e8",
+        "identifier" : [
+          {
+            "type" : {
+              "coding" : [
+                {
+                  "system" : "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "code" : "NIIP"
+                }
+              ]
+            },
+            "system" : "urn:oid:1.2.203.24341.1.20.2",
+            "value" : "740512852"
+          },
+          {
+            "system" : "urn:oid:1.2.203.24341.1.20.9.1",
+            "value" : "A225961454"
+          },
+          {
+            "type" : {
+              "coding" : [
+                {
+                  "system" : "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "code" : "PPN"
+                }
+              ]
+            },
+            "system" : "urn:oid:2.16.840.1.113883.4.330.203",
+            "value" : "5484136"
+          }
+        ],
+        "name" : [
+          {
+            "family" : "Očkovaný",
+            "given" : [
+              "František"
+            ]
+          }
+        ],
+        "birthDate" : "2000-03-21"
+      }
+    },
+    {
+      "fullUrl" : "urn:uuid:c220e36c-eb67-4fc4-9ba1-2fabc52acec6",
+      "resource" : {
+        "resourceType" : "Immunization",
+        "id" : "c220e36c-eb67-4fc4-9ba1-2fabc52acec6",
+        "status" : "completed",
+        "vaccineCode" : {
+          "coding" : [
+            {
+              "system" : "http://snomed.info/sct",
+              "code" : "1119349007",
+              "display" : "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 messenger ribonucleic acid"
+            }
+          ],
+          "text" : "Comirnaty"
+        },
+        "patient" : {
+          "reference" : "urn:uuid:2b90dd2b-2dab-4c75-9bb9-a355e07401e8"
+        },
+        "occurrenceDateTime" : "2020-12-02",
+        "location" : {
+          "reference" : "urn:uuid:55a5c5b1-4ec1-4d60-b4b2-ff5a84a41fd8"
+        },
+        "manufacturer" : {
+          "display" : "BioNTech Manufacturing GmbH"
+        },
+        "lotNumber" : "B1235742",
+        "performer" : [
+          {
+            "actor" : {
+              "display" : "MUDr. Aleš Procházka"
+            }
+          }
+        ],
+        "protocolApplied" : [
+          {
+            "targetDisease" : [
+              {
+                "coding" : [
+                  {
+                    "system" : "http://snomed.info/sct",
+                    "code" : "840533007"
+                  }
+                ]
+              }
+            ],
+            "doseNumberPositiveInt" : 1,
+            "seriesDosesString" : "2"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl" : "urn:uuid:45a5c5b1-4ec1-4d60-b4b2-ff5a84a41fd7",
+      "resource" : {
+        "resourceType" : "Organization",
+        "id" : "45a5c5b1-4ec1-4d60-b4b2-ff5a84a41fd7",
+        "identifier" : [
+          {
+            "system" : "urn:oid:1.2.203",
+            "value" : "24341"
+          }
+        ],
+        "name" : "Ministry of Health of the Czech Republic"
+      }
+    },
+    {
+      "fullUrl" : "urn:uuid:55a5c5b1-4ec1-4d60-b4b2-ff5a84a41fd8",
+      "resource" : {
+        "resourceType" : "Location",
+        "id" : "55a5c5b1-4ec1-4d60-b4b2-ff5a84a41fd8",
+        "name" : "Hospital Na Františku Prague",
+        "address" : {
+          "city" : "Prague",
+          "country" : "CZ"
+        }
+      }
+    }
+  ]
+}
