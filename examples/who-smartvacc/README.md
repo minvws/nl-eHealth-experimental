@@ -25,4 +25,12 @@ then be placed in e.g. a QR code (after possible encryption and then being digit
 
 To get started, run build_pb.sh which in turn calls build_pb.py with some settings / args/
 
+
+size | proto    | file 
+-----|----------|-----------------------------
+5953 | json     | Vaccination-FHIR-Bundle - GC.json
+102  | protobuf | Vaccination-FHIR-Bundle - GC.bin
+156  | xz(lmpa) |  Vaccination-FHIR-Bundle - GC.bin.xz
+
+
 [^1]: ICD-11 will be release shortly containing these "emergency" codes as part of the core standard)
