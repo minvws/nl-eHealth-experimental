@@ -1,7 +1,6 @@
 .idea/
 venv/
 __pycache__/
-protobuf-json/
 *_pb2.py
 *.bin
-
+*.xz
