@@ -6,7 +6,7 @@ set for vaccination certificates.
 
 Current work for defining a minimum data set focuses on medical use. There is already a standard
 medical message for immunization in HL7 (both v3 CDA and FHIR) which can be re-used also for 
-COVID-19 purposes. In fact, snomed and ICD-10 [^1] have simply extended their coding schemes in an 
+COVID-19 purposes. In fact, [snomed](https://www.snomed.org/) and ICD-10 [^1] have simply extended their coding schemes in an 
 "emergency" update to cater for COVID-19 specifics thus indicating that existing mechanisms 
 for conveying immunization information are suitable also for re-use with COVID-19.
 
@@ -23,7 +23,43 @@ more compact representation using the standard google protobuf packaging. We shr
 file still further by using compression (e.g xz) on the file. This is the final binary which can 
 then be placed in e.g. a QR code (after possible encryption and then being digitally signed).
 
-To get started, run build_pb.sh which in turn calls build_pb.py with some settings / args/
+## Getting Started
+
+### Checking Out
+
+In order to support Python3, we needed to update the long data type in an external repository
+(https://github.com/dpp-name/protobuf-json) which we have included as sub-module here.
+When cloning, you can use 
+
+```bash
+git clone [repo] --recurse-submodules
+```
+
+If, however, you have already cloned the main repository, then from within the repository please 
+issue the following two git commands (cmdline or via UI):
+
+```bash
+git submodule init
+git submodule update 
+```
+
+to clone the sub-module project protobuf-json.
+
+### Running
+
+Run 
+
+```bash
+./build_pb.sh
+``` 
+which in turn calls build_pb.py with some pre-defined settings / arguments.
+
+For this pre-configured version the output should be:
+```
+5953 Vaccination-FHIR-Bundle - GC.json
+102 Vaccination-FHIR-Bundle - GC.bin
+156 Vaccination-FHIR-Bundle - GC.bin.xz
+```
 
 
 size | proto    | file 
