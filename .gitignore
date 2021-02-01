@@ -1,6 +1,5 @@
 .idea/
 venv/
 __pycache__/
-*_pb2.py
 *.bin
 *.xz
