@@ -1,3 +1,16 @@
+# Packaging FHIR examples
+
+Example in Google protobuf (the other efficient option appears to be CBOR-LD).
+
+1. Bundle-Scenario* 	example from vaccine-credentail-ig
+1. REPC_EX*		example from NL
+1. Vaccination-*	example from CZ
+
+''text'' has been removed from these; but ''display'' strings kept.
+
+Sizes are in xml, json and the protobuff; the compresson is LZMA based.
+
+
 file	                     | proto    | plain	   | compressed
 -----------------------------|----------|----------|-----------------
 Bundle-Scenario1Bundle	| pb	|     1132 |	     536
