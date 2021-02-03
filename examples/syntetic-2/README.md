@@ -1,9 +1,15 @@
 file	                     | proto    | plain	   | compressed
 -----------------------------|----------|----------|-----------------
-REPC_EX002140NL_02		| pb	|      519 |	     408
+Bundle-Scenario1Bundle	| pb	|     1132 |	     536
+..                            	| json	|     5303 |	    1096
+..                            	| xml	|     5129 |	    1108
+Bundle-Scenario2Bundle	| pb	|     1134 |	     532
+..                            	| json	|     5303 |	    1096
+..                            	| xml	|     5129 |	    1108
+REPC_EX002140NL_02	| pb	|      519 |	     408
 ..                            	| json	|     5320 |	    1232
 ..                            	| xml	|     6360 |	    1388
-REPC_EX002140NL_04		| pb	|     2177 |	     796
+REPC_EX002140NL_04	| pb	|     2177 |	     796
 ..                            	| json	|     8120 |	    1544
 ..                            	| xml	|    10077 |	    1684
 REPC_EX002140NL_04-minimal	| pb	|      508 |	     400
