@@ -43,7 +43,7 @@ do
 			PLAIN=$(cat "$base.$ex" | wc -c)
 			COMP=$(cat "$base.$ex" | xz --compress  -e | wc -c)
 			echo "$JJ	| $ex	| $PLAIN |	$COMP"
-			JJ="                            "
+			JJ="..                            "
 		fi
 	done
 done
