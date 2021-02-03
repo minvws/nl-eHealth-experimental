@@ -1,0 +1,215 @@
+{
+  "resourceType": "Bundle",
+  "id": "Scenario1Bundle",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/us/vaccinecredential/StructureDefinition/vaccine-credential-bundle"
+    ]
+  },
+  "type": "collection",
+  "entry": [
+    {
+      "fullUrl": "http://example.org/fhir/Patient/Scenario1Patient",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "Scenario1Patient",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/vaccinecredential/StructureDefinition/vaccine-credential-patient"
+          ]
+        },
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p><b>Generated Narrative</b></p><p><b>identifier</b>: Medical Record Number: m123 (USUAL)</p><p><b>name</b>: John B. Anyperson </p><p><b>gender</b>: male</p><p><b>birthDate</b>: 1951-01-20</p><p><b>address</b>: 123 Main St Anytown 12345 US </p><h3>Contacts</h3><table class=\"grid\"><tr><td>-</td><td><b>Telecom</b></td></tr><tr><td>*</td><td>ph: 555-555-5555(HOME), <a href=\"mailto:john.anyperson@example.com\">john.anyperson@example.com</a></td></tr></table><h3>Communications</h3><table class=\"grid\"><tr><td>-</td><td><b>Language</b></td></tr><tr><td>*</td><td><span title=\"Codes: {urn:ietf:bcp:47 en-US}\">English</span></td></tr></table></div>"
+        },
+        "identifier": [
+          {
+            "use": "usual",
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "code": "MR",
+                  "display": "Medical Record Number"
+                }
+              ]
+            },
+            "system": "http://hospital.example.org",
+            "value": "m123"
+          }
+        ],
+        "name": [
+          {
+            "family": "Anyperson",
+            "given": [
+              "John",
+              "B."
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1951-01-20",
+        "address": [
+          {
+            "line": [
+              "123 Main St"
+            ],
+            "city": "Anytown",
+            "postalCode": "12345",
+            "country": "US"
+          }
+        ],
+        "contact": [
+          {
+            "telecom": [
+              {
+                "system": "phone",
+                "value": "555-555-5555",
+                "use": "home"
+              },
+              {
+                "system": "email",
+                "value": "john.anyperson@example.com"
+              }
+            ]
+          }
+        ],
+        "communication": [
+          {
+            "language": {
+              "coding": [
+                {
+                  "system": "urn:ietf:bcp:47",
+                  "code": "en-US",
+                  "display": "English (Region=United States)"
+                }
+              ],
+              "text": "English"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://example.org/fhir/Immunization/Scenario1Immunization1",
+      "resource": {
+        "resourceType": "Immunization",
+        "id": "Scenario1Immunization1",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/vaccinecredential/StructureDefinition/vaccine-credential-immunization"
+          ]
+        },
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p><b>Generated Narrative</b></p><p><b>status</b>: completed</p><p><b>vaccineCode</b>: <span title=\"Codes: {http://hl7.org/fhir/sid/cvx 207}\">COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</span></p><p><b>patient</b>: <a href=\"#Patient_Scenario1Patient\">See above (Patient/Scenario1Patient)</a></p><p><b>occurrence</b>: Jan 1, 2021, 12:45:33 AM</p><p><b>primarySource</b>: true</p><p><b>location</b>: <a href=\"#Location_Scenario1Location\">See above (Location/Scenario1Location)</a></p><p><b>lotNumber</b>: Lot #0000001</p><h3>ProtocolApplieds</h3><table class=\"grid\"><tr><td>-</td><td><b>TargetDisease</b></td><td><b>DoseNumber[x]</b></td><td><b>SeriesDoses[x]</b></td></tr><tr><td>*</td><td><span title=\"Codes: {http://snomed.info/sct 840539006}\">COVID-19</span></td><td>1</td><td>2</td></tr></table></div>"
+        },
+        "status": "completed",
+        "vaccineCode": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/cvx",
+              "code": "207",
+              "display": "COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose"
+            }
+          ]
+        },
+        "patient": {
+          "reference": "Patient/Scenario1Patient"
+        },
+        "occurrenceDateTime": "2021-01-01T11:45:33+11:00",
+        "primarySource": true,
+        "location": {
+          "reference": "Location/Scenario1Location"
+        },
+        "lotNumber": "Lot #0000001",
+        "protocolApplied": [
+          {
+            "targetDisease": [
+              {
+                "coding": [
+                  {
+                    "system": "http://snomed.info/sct",
+                    "code": "840539006",
+                    "display": "COVID-19"
+                  }
+                ]
+              }
+            ],
+            "doseNumberPositiveInt": 1,
+            "seriesDosesPositiveInt": 2
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://example.org/fhir/Immunization/Scenario1Immunization2",
+      "resource": {
+        "resourceType": "Immunization",
+        "id": "Scenario1Immunization2",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/vaccinecredential/StructureDefinition/vaccine-credential-immunization"
+          ]
+        },
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p><b>Generated Narrative</b></p><p><b>status</b>: completed</p><p><b>vaccineCode</b>: <span title=\"Codes: {http://hl7.org/fhir/sid/cvx 207}\">COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</span></p><p><b>patient</b>: <a href=\"#Patient_Scenario1Patient\">See above (Patient/Scenario1Patient)</a></p><p><b>occurrence</b>: Jan 29, 2021, 12:45:33 AM</p><p><b>primarySource</b>: true</p><p><b>location</b>: <a href=\"#Location_Scenario1Location\">See above (Location/Scenario1Location)</a></p><p><b>lotNumber</b>: Lot #0000007</p><h3>ProtocolApplieds</h3><table class=\"grid\"><tr><td>-</td><td><b>TargetDisease</b></td><td><b>DoseNumber[x]</b></td><td><b>SeriesDoses[x]</b></td></tr><tr><td>*</td><td><span title=\"Codes: {http://snomed.info/sct 840539006}\">COVID-19</span></td><td>2</td><td>2</td></tr></table></div>"
+        },
+        "status": "completed",
+        "vaccineCode": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/cvx",
+              "code": "207",
+              "display": "COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose"
+            }
+          ]
+        },
+        "patient": {
+          "reference": "Patient/Scenario1Patient"
+        },
+        "occurrenceDateTime": "2021-01-29T11:45:33+11:00",
+        "primarySource": true,
+        "location": {
+          "reference": "Location/Scenario1Location"
+        },
+        "lotNumber": "Lot #0000007",
+        "protocolApplied": [
+          {
+            "targetDisease": [
+              {
+                "coding": [
+                  {
+                    "system": "http://snomed.info/sct",
+                    "code": "840539006",
+                    "display": "COVID-19"
+                  }
+                ]
+              }
+            ],
+            "doseNumberPositiveInt": 2,
+            "seriesDosesPositiveInt": 2
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://example.org/fhir/Immunization/Scenario1Location",
+      "resource": {
+        "resourceType": "Location",
+        "id": "Scenario1Location",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/core/StructureDefinition/us-core-location"
+          ]
+        },
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p><b>Generated Narrative</b></p><p><b>name</b>: ABC Pharmacy</p></div>"
+        },
+        "name": "ABC Pharmacy"
+      }
+    }
+  ]
+}
