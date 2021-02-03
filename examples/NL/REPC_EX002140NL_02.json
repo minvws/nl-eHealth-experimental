@@ -1,0 +1,209 @@
+{
+  "type": "collection",
+  "resourceType": "Bundle",
+  "id": "6ca9083c-8d0d-46f6-b7dc-46ad8e41cb8e",
+  "entry": [
+    {
+      "resource": {
+        "lotNumber": "7656AFT989",
+        "resourceType": "Immunization",
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns='http://www.w3.org/1999/xhtml'>Vaccine<span style='font-weight: bold;'>10 - D.K.T.P.-Hib</span>has been administered.</div>"
+        },
+        "encounter": {
+          "display": "Contact, Huisbezoek 4-7 dagen",
+          "reference": "urn:oid:2.16.528.1.1007.3.3.12345678.1377.317297"
+        },
+        "performer": {
+          "actor": {
+            "type": "Organization",
+            "display": "Youth Care Organization",
+            "reference": "urn:oid:2.16.528.1.1007.3.3.12345678"
+          },
+          "function": {
+            "coding": {
+              "display": "Administering Provider",
+              "code": [
+                "AP"
+              ],
+              "system": "http://terminology.hl7.org/CodeSystem/v2-0443"
+            }
+          }
+        },
+        "occurrenceDateTime": "2000-10-14",
+        "vaccineCode": {
+          "coding": [
+            {
+              "display": "D.K.T.P.-Hib",
+              "code": "10",
+              "system": "urn:oid:2.16.840.1.113883.2.4.4.40.76"
+            }
+          ]
+        },
+        "status": "completed",
+        "patient": {
+          "display": "Thijmen Frank van de Boog",
+          "reference": "urn:uuid:774d4def-6621-11eb-1122-020000000000"
+        }
+      },
+      "fullUrl": "7752a53b-6621-11eb-1122-020000000000"
+    },
+    {
+      "resource": {
+        "subject": {
+          "display": "Thijmen Frank van de Boog",
+          "reference": "urn:uuid:774d4def-6621-11eb-1122-020000000000"
+        },
+        "identifier": [
+          {
+            "value": "317297",
+            "system": "urn:oid:2.16.528.1.1007.3.3.12345678.1377"
+          }
+        ],
+        "serviceProvider": {
+          "type": "Organization",
+          "display": "Youth Care Organization",
+          "reference": "urn:oid:2.16.528.1.1007.3.3.12345678"
+        },
+        "class": {
+          "display": "inpatient encounter",
+          "extension": [
+            {
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "display": "Huisbezoek 4-7 dagen",
+                    "code": "01",
+                    "system": "urn:oid:2.16.840.1.113883.2.4.4.40.308"
+                  }
+                ]
+              },
+              "url": "http://nictiz.nl/fhir/StructureDefinition/code-specification"
+            }
+          ],
+          "code": "IMP",
+          "system": "http://hl7.org/fhir/v3/ActCode"
+        },
+        "resourceType": "Encounter",
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns='http://www.w3.org/1999/xhtml'>Contact, Huisbezoek 4-7 dagen</div>"
+        },
+        "status": "finished"
+      },
+      "fullUrl": "urn:oid:2.16.528.1.1007.3.3.12345678.1377.317297"
+    },
+    {
+      "resource": {
+        "managingOrganization": {
+          "type": "Organization",
+          "display": "Youth Care Organization",
+          "reference": "urn:oid:2.16.528.1.1007.3.3.12345678"
+        },
+        "resourceType": "Location",
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns='http://www.w3.org/1999/xhtml'>Location, Consultation Agency Church Road in organization Youth Care Organization</div>"
+        },
+        "name": "Consultation Agency Church Road"
+      },
+      "fullUrl": "774d4e1f-6621-11eb-1122-020000000000"
+    },
+    {
+      "resource": {
+        "name": [
+          {
+            "_family": {
+              "extension": [
+                {
+                  "valueString": "van de ",
+                  "url": "http://hl7.org/fhir/StructureDefinition/humanname-own-prefix"
+                },
+                {
+                  "valueString": "Boog",
+                  "url": "http://hl7.org/fhir/StructureDefinition/humanname-own-name"
+                }
+              ]
+            },
+            "family": "van de  Boog",
+            "given": [
+              "Thijmen Frank"
+            ],
+            "use": "official"
+          }
+        ],
+        "address": [
+          {
+            "line": [
+              "15 bis"
+            ],
+            "postalCode": "2061 VH",
+            "_line": [
+              {
+                "extension": [
+                  {
+                    "valueString": "15",
+                    "url": "http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-houseNumber"
+                  },
+                  {
+                    "valueString": "bis",
+                    "url": "http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-buildingNumberSuffix"
+                  }
+                ]
+              }
+            ],
+            "use": "home"
+          }
+        ],
+        "resourceType": "Patient",
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns='http://www.w3.org/1999/xhtml'>\n  <table>\n    <tbody>\n      <tr>\n        <th>ID</th>\n        <th>Name</th>\n      </tr>\n      <tr>\n        <td/>\n        <td>Thijmen Frank van de Boog</td>\n      </tr>\n      <tr>\n        <th>Contact</th>\n        <th>Address</th>\n      </tr>\n      <tr>\n        <td/>\n        <td>\n          <div>15</div>\n          <div>bis</div>\n          <div>2061 VH</div>\n        </td>\n      </tr>\n    </tbody>\n  </table>\n</div>"
+        },
+        "telecom": [
+          {
+            "value": "0612345990",
+            "use": "work",
+            "system": "phone"
+          },
+          {
+            "value": "devries@work.com",
+            "use": "work",
+            "system": "email"
+          }
+        ]
+      },
+      "fullUrl": "urn:uuid:774d4def-6621-11eb-1122-020000000000"
+    },
+    {
+      "resource": {
+        "identifier": [
+          {
+            "value": "12345678",
+            "system": "http://fhir.nl/fhir/NamingSystem/ura"
+          }
+        ],
+        "name": "Youth Care Organization",
+        "resourceType": "Organization",
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns='http://www.w3.org/1999/xhtml'>Organization: Youth Care Organization</div>"
+        },
+        "telecom": [
+          {
+            "value": "0612345990",
+            "use": "work",
+            "system": "phone"
+          },
+          {
+            "value": "devries@work.com",
+            "use": "work",
+            "system": "email"
+          }
+        ]
+      },
+      "fullUrl": "urn:oid:2.16.528.1.1007.3.3.12345678"
+    }
+  ]
+}
