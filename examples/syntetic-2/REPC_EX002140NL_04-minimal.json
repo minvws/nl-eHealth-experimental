@@ -3,56 +3,6 @@
   "entry": [
     {
       "resource": {
-        "performer": {
-          "actor": {
-            "reference": "urn:oid:2.16.528.1.1007.3.3.12345678",
-            "display": "Youth Care Organization",
-            "type": "Organization"
-          },
-          "function": {
-            "coding": {
-              "code": [
-                "AP"
-              ],
-              "display": "Administering Provider",
-              "system": "http://terminology.hl7.org/CodeSystem/v2-0443"
-            }
-          }
-        },
-        "status": "not-done",
-        "statusReason": {
-          "coding": {
-            "code": [
-              "1"
-            ],
-            "display": "Medisch bezwaar",
-            "system": "urn:oid:2.16.840.1.113883.2.4.4.40.394"
-          }
-        },
-        "vaccineCode": {
-          "coding": [
-            {
-              "code": "10",
-              "display": "D.K.T.P.-Hib",
-              "system": "urn:oid:2.16.840.1.113883.2.4.4.40.76"
-            }
-          ]
-        },
-        "resourceType": "Immunization",
-        "patient": {
-          "display": "Sarah de Groot",
-          "reference": "urn:uuid:c731b1af-660a-11eb-1948-020000000000"
-        },
-        "occurrenceDateTime": "2011-01-07",
-        "encounter": {
-          "display": "Contact, Huisbezoek 4-7 dagen",
-          "reference": "urn:oid:2.16.528.1.1007.3.3.12345678.1377.317297"
-        }
-      },
-      "fullUrl": "c738417b-660a-11eb-1948-020000000000"
-    },
-    {
-      "resource": {
         "lotNumber": "7656AFT989",
         "performer": {
           "actor": {
