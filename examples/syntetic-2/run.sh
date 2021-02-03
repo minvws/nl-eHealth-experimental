@@ -3,7 +3,7 @@ set -e
 
 PYTHON=${PYTHON:-/opt/local/bin/python2.7}
 
-test -d pbjson || git clone git@github.com:yinqiwen/pbjson.git
+test -d pbjson || git clone git@github.com:aoeuidht/pbjson.git
 test -d protobuf-json || git clone git@github.com:dpp-name/protobuf-json.git
 
 echo "file	                     | proto    | plain	   | compressed"
