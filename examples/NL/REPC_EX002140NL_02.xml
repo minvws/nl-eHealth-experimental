@@ -1,0 +1,201 @@
+<?xml-model href="http://hl7.org/fhir/R4/bundle.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?><Bundle xmlns="http://hl7.org/fhir"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://hl7.org/fhir http://hl7.org/fhir/R4/fhir-all.xsd"><!-- TODO Check Bundle elements -->
+   <id value="6ca9083c-8d0d-46f6-b7dc-46ad8e41cb8e"/>
+   <type value="collection"/>
+   <entry>
+      <fullUrl value="7752a53b-6621-11eb-1122-020000000000"/>
+      <resource>
+         <Immunization>
+            <text>
+               <status value="generated"/>
+               <div xmlns="http://www.w3.org/1999/xhtml">Vaccine <span style="font-weight: bold;">10 - D.K.T.P.-Hib</span> has been administered.</div>
+            </text>
+            <status value="completed"/>
+            <vaccineCode>
+               <coding>
+                  <system value="urn:oid:2.16.840.1.113883.2.4.4.40.76"/>
+                  <code value="10"/>
+                  <display value="D.K.T.P.-Hib"/>
+               </coding>
+            </vaccineCode>
+            <patient>
+               <reference value="urn:uuid:774d4def-6621-11eb-1122-020000000000"/>
+               <display value="Thijmen Frank van de Boog"/>
+            </patient>
+            <encounter>
+               <reference value="urn:oid:2.16.528.1.1007.3.3.12345678.1377.317297"/>
+               <display value="Contact, Huisbezoek 4-7 dagen"/>
+            </encounter>
+            <occurrenceDateTime value="2000-10-14"/>
+            <lotNumber value="7656AFT989"/>
+            <performer>
+               <function>
+                  <coding>
+                     <system value="http://terminology.hl7.org/CodeSystem/v2-0443"/>
+                     <code value="AP"/>
+                     <display value="Administering Provider"/>
+                  </coding>
+               </function>
+               <actor>
+                  <reference value="urn:oid:2.16.528.1.1007.3.3.12345678"/>
+                  <type value="Organization"/>
+                  <display value="Youth Care Organization"/>
+               </actor>
+            </performer>
+         </Immunization>
+      </resource>
+   </entry>
+   <entry>
+      <fullUrl value="urn:oid:2.16.528.1.1007.3.3.12345678.1377.317297"/>
+      <resource>
+         <Encounter>
+            <text>
+               <status value="generated"/>
+               <div xmlns="http://www.w3.org/1999/xhtml">Contact, Huisbezoek 4-7 dagen</div>
+            </text>
+            <identifier>
+               <system value="urn:oid:2.16.528.1.1007.3.3.12345678.1377"/>
+               <value value="317297"/>
+            </identifier>
+            <status value="finished"/>
+            <class>
+               <extension url="http://nictiz.nl/fhir/StructureDefinition/code-specification">
+                  <valueCodeableConcept>
+                     <coding>
+                        <system value="urn:oid:2.16.840.1.113883.2.4.4.40.308"/>
+                        <code value="01"/>
+                        <display value="Huisbezoek 4-7 dagen"/>
+                     </coding>
+                  </valueCodeableConcept>
+               </extension>
+               <system value="http://hl7.org/fhir/v3/ActCode"/>
+               <code value="IMP"/>
+               <display value="inpatient encounter"/>
+            </class>
+            <subject>
+               <reference value="urn:uuid:774d4def-6621-11eb-1122-020000000000"/>
+               <display value="Thijmen Frank van de Boog"/>
+            </subject>
+            <serviceProvider>
+               <reference value="urn:oid:2.16.528.1.1007.3.3.12345678"/>
+               <type value="Organization"/>
+               <display value="Youth Care Organization"/>
+            </serviceProvider>
+         </Encounter>
+      </resource>
+   </entry>
+   <entry>
+      <fullUrl value="774d4e1f-6621-11eb-1122-020000000000"/>
+      <resource>
+         <Location>
+            <text>
+               <status value="generated"/>
+               <div xmlns="http://www.w3.org/1999/xhtml">Location, Consultation Agency Church Road in organization Youth Care Organization</div>
+            </text>
+            <name value="Consultation Agency Church Road"/>
+            <managingOrganization>
+               <reference value="urn:oid:2.16.528.1.1007.3.3.12345678"/>
+               <type value="Organization"/>
+               <display value="Youth Care Organization"/>
+            </managingOrganization>
+         </Location>
+      </resource>
+   </entry>
+   <entry>
+      <fullUrl value="urn:uuid:774d4def-6621-11eb-1122-020000000000"/>
+      <resource>
+         <Patient>
+            <text>
+               <status value="generated"/>
+               <div xmlns="http://www.w3.org/1999/xhtml">
+                  <table>
+                     <tbody>
+                        <tr>
+                           <th>ID</th>
+                           <th>Name</th>
+                        </tr>
+                        <tr>
+                           <td/>
+                           <td>Thijmen Frank van de Boog</td>
+                        </tr>
+                        <tr>
+                           <th>Contact</th>
+                           <th>Address</th>
+                        </tr>
+                        <tr>
+                           <td/>
+                           <td>
+                              <div>15</div>
+                              <div>bis</div>
+                              <div>2061 VH</div>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </text>
+            <name>
+               <use value="official"/>
+               <family value="van de  Boog">
+                  <extension url="http://hl7.org/fhir/StructureDefinition/humanname-own-prefix">
+                     <valueString value="van de "/>
+                  </extension>
+                  <extension url="http://hl7.org/fhir/StructureDefinition/humanname-own-name">
+                     <valueString value="Boog"/>
+                  </extension>
+               </family>
+               <given value="Thijmen Frank"/>
+            </name>
+            <telecom>
+               <system value="phone"/>
+               <value value="0612345990"/>
+               <use value="work"/>
+            </telecom>
+            <telecom>
+               <system value="email"/>
+               <value value="devries@work.com"/>
+               <use value="work"/>
+            </telecom>
+            <address>
+               <use value="home"/>
+               <line value="15 bis">
+                  <extension url="http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-houseNumber">
+                     <valueString value="15"/>
+                  </extension>
+                  <extension url="http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-buildingNumberSuffix">
+                     <valueString value="bis"/>
+                  </extension>
+               </line>
+               <postalCode value="2061 VH"/>
+            </address>
+         </Patient>
+      </resource>
+   </entry>
+   <entry>
+      <fullUrl value="urn:oid:2.16.528.1.1007.3.3.12345678"/>
+      <resource>
+         <Organization>
+            <text>
+               <status value="generated"/>
+               <div xmlns="http://www.w3.org/1999/xhtml">Organization: Youth Care Organization</div>
+            </text>
+            <identifier>
+               <system value="http://fhir.nl/fhir/NamingSystem/ura"/>
+               <value value="12345678"/>
+            </identifier>
+            <name value="Youth Care Organization"/>
+            <telecom>
+               <system value="phone"/>
+               <value value="0612345990"/>
+               <use value="work"/>
+            </telecom>
+            <telecom>
+               <system value="email"/>
+               <value value="devries@work.com"/>
+               <use value="work"/>
+            </telecom>
+         </Organization>
+      </resource>
+   </entry>
+</Bundle>
