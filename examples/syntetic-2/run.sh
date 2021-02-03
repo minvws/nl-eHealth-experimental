@@ -36,12 +36,13 @@ do
         PYTHONPATH=.:protobuf-json /opt/local/bin/python2.7 ./json2pb.py  "$base.json" > "$base.pb"
 
 	# FInally show the various file sizes.
+	JJ=$base
 	for ex in pb json xml
 	do
 		if test -f "$base.$ex"; then
 			PLAIN=$(cat "$base.$ex" | wc -c)
 			COMP=$(cat "$base.$ex" | xz --compress  -e | wc -c)
-			echo "$base	| $ex	| $PLAIN |	$COMP"
+			echo "$JJ	| $ex	| $PLAIN |	$COMP"
 			JJ="                            "
 		fi
 	done
