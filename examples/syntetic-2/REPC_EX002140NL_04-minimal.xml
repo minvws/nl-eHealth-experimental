@@ -4,51 +4,6 @@
    <id value="6ca9083c-8d0d-46f6-b7dc-46ad8e41cb8e"/>
    <type value="collection"/>
    <entry>
-      <fullUrl value="c738417b-660a-11eb-1948-020000000000"/>
-      <resource>
-         <Immunization>
-            <status value="not-done"/>
-            <statusReason>
-               <coding>
-                  <system value="urn:oid:2.16.840.1.113883.2.4.4.40.394"/>
-                  <code value="1"/>
-                  <display value="Medisch bezwaar"/>
-               </coding>
-            </statusReason>
-            <vaccineCode>
-               <coding>
-                  <system value="urn:oid:2.16.840.1.113883.2.4.4.40.76"/>
-                  <code value="10"/>
-                  <display value="D.K.T.P.-Hib"/>
-               </coding>
-            </vaccineCode>
-            <patient>
-               <reference value="urn:uuid:c731b1af-660a-11eb-1948-020000000000"/>
-               <display value="Sarah de Groot"/>
-            </patient>
-            <encounter>
-               <reference value="urn:oid:2.16.528.1.1007.3.3.12345678.1377.317297"/>
-               <display value="Contact, Huisbezoek 4-7 dagen"/>
-            </encounter>
-            <occurrenceDateTime value="2011-01-07"/>
-            <performer>
-               <function>
-                  <coding>
-                     <system value="http://terminology.hl7.org/CodeSystem/v2-0443"/>
-                     <code value="AP"/>
-                     <display value="Administering Provider"/>
-                  </coding>
-               </function>
-               <actor>
-                  <reference value="urn:oid:2.16.528.1.1007.3.3.12345678"/>
-                  <type value="Organization"/>
-                  <display value="Youth Care Organization"/>
-               </actor>
-            </performer>
-         </Immunization>
-      </resource>
-   </entry>
-   <entry>
       <fullUrl value="c7384194-660a-11eb-1948-020000000000"/>
       <resource>
          <Immunization>
