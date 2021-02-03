@@ -1,9 +1,9 @@
-# who-smartvacc
+# smartvacc
 
 ## NOTE - this is based on an outdated/informal/incomplete version of the specification
 
 This experiment is to use a very specific selection of items to serialize to a protobuf.
-The selection of items is guided by the *draft* version of the WHO requirements for a minimum data 
+The selection of items is guided by the *draft* version of the requirements for a minimum data 
 set for vaccination certificates.
 
 Current work for defining a minimum data set focuses on medical use. There is already a standard
