@@ -1,0 +1,19 @@
+syntax = "proto2";
+
+package smart_vacc_fhir_bundle;
+
+message SmartVaccCert2 {
+
+  message Entry {
+    message Resource {
+      message manufacturer {
+        optional string display = 1;
+      }
+      optional manufacturer _manufacturer = 2;
+      optional string lotNumber = 3;
+      optional string occurrenceDateTime = 4;
+    }
+    optional Resource resource = 1;
+  }
+  repeated Entry entry = 1;
+}
