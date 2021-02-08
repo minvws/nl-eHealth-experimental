@@ -47,6 +47,11 @@ git submodule update
 
 to clone the sub-module project protobuf-json.
 
+Alternative to initialize and recursively pull any submodules:
+```bash
+git submodule update --init --recursive
+``
+
 ### Running
 
 Run 
