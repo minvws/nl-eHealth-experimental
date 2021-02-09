@@ -1,0 +1,19 @@
+syntax = "proto2";
+
+package smart_vacc_fhir_bundle;
+
+message SmartVaccCert0 {
+  message Entry {
+    message Resource {
+      message Name {
+        optional string family = 1;
+        repeated string given = 2;
+      }
+      optional string resourceType = 2;
+      optional Name name = 3;
+      optional string status = 4;
+    }
+    optional Resource resource = 1;
+  }
+  repeated Entry entry = 1;
+}

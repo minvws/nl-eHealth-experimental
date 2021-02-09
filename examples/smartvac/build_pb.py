@@ -9,7 +9,7 @@ The protobuf object (NNN_pb2.py) is created by using:
 """
 import json
 import protobuf_json
-import smart_vacc_fhir_bundle_gc_pb2
+import smart_vacc_fhir_bundle_gc0_pb2
 import smart_vacc_fhir_bundle_gc1_pb2
 import smart_vacc_fhir_bundle_gc2_pb2
 import sys
@@ -28,14 +28,14 @@ class DisclosureLevel(IntEnum):
 
 def __smart_vac_pb_factory(disclosure_level: DisclosureLevel) -> Any:
     if disclosure_level == DisclosureLevel.ZERO:
-        return smart_vacc_fhir_bundle_gc_pb2.SmartVaccCert()
+        return smart_vacc_fhir_bundle_gc0_pb2.SmartVaccCert0()
     elif disclosure_level == DisclosureLevel.ONE:
         return smart_vacc_fhir_bundle_gc1_pb2.SmartVaccCert1()
     elif disclosure_level == DisclosureLevel.TWO:
         return smart_vacc_fhir_bundle_gc2_pb2.SmartVaccCert2()
     else:
         print("INFO: defaulting to lowest (most private) disclosure level")
-        return smart_vacc_fhir_bundle_gc_pb2.SmartVaccCert()
+        return smart_vacc_fhir_bundle_gc0_pb2.SmartVaccCert()
 
 
 def __write_protobuf_from_json(json_source: Path, disclosure_level: DisclosureLevel) -> None:

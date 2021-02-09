@@ -3,7 +3,6 @@ syntax = "proto2";
 package smart_vacc_fhir_bundle;
 
 message SmartVaccCert1 {
-
   message Entry {
     message Resource {
       message Name {
@@ -23,7 +22,9 @@ message SmartVaccCert1 {
       }
       optional string resourceType = 2;
       optional Name name = 3;
-      optional vaccineCode vaccine_code = 4;
+      optional string status = 4;
+      optional manufacturer _manufacturer = 5;
+      optional string occurrenceDateTime = 6;
     }
     optional Resource resource = 1;
   }
