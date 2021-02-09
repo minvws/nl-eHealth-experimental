@@ -35,7 +35,7 @@ def __smart_vac_pb_factory(disclosure_level: DisclosureLevel) -> Any:
         return smart_vacc_fhir_bundle_gc2_pb2.SmartVaccCert2()
     else:
         print("INFO: defaulting to lowest (most private) disclosure level")
-        return smart_vacc_fhir_bundle_gc0_pb2.SmartVaccCert()
+        return smart_vacc_fhir_bundle_gc0_pb2.SmartVaccCert0()
 
 
 def __write_protobuf_from_json(json_source: Path, disclosure_level: DisclosureLevel) -> None:
