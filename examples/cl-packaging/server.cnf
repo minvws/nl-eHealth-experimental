@@ -1,0 +1,8 @@
+[ server ]
+basicConstraints=CA:FALSE
+extendedKeyUsage = serverAuth
+subjectKeyIdentifier=hash
+authorityKeyIdentifier=keyid,issuer
+# subjectAltName=DNS:uzi-test.webweaving.org,DNS:localhost,IP:127.0.0.1,IP:::1
+subjectAltName=DNS:uzi-test.webweaving.org
+
