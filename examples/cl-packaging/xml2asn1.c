@@ -176,7 +176,7 @@ main(int argc, char **argv)
 {
 	xmlDoc         *doc = NULL;
 	xmlNode        *root_element = NULL;
-	int		noout = 0,	der = 0, ascii = 0, cnf = 1, debug = 0;
+	int		noout = 0,	der = 0, ascii = 0, cnf = 0, debug = 0;
 
 	LIBXML_TEST_VERSION
 

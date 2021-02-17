@@ -1,12 +1,19 @@
 # X509 packaging
 
-Running make will output below - a C.L. key contained in an X509 extension.
+Running make will output below - a C.L. key contained in an X509 extension. 
 
-The key output file is
+It takes an Idemix XML file (example in ```cl.xml```). The key output file when doing ```make``` is:
 
 	cl-key.cnf
 and
 	out/fake-cl.pem
+
+Alternatively run it as:
+
+	./xml2asn1 -p ./cl.xml 
+
+And flags that are  ```-p``` is pretty print, ```-d``` is for DER and most useful is probably ```-c``` is for an openssl CNF file. See ```cl-sign.sh``` for how to use this. The default is ```PEM```. The ```-D``` flag shows how the XML is parsed. 
+
 
 ## Server/Medical-professional certificate
 
