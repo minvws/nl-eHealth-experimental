@@ -7,7 +7,7 @@ if [ -e out/fake-cl.key ]; then
 fi
 cd out
 
-SUBJ='/CN=Camenisch Lysyanskaya Signature/'
+SUBJ='/CN=Camenisch Lysyanskaya Signature/O=eHealth demo/C=EU'
 
 openssl req -new -keyout fake-cl.key -nodes -subj "${SUBJ}" |\
 openssl x509 \

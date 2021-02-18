@@ -13,7 +13,7 @@ cl-key.cnf: xml2asn1 cl.xml
 	./xml2asn1 -c cl.xml > cl-key.cnf
 
 xml2asn1: xml2asn1.c
-	gcc -Wall -Werror ${CFLAGS} -o xml2asn1 xml2asn1.c ${LDFLAGS} ${LIBS}
+	gcc -Wall -Werror -Wextra ${CFLAGS} -o xml2asn1 xml2asn1.c ${LDFLAGS} ${LIBS}
 
 out:
 	sh resign.sh

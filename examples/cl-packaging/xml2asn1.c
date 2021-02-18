@@ -130,6 +130,7 @@ _get_element(char *path, char *at, xmlNode * a_node)
 	}
 	return out;
 }
+
 static char    *
 get_element(char *path, xmlNode * a_node)
 {
@@ -142,11 +143,13 @@ get_ASN1_INTEGER(char *path, xmlNode * a_node)
 	ASN1_INTEGER   *out = ASN1_INTEGER_new();
 	char           *str;
 
-	if (NULL == (str = get_element(path, a_node)))
+	if (NULL == (str = get_element(path, a_node))) 
 		return NULL;
 
-	if (0 == ASN1_INTEGER_set_uint64(out, strtoull(str, NULL, 10)))
+	if (0 == ASN1_INTEGER_set_uint64(out, strtoull(str, NULL, 10))) {
+		ERR_print_errors_fp(stderr);
 		return NULL;
+        }
 
 	return out;
 };
@@ -160,8 +163,10 @@ get_BIGNUM(char *path, xmlNode * a_node)
 	if (NULL == (str = get_element(path, a_node)))
 		return NULL;
 
-	if (0 == BN_dec2bn(&bn, (const char *)str))
+	if (0 == BN_dec2bn(&bn, (const char *)str)) {
+		ERR_print_errors_fp(stderr);
 		return NULL;
+	};
 
 	return bn;
 };
@@ -177,6 +182,7 @@ main(int argc, char **argv)
 	xmlDoc         *doc = NULL;
 	xmlNode        *root_element = NULL;
 	int		noout = 0,	der = 0, ascii = 0, cnf = 0, debug = 0;
+	int		err = 1;
 
 	LIBXML_TEST_VERSION
 
@@ -226,18 +232,27 @@ main(int argc, char **argv)
 
 
 	ZKP_PUBLIC_KEY *zkp = ZKP_PUBLIC_KEY_new();
-	zkp->algorithm = OBJ_nid2obj(nid_cl);
+        if (!zkp) {
+		ERR_print_errors_fp(stderr);
+		goto errout;
+	}
 
-#define GET_OR_EXIT(zkp, err, tpe, member, elem, root_element) { \
-    if (err == (zkp->member = get_##tpe(elem, root_element))) { \
+	if (NULL == (zkp->algorithm = OBJ_nid2obj(nid_cl))) {
+		ERR_print_errors_fp(stderr);
+		goto errout;
+	}
+
+
+#define GET_OR_EXIT(zkp, tpe, member, elem, root_element) { \
+    if (NULL == (zkp->member = get_##tpe(elem, root_element))) { \
 	fprintf(stderr,"Failed to convert " #elem " for " #member "\n"); \
 	return(1); \
     }; \
 }
-	GET_OR_EXIT(zkp, NULL, ASN1_INTEGER, counter, "/IssuerPublicKey/Counter", root_element);
-	GET_OR_EXIT(zkp, NULL, BIGNUM, n, "/IssuerPublicKey/Elements/n", root_element);
-	GET_OR_EXIT(zkp, NULL, BIGNUM, Z, "/IssuerPublicKey/Elements/Z", root_element);
-	GET_OR_EXIT(zkp, NULL, BIGNUM, S, "/IssuerPublicKey/Elements/S", root_element);
+	GET_OR_EXIT(zkp, ASN1_INTEGER, counter, "/IssuerPublicKey/Counter", root_element);
+	GET_OR_EXIT(zkp, BIGNUM,       n, "/IssuerPublicKey/Elements/n", root_element);
+	GET_OR_EXIT(zkp, BIGNUM,       Z, "/IssuerPublicKey/Elements/Z", root_element);
+	GET_OR_EXIT(zkp, BIGNUM,       S, "/IssuerPublicKey/Elements/S", root_element);
 
 	for (int i = 0;; i++) {
 		char		elem      [1024];
@@ -247,21 +262,29 @@ main(int argc, char **argv)
 			break;
 		sk_BIGNUM_push(zkp->bases, bn);
 	};
+        if (sk_BIGNUM_num(zkp->bases) < 2) {
+		fprintf(stderr, "Failed to read enough bases.\n");
+		goto errout;
+	};
 
 	unsigned char	outbuff[1024 * 32], *p = outbuff;
 	if (0 == i2d_ZKP_PUBLIC_KEY(zkp, &p)) {
 		fprintf(stderr, "Failed to serialize.\n");
-		return (1);
+		ERR_print_errors_fp(stderr);
+		goto errout;
 	};
-	fprintf(stderr, "DER: %lu bytes\n", p - outbuff);
+
 	if (der)
 		fwrite(outbuff, p - outbuff, 1, stdout);
 	else if (ascii) {
-		BIO            *bio_out = BIO_new_fp(stdout, 0);
-
-		if (!ASN1_parse_dump(bio_out, outbuff, p - outbuff, 4 /* indent */ , 1 /* unk as hex */ ))
-			ERR_print_errors_fp(stderr);
+		BIO *bio_out = BIO_new_fp(stdout, 0);
+		size_t l = ASN1_parse_dump(bio_out, outbuff, p - outbuff, 4 /* indent */ , 1 /* unk as hex */ );
 		BIO_free_all(bio_out);
+
+                if (l == 0) { 
+			ERR_print_errors_fp(stderr);
+			goto errout;
+		};
 	} else if (cnf) {
 		printf("# %s extension\n[zkp]\n%s=DER:", OBJ_nid2ln(nid_zkp), OID_STR_ZKP);
 		for (unsigned char *q = outbuff; q < p; q++)
@@ -281,9 +304,11 @@ main(int argc, char **argv)
 
 		BIO_free_all(bio_filter_b64);
 	}
+	err = 0;
+errout:
 	ZKP_PUBLIC_KEY_free(zkp);
 	xmlFreeDoc(doc);
 	xmlCleanupParser();
 
-	return 0;
+	return err;
 }
