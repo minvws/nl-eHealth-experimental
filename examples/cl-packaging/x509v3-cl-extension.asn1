@@ -1,0 +1,42 @@
+DEFINITIONS IMPLICIT TAGS ::=
+BEGIN
+
+IMPORTS
+ PUBLIC-KEY, SIGNATURE-ALGORITHM
+   FROM AlgorithmInformation-2009 -- in [RFC5912]
+     { iso(1) identified-organization(3) dod(6) internet(1)
+       security(5)mechanisms(5) pkix(7) id-mod(0)
+       id-mod-algorithmInformation-02(58) } ;
+
+eHealth OBJECT IDENTIFIER ::= 
+{ iso(1) identified-organization(3) dod(6) internet(1)
+  private(4) enterprise(1) jrc(1847) eHealth(2021) }
+
+id-ce-zkp OBJECT IDENTIFIER ::= { eHealth 1 }
+
+publicKeyData OBJECT IDENTIFIER ::= { eHealth 2 }
+
+id-zkp OBJECT IDENTIFIER ::= { publicKeyData 1 }
+
+sa-ZKP SIGNATURE-ALGORITHM ::= {
+   IDENTIFIER id-zkp
+   PARAMS TYPE NULL ARE absent
+   HASHES { ... }
+   PUBLIC-KEYS { pk-ZKP }
+  }
+
+pk-ZKP PUBLIC-KEY ::= {
+   IDENTIFIER id-zkp
+   KEY ZKPPublicKey
+   PARAMS TYPE NULL ARE absent
+   -- Private key format not in this module --
+   CERT-KEY-USAGE {digitalSignature}
+  }
+
+ZKPPublicKey ::= SEQUENCE {
+   counter INTEGER (0..MAX),
+   n INTEGER,
+   z INTEGER,
+   s INTEGER, 
+   bases SEQUENCE OF INTEGER
+}

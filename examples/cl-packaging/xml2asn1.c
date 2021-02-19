@@ -60,7 +60,7 @@ const X509V3_EXT_METHOD v3_zkp_feature = {
 #define NID_ENTERPRISE               1.3.6.1.4.1.
 #define NID_JOINT_RESEARCH_CENTRE_EU NID_ENTERPRISE.1847
 #define NID_EHEALTH                  NID_JOINT_RESEARCH_CENTRE_EU.2021
-#define NID_ZKP_PUBLIC_KEY           NID_EHEALTH.1
+#define NID_ZKP_PUBLICKEY           NID_EHEALTH.1
 #define NID_ZKP_ALG                  NID_EHEALTH.2
 #define NID_CL_ALG                   NID_ZKP_ALG.1
 #define NID_BBSPLUS_ALG              NID_ZKP_ALG.2
@@ -68,29 +68,48 @@ const X509V3_EXT_METHOD v3_zkp_feature = {
 #define xstr(s) str(s)
 #define str(s) #s
 
-#define OID_STR_ZKP xstr(NID_ZKP_PUBLIC_KEY)
+#define OID_STR_ZKP xstr(NID_ZKP_PUBLICKEY)
 #define OID_STR_CL xstr(NID_CL_ALG)
 
 DEFINE_STACK_OF(BIGNUM)
 
 typedef struct {
-	ASN1_OBJECT    *algorithm;
 	ASN1_INTEGER   *counter;
 	BIGNUM         *n, *Z, *S;
-	STACK_OF      (BIGNUM) * bases;
-} ZKP_PUBLIC_KEY;
+	STACK_OF (BIGNUM) * bases;
+} ZKP_PUBLICKEY;
 
-ASN1_SEQUENCE(ZKP_PUBLIC_KEY) =
+typedef struct {
+	ASN1_OBJECT    *algorithm;
+	STACK_OF(ASN1_OBJECT)   * hashes;
+        STACK_OF(ZKP_PUBLICKEY) * public_keys;
+} ZKP_EXT;
+
+DECLARE_ASN1_FUNCTIONS(ZKP_PUBLICKEY)
+DECLARE_ASN1_FUNCTIONS(ZKP_EXT)
+
+ASN1_SEQUENCE(ZKP_PUBLICKEY) =
 {
-	ASN1_SIMPLE(ZKP_PUBLIC_KEY, algorithm, ASN1_OBJECT),
-	ASN1_SIMPLE(ZKP_PUBLIC_KEY, counter, ASN1_INTEGER),
-	ASN1_SIMPLE(ZKP_PUBLIC_KEY, n, BIGNUM),
-	ASN1_SIMPLE(ZKP_PUBLIC_KEY, Z, BIGNUM),
-	ASN1_SIMPLE(ZKP_PUBLIC_KEY, S, BIGNUM),
-	ASN1_SEQUENCE_OF(ZKP_PUBLIC_KEY, bases, BIGNUM)
-} ASN1_SEQUENCE_END(ZKP_PUBLIC_KEY)
+	ASN1_SIMPLE(ZKP_PUBLICKEY, counter, ASN1_INTEGER),
+	ASN1_SIMPLE(ZKP_PUBLICKEY, n, BIGNUM),
+	ASN1_SIMPLE(ZKP_PUBLICKEY, Z, BIGNUM),
+	ASN1_SIMPLE(ZKP_PUBLICKEY, S, BIGNUM),
+	ASN1_SEQUENCE_OF(ZKP_PUBLICKEY, bases, BIGNUM)
+} ASN1_SEQUENCE_END(ZKP_PUBLICKEY)
 
-IMPLEMENT_ASN1_FUNCTIONS(ZKP_PUBLIC_KEY)
+IMPLEMENT_ASN1_FUNCTIONS(ZKP_PUBLICKEY)
+
+DEFINE_STACK_OF(ZKP_PUBLICKEY)
+
+ASN1_SEQUENCE(ZKP_EXT) =
+{
+	ASN1_SIMPLE(ZKP_EXT, algorithm, ASN1_OBJECT),
+        ASN1_SEQUENCE_OF(ZKP_EXT, hashes, ASN1_OBJECT),
+        ASN1_SEQUENCE_OF(ZKP_EXT, public_keys, ZKP_PUBLICKEY)
+} ASN1_SEQUENCE_END(ZKP_EXT)
+
+
+IMPLEMENT_ASN1_FUNCTIONS(ZKP_EXT)
 
 static void
 print_element_names(char *at, xmlNode * a_node)
@@ -231,17 +250,24 @@ main(int argc, char **argv)
 		print_element_names("", root_element);
 
 
-	ZKP_PUBLIC_KEY *zkp = ZKP_PUBLIC_KEY_new();
-        if (!zkp) {
+	ZKP_EXT *ext = ZKP_EXT_new();
+	ZKP_PUBLICKEY *zkp = ZKP_PUBLICKEY_new();
+
+        if (!ext || !zkp) {
 		ERR_print_errors_fp(stderr);
 		goto errout;
 	}
 
-	if (NULL == (zkp->algorithm = OBJ_nid2obj(nid_cl))) {
+	// if (!sk_push((OPENSSL_STACK *)ext->public_keys, zkp)) {
+	if (!sk_ZKP_PUBLICKEY_push(ext->public_keys, zkp)) {
 		ERR_print_errors_fp(stderr);
 		goto errout;
 	}
 
+	if (NULL == (ext->algorithm = OBJ_nid2obj(nid_cl))) {
+		ERR_print_errors_fp(stderr);
+		goto errout;
+	}
 
 #define GET_OR_EXIT(zkp, tpe, member, elem, root_element) { \
     if (NULL == (zkp->member = get_##tpe(elem, root_element))) { \
@@ -268,7 +294,7 @@ main(int argc, char **argv)
 	};
 
 	unsigned char	outbuff[1024 * 32], *p = outbuff;
-	if (0 == i2d_ZKP_PUBLIC_KEY(zkp, &p)) {
+	if (0 == i2d_ZKP_EXT(ext, &p)) {
 		fprintf(stderr, "Failed to serialize.\n");
 		ERR_print_errors_fp(stderr);
 		goto errout;
@@ -305,8 +331,11 @@ main(int argc, char **argv)
 		BIO_free_all(bio_filter_b64);
 	}
 	err = 0;
+
 errout:
-	ZKP_PUBLIC_KEY_free(zkp);
+	// ZKP_PUBLICKEY_free(zkp);
+	ZKP_EXT_free(ext);
+
 	xmlFreeDoc(doc);
 	xmlCleanupParser();
 
