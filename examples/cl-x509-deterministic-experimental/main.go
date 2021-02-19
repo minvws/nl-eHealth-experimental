@@ -119,19 +119,12 @@ func generateDeterministicKeyPair(params *gabi.SystemParameters) (*gabi.PrivateK
 // TODO: This function is still experimental in this implementation and use-case, and subject to peer-review
 func deterministicPubkeyFromN(params *gabi.SystemParameters, N *big.Int, numAttributes int) *gabi.PublicKey {
 	s := hashNForPrefix(params, "S", N)
+	z := hashNForPrefix(params, "Z", N)
 
-	// Compute Z = S^x mod n
-	sExponent := hashNForPrefix(params, "Z", N)
-	z := new(big.Int).Exp(s, sExponent, N)
-
-	// Derive R_i for i = 0...numAttributes from S
-	rs := make([]*big.Int, numAttributes)
+	rs := make([]*big.Int, 0, numAttributes)
 	for i := 0; i < numAttributes; i++ {
-		// Compute R_i = S^x mod n
-		riExponent := hashNForPrefix(params, "R"+string(i), N)
-
-		rs[i] = new(big.Int)
-		rs[i].Exp(s, riExponent, N)
+		r := hashNForPrefix(params, "R"+string(i), N)
+		rs = append(rs, r)
 	}
 
 	return gabi.NewPublicKey(N, z, s, nil, nil, rs, "", 0, time.Now())
