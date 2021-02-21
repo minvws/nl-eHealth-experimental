@@ -13,6 +13,7 @@ import (
 	"golang.org/x/crypto/sha3"
 	gobig "math/big"
 	"os"
+	"strconv"
 	"time"
 	"fmt"
 )
@@ -105,7 +106,7 @@ func rsaKeypairFromGabi(privk *gabi.PrivateKey, pubk *gabi.PublicKey) (*rsa.Priv
 }
 
 func generateDeterministicKeyPair(params *gabi.SystemParameters) (*gabi.PrivateKey, *gabi.PublicKey, error) {
-	privk, originalPubk, err := gabi.GenerateKeyPair(params, 12, 0, time.Now())
+	privk, originalPubk, err := gabi.GenerateKeyPair(params, 0, 0, time.Now())
 	if err != nil {
 		return nil, nil, err
 	}
@@ -123,7 +124,7 @@ func deterministicPubkeyFromN(params *gabi.SystemParameters, N *big.Int, numAttr
 
 	rs := make([]*big.Int, 0, numAttributes)
 	for i := 0; i < numAttributes; i++ {
-		r := hashNForPrefix(params, "R"+string(i), N)
+		r := hashNForPrefix(params, "R"+strconv.Itoa(i), N)
 		rs = append(rs, r)
 	}
 
@@ -138,7 +139,7 @@ func hashNForPrefix(params *gabi.SystemParameters, prefix string, N *big.Int) *b
 	hashBts, _ := asn1.Marshal(struct {
 		Prefix []byte
 		N      []byte
-	}{N: N.Bytes(), Prefix: []byte(prefix)})
+	}{Prefix: []byte(prefix), N: N.Bytes()})
 
 	return hash(params, N, hashBts)
 }
