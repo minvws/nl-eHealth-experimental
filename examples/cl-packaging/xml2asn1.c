@@ -5,6 +5,7 @@
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 #include <string.h>
+#include <ctype.h>
 
 #include <assert.h>
 #include <stdio.h>
@@ -80,12 +81,20 @@ typedef struct {
 } ZKP_PUBLICKEY;
 
 typedef struct {
+	ASN1_IA5STRING * url;
+	ASN1_OBJECT    *algorithm;
+	ASN1_OCTET_STRING * digest;
+} ZKP_PROOF;
+
+typedef struct {
 	ASN1_OBJECT    *algorithm;
 	STACK_OF(ASN1_OBJECT)   * hashes;
+	STACK_OF(ZKP_PROOF)   * params;
         STACK_OF(ZKP_PUBLICKEY) * public_keys;
 } ZKP_EXT;
 
 DECLARE_ASN1_FUNCTIONS(ZKP_PUBLICKEY)
+DECLARE_ASN1_FUNCTIONS(ZKP_PROOF)
 DECLARE_ASN1_FUNCTIONS(ZKP_EXT)
 
 ASN1_SEQUENCE(ZKP_PUBLICKEY) =
@@ -98,16 +107,25 @@ ASN1_SEQUENCE(ZKP_PUBLICKEY) =
 } ASN1_SEQUENCE_END(ZKP_PUBLICKEY)
 
 IMPLEMENT_ASN1_FUNCTIONS(ZKP_PUBLICKEY)
-
 DEFINE_STACK_OF(ZKP_PUBLICKEY)
+
+ASN1_SEQUENCE(ZKP_PROOF) =
+{
+	ASN1_SIMPLE(ZKP_PROOF, url, ASN1_IA5STRING),
+	ASN1_SIMPLE(ZKP_PROOF, algorithm, ASN1_OBJECT),
+	ASN1_SIMPLE(ZKP_PROOF, digest, ASN1_OCTET_STRING),
+} ASN1_SEQUENCE_END(ZKP_PROOF)
+
+IMPLEMENT_ASN1_FUNCTIONS(ZKP_PROOF)
+DEFINE_STACK_OF(ZKP_PROOF)
 
 ASN1_SEQUENCE(ZKP_EXT) =
 {
 	ASN1_SIMPLE(ZKP_EXT, algorithm, ASN1_OBJECT),
         ASN1_SEQUENCE_OF(ZKP_EXT, hashes, ASN1_OBJECT),
+        ASN1_SEQUENCE_OF(ZKP_EXT, params, ZKP_PROOF),
         ASN1_SEQUENCE_OF(ZKP_EXT, public_keys, ZKP_PUBLICKEY)
 } ASN1_SEQUENCE_END(ZKP_EXT)
-
 
 IMPLEMENT_ASN1_FUNCTIONS(ZKP_EXT)
 
@@ -202,6 +220,8 @@ main(int argc, char **argv)
 	xmlNode        *root_element = NULL;
 	int		noout = 0,	der = 0, ascii = 0, cnf = 0, debug = 0;
 	int		err = 1;
+	const char	*url, *sha256;
+	unsigned char sha256_raw[32];
 
 	LIBXML_TEST_VERSION
 
@@ -233,11 +253,26 @@ main(int argc, char **argv)
 			};
 		}
 
-		if (i != argc - 1) {
-			fprintf(stderr, "Syntax: %s [-D][-d][-n][-p[-c] <infile.xml>\n\tOutput goes to stdout.\n", argv[0]);
+		if (i != argc - 1 && i != argc - 3) {
+			fprintf(stderr, "Syntax: %s [-D][-d][-n][-p[-c] <infile.xml> [url sha256]\n\tOutput goes to stdout.\n", argv[0]);
 			return (1);
 		}
 		doc = xmlReadFile(argv[i], NULL, 0);
+		if (i == argc - 3) {
+			url = argv[++i];
+			sha256 = argv[++i];
+			if (strlen(sha256) != 2 * sizeof(sha256_raw)) {
+				fprintf(stderr,"Not a sha 256?\n");
+				exit(1);
+			};
+			for(int i = 0; *sha256 && i < (int) sizeof(sha256_raw); i++, sha256 += 2) {
+        			if (!isxdigit((sha256[0])) ||!isxdigit((sha256[1]))) {
+					fprintf(stderr,"Not a sha 256 - odd non hex char\n");
+					exit(1);
+				};
+				sha256_raw[i] = OPENSSL_hexchar2int(sha256[0])<<4 | OPENSSL_hexchar2int(sha256[1]);
+			};
+		};
 	}
 
 	if (doc == NULL) {
@@ -252,6 +287,9 @@ main(int argc, char **argv)
 
 	ZKP_EXT *ext = ZKP_EXT_new();
 	ZKP_PUBLICKEY *zkp = ZKP_PUBLICKEY_new();
+	ZKP_PROOF *zkproof = NULL;
+	ASN1_IA5STRING *ia5_url = NULL;
+	ASN1_OCTET_STRING * sha256_os = NULL;
 
         if (!ext || !zkp) {
 		ERR_print_errors_fp(stderr);
@@ -272,7 +310,7 @@ main(int argc, char **argv)
 #define GET_OR_EXIT(zkp, tpe, member, elem, root_element) { \
     if (NULL == (zkp->member = get_##tpe(elem, root_element))) { \
 	fprintf(stderr,"Failed to convert " #elem " for " #member "\n"); \
-	return(1); \
+	goto errout; \
     }; \
 }
 	GET_OR_EXIT(zkp, ASN1_INTEGER, counter, "/IssuerPublicKey/Counter", root_element);
@@ -293,6 +331,22 @@ main(int argc, char **argv)
 		goto errout;
 	};
 
+	if (url) {
+		zkproof = ZKP_PROOF_new();
+		ia5_url = ASN1_IA5STRING_new();
+		sha256_os = ASN1_OCTET_STRING_new();
+
+		if (!sha256_os || !zkproof || !ia5_url || 
+			!ASN1_STRING_set(ia5_url, url, strlen(url)) ||
+			!ASN1_OCTET_STRING_set(sha256_os, sha256_raw, sizeof(sha256_raw))
+		) goto errout;
+
+		zkproof->algorithm = OBJ_nid2obj(NID_hmacWithSHA256); // hardcoded
+		zkproof->url = ia5_url;
+		zkproof->digest = sha256_os;
+
+		sk_ZKP_PROOF_push(ext->params, zkproof);
+	};
 	unsigned char	outbuff[1024 * 32], *p = outbuff;
 	if (0 == i2d_ZKP_EXT(ext, &p)) {
 		fprintf(stderr, "Failed to serialize.\n");

@@ -28,10 +28,16 @@ sa-ZKP SIGNATURE-ALGORITHM ::= {
 pk-ZKP PUBLIC-KEY ::= {
    IDENTIFIER id-zkp
    KEY ZKPPublicKey
-   PARAMS TYPE NULL ARE absent
+   PARAMS TYPE ZKPProof ARE optional
    -- Private key format not in this module --
    CERT-KEY-USAGE {digitalSignature}
   }
+
+ZKPProof :== SEQEUNCE {
+   proofURL [0] EXPLICIT IA5String,
+   proofHashAlgorithm AlgorithmIdentifier {DIGEST-ALGORITHM, {...}},
+   proofHash OCTET STRING,
+}
 
 ZKPPublicKey ::= SEQUENCE {
    counter INTEGER (0..MAX),
