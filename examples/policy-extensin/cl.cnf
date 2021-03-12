@@ -1,0 +1,28 @@
+[ cl ]
+basicConstraints=CA:FALSE
+extendedKeyUsage = serverAuth, clientAuth, codeSigning, emailProtection
+subjectKeyIdentifier=hash
+authorityKeyIdentifier=keyid,issuer
+authorityInfoAccess = OCSP;URI:http://ocsp.uzi-register.nl
+crlDistributionPoints = URI:http://www.uzi-register.nl/cdp/uzi-register_zorgverlener_ca.crl
+certificatePolicies = @pols
+# keyUsage=critical, nonRepudiation
+
+#1.3.6.1.5.5.7.1.3=ASN1:Sequence:0.4.0.1862.1.1
+# 1.3.6.1.5.5.7.1.3=DER:300A3008060604008E460101
+
+[ pols ]
+policyIdentifier=2.16.528.1.1003.1.2.2.2
+CPS.1=https://www.uzi-register.nl/cps/cps.html
+userNotice.1=@notice
+
+[ notice ]
+explicitText=Het toepassingsgebied van dit certificaat is beperkt tot communicatie binnen het domein Overheid zoals aangegeven in het Programma van Eisen van de PKI voor de Overheid. Zie www.pkioverheid.nl
+
+[ v3_req ]
+extendedKeyUsage = serverAuth, clientAuth, codeSigning, emailProtection
+basicConstraints = CA:FALSE
+
+[ subca ]
+basicConstraints = CA:TRUE
+
