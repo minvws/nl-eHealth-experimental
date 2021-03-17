@@ -13,4 +13,20 @@
 
 ## Default Settings
 ### Port Mappings
-By default we map 8080 on host to 3030 in the docker container
+By default we map 8080 on host to 3030 in the docker container with the
+```-p 8080:3030``` argument to ```docker run```. The target port of 3030 is set in the docker, 
+but feel free to map some other host port to 3030, as required. 
+
+### FHIR Test Servers
+A list of public FHIR test servers can be found at:
+https://confluence.hl7.org/display/FHIR/Public+Test+Servers
+
+Standard HTTP accept header for FHIR R4: ```Accept: application/fhir+json```
+
+I am using the current, stable FHIR Release 4 endpoints on these public FHIR test servers:
+
+| Name | FHIR R4 Service Root URL |
+| ---: | :----------------------- |
+| Firely | https://server.fire.ly/r4/ |
+| SmileCDR | https://try.smilecdr.com:8000/baseR4/ |
+| Cerner Open Sandbox | https://fhir-open.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/ |
