@@ -1,0 +1,49 @@
+{
+   "Signature" : {
+      "SignatureAlgo" : "1.2.840.10045.4.3.2",
+      "Certificate" : "MIIBYjCCAQWgAwIBAgIBZjAMBggqhkjOPQQDAgUAMB0xCzAJBgNVBAYTAlVUMQ4wDAYDVQQDDAVVVCBDQTAeFw0yMTAzMDIwODM5MzlaFw0yNjA5MDIwODM5MzlaMBoxCzAJBgNVBAYTAlVUMQswCQYDVQQDDAIwNDBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABNW7R67gPrWqUuSDEQsJJpURFFmEhYE_LoUJF8Jlqe8BJsRFpnlWy1pK_79bMFuO_Vb7ONrCgioyOkeFesCompKjNzA1MBIGA1UdJQQLMAkGB2eBCAEBDgIwHwYDVR0jBBgwFoAUymyksnX8rywn0RH7nDq-Bs2QOqowDAYIKoZIzj0EAwIFAANJADBGAiEAuSeQL6red9OODa4PGga79SFHxFOovWwig3orWC_XvOQCIQCUGU78U0TrQrhNR7zoXqXnGwug5lemYvQVUeGQu0cl8w==",
+      "SignatureValue" : "hbpPPK1e6HQC4-P7CxjRQpkR-ianbtGDWkhFhRloufnOEoDUBpXVxUL1pk32sz-QRa7VCPf_K_aMxQt_ZBG5aA=="
+   },
+   "Data" : {
+      "Header" : {
+         "Type" : "vaccination-EU",
+         "IssuingCountry" : "UTO",
+         "Version" : 1
+      },
+      "Message" : {
+         "VaccinationInfo" : [
+            {
+               "VaccineMedicinalProduct" : "Comirnaty",
+               "Vaccine" : "COVID-19 mRNA vaccine",
+               "SeriesOfDoses" : {
+                  "Total" : 2,
+                  "Current" : 1
+               },
+               "HealthProfessionalIdentification" : "2035RC22",
+               "BatchNumber" : "VC35679",
+               "MarketingAuthorizationHolder" : "Pfizer BioNTech",
+               "DateOfVaccination" : "2021-02-01",
+               "NextVaccinationDate" : "2021-03-15",
+               "CountryOfVaccination" : "UTO",
+               "AdministeringCentre" : "RIVM",
+               "DiseaseOrAgentTargeted" : "COVID-19"
+            }
+         ],
+         "PersonIdentification" : {
+            "PersonName" : "Gary West",
+            "Sex" : "M",
+            "PersonIdentifier" : [
+               {
+                  "IdentifierType" : "Passport",
+                  "IdentifierNum" : "P9876543E"
+               },
+               {
+                  "IdentifierType" : "ID Card",
+                  "IdentifierNum" : "U1234567A"
+               }
+            ],
+            "PersonDOB" : "1985-03-02"
+         }
+      }
+   }
+}
