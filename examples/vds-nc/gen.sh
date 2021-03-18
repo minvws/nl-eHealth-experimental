@@ -33,8 +33,11 @@ cat ${FILE}.json | xz -9 > ${FILE}.json.Z
 cat ${FILE}.cbor | gzip -c -9 > ${FILE}.cbor.gz
 cat ${FILE}.json | gzip -c -9 > ${FILE}.json.gz
 
+cat ${FILE}.cbor | openssl zlib > ${FILE}.cbor.zlib
+cat ${FILE}.json | openssl zlib > ${FILE}.json.zlib
+
 echo Sizes:
-for i in ${FILE}.json ${FILE}.cbor ${FILE}.*.Z ${FILE}.*.gz
+for i in ${FILE}.json ${FILE}.cbor ${FILE}.*.Z ${FILE}.*.gz ${FILE}.*.zlib
 do
 	wc -c $i
 done | sort -nr
