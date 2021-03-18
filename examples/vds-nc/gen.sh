@@ -27,11 +27,14 @@ L2=$(wc -c <${FILE}-pretty.cbor)
 
 # Compress both the json and the CBOR for comparison
 #
-cat ${FILE}.cbor | xz > ${FILE}.cbor.Z
-cat ${FILE}.json | xz > ${FILE}.json.Z
+cat ${FILE}.cbor | xz -9 > ${FILE}.cbor.Z
+cat ${FILE}.json | xz -9 > ${FILE}.json.Z
+
+cat ${FILE}.cbor | gzip -c -9 > ${FILE}.cbor.gz
+cat ${FILE}.json | gzip -c -9 > ${FILE}.json.gz
 
 echo Sizes:
-for i in ${FILE}.json  ${FILE}.json.Z ${FILE}.cbor ${FILE}.cbor.Z
+for i in ${FILE}.json ${FILE}.cbor ${FILE}.*.Z ${FILE}.*.gz
 do
 	wc -c $i
 done | sort -nr
