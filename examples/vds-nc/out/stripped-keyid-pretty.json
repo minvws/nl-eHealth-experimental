@@ -1,22 +1,26 @@
 {
+   "Signature" : {
+      "AuthorityKeyIdentifier" : "616876786500413B0A4F7C7608FD3624A167EE78",
+      "SignatureAlgo" : "1.2.840.10045.4.3.2",
+      "SignatureValue" : "hbpPPK1e6HQC4-P7CxjRQpkR-ianbtGDWkhFhRloufnOEoDUBpXVxUL1pk32sz-QRa7VCPf_K_aMxQt_ZBG5aA=="
+   },
    "Data" : {
       "Message" : {
          "VaccinationInfo" : [
             {
-               "Vaccine" : "COVID-19 mRNA vaccine",
-               "DateOfVaccination" : "2021-02-01",
-               "DiseaseOrAgentTargeted" : "COVID-19",
-               "MarketingAuthorizationHolder" : "Pfizer BioNTech",
                "SeriesOfDoses" : {
                   "Total" : 2,
                   "Current" : 1
                },
+               "Vaccine" : "COVID-19 mRNA vaccine",
+               "VaccineMedicinalProduct" : "Comirnaty",
                "CountryOfVaccination" : "UTO",
-               "VaccineMedicinalProduct" : "Comirnaty"
+               "MarketingAuthorizationHolder" : "Pfizer BioNTech",
+               "DiseaseOrAgentTargeted" : "COVID-19",
+               "DateOfVaccination" : "2021-02-01"
             }
          ],
          "PersonIdentification" : {
-            "PersonName" : "Gary West",
             "PersonIdentifier" : [
                {
                   "IdentifierType" : "Passport",
@@ -27,18 +31,14 @@
                   "IdentifierType" : "ID Card"
                }
             ],
-            "PersonDOB" : "1985-03-02"
+            "PersonDOB" : "1985-03-02",
+            "PersonName" : "Gary West"
          }
       },
       "Header" : {
          "Version" : 1,
-         "Type" : "vaccination-EU",
-         "UVCI" : "urn:uvci:v1:NL:1282749238479234729"
+         "UVCI" : "urn:uvci:v1:NL:1282749238479234729",
+         "Type" : "vaccination-EU"
       }
-   },
-   "Signature" : {
-      "SignatureAlgo" : "1.2.840.10045.4.3.2",
-      "AuthorityKeyIdentifier" : "616876786500413B0A4F7C7608FD3624A167EE78",
-      "SignatureValue" : "hbpPPK1e6HQC4-P7CxjRQpkR-ianbtGDWkhFhRloufnOEoDUBpXVxUL1pk32sz-QRa7VCPf_K_aMxQt_ZBG5aA=="
    }
 }

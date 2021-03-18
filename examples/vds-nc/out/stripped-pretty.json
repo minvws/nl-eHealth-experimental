@@ -1,44 +1,44 @@
 {
+   "Signature" : {
+      "SignatureAlgo" : "1.2.840.10045.4.3.2",
+      "SignatureValue" : "hbpPPK1e6HQC4-P7CxjRQpkR-ianbtGDWkhFhRloufnOEoDUBpXVxUL1pk32sz-QRa7VCPf_K_aMxQt_ZBG5aA==",
+      "Certificate" : "MIIBYjCCAQWgAwIBAgIBZjAMBggqhkjOPQQDAgUAMB0xCzAJBgNVBAYTAlVUMQ4wDAYDVQQDDAVVVCBDQTAeFw0yMTAzMDIwODM5MzlaFw0yNjA5MDIwODM5MzlaMBoxCzAJBgNVBAYTAlVUMQswCQYDVQQDDAIwNDBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABNW7R67gPrWqUuSDEQsJJpURFFmEhYE_LoUJF8Jlqe8BJsRFpnlWy1pK_79bMFuO_Vb7ONrCgioyOkeFesCompKjNzA1MBIGA1UdJQQLMAkGB2eBCAEBDgIwHwYDVR0jBBgwFoAUymyksnX8rywn0RH7nDq-Bs2QOqowDAYIKoZIzj0EAwIFAANJADBGAiEAuSeQL6red9OODa4PGga79SFHxFOovWwig3orWC_XvOQCIQCUGU78U0TrQrhNR7zoXqXnGwug5lemYvQVUeGQu0cl8w=="
+   },
    "Data" : {
       "Header" : {
-         "UVCI" : "urn:uvci:v1:NL:1282749238479234729",
          "Type" : "vaccination-EU",
-         "Version" : 1
+         "Version" : 1,
+         "UVCI" : "urn:uvci:v1:NL:1282749238479234729"
       },
       "Message" : {
+         "VaccinationInfo" : [
+            {
+               "DateOfVaccination" : "2021-02-01",
+               "VaccineMedicinalProduct" : "Comirnaty",
+               "MarketingAuthorizationHolder" : "Pfizer BioNTech",
+               "DiseaseOrAgentTargeted" : "COVID-19",
+               "SeriesOfDoses" : {
+                  "Current" : 1,
+                  "Total" : 2
+               },
+               "CountryOfVaccination" : "UTO",
+               "Vaccine" : "COVID-19 mRNA vaccine"
+            }
+         ],
          "PersonIdentification" : {
-            "PersonDOB" : "1985-03-02",
+            "PersonName" : "Gary West",
             "PersonIdentifier" : [
                {
                   "IdentifierType" : "Passport",
                   "IdentifierNum" : "P9876543E"
                },
                {
-                  "IdentifierNum" : "U1234567A",
-                  "IdentifierType" : "ID Card"
+                  "IdentifierType" : "ID Card",
+                  "IdentifierNum" : "U1234567A"
                }
             ],
-            "PersonName" : "Gary West"
-         },
-         "VaccinationInfo" : [
-            {
-               "SeriesOfDoses" : {
-                  "Total" : 2,
-                  "Current" : 1
-               },
-               "Vaccine" : "COVID-19 mRNA vaccine",
-               "MarketingAuthorizationHolder" : "Pfizer BioNTech",
-               "CountryOfVaccination" : "UTO",
-               "VaccineMedicinalProduct" : "Comirnaty",
-               "DiseaseOrAgentTargeted" : "COVID-19",
-               "DateOfVaccination" : "2021-02-01"
-            }
-         ]
+            "PersonDOB" : "1985-03-02"
+         }
       }
-   },
-   "Signature" : {
-      "SignatureValue" : "hbpPPK1e6HQC4-P7CxjRQpkR-ianbtGDWkhFhRloufnOEoDUBpXVxUL1pk32sz-QRa7VCPf_K_aMxQt_ZBG5aA==",
-      "SignatureAlgo" : "1.2.840.10045.4.3.2",
-      "Certificate" : "MIIBYjCCAQWgAwIBAgIBZjAMBggqhkjOPQQDAgUAMB0xCzAJBgNVBAYTAlVUMQ4wDAYDVQQDDAVVVCBDQTAeFw0yMTAzMDIwODM5MzlaFw0yNjA5MDIwODM5MzlaMBoxCzAJBgNVBAYTAlVUMQswCQYDVQQDDAIwNDBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABNW7R67gPrWqUuSDEQsJJpURFFmEhYE_LoUJF8Jlqe8BJsRFpnlWy1pK_79bMFuO_Vb7ONrCgioyOkeFesCompKjNzA1MBIGA1UdJQQLMAkGB2eBCAEBDgIwHwYDVR0jBBgwFoAUymyksnX8rywn0RH7nDq-Bs2QOqowDAYIKoZIzj0EAwIFAANJADBGAiEAuSeQL6red9OODa4PGga79SFHxFOovWwig3orWC_XvOQCIQCUGU78U0TrQrhNR7zoXqXnGwug5lemYvQVUeGQu0cl8w=="
    }
 }
