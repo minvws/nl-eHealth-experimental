@@ -12,7 +12,7 @@ for E in L M H Q
 do
 rm -f x.png
 /bin/echo -n "plain/8		$E	"
-cat appendix-h.json| qrencode -8 -l $E -o x.png 2>/dev/null &&  gs  || echo FAIL
+cat appendix-h.json| qrencode ${QRFLAGS} -8 -l $E -o x.png 2>/dev/null &&  gs  || echo FAIL
 
 /bin/echo -n "b45/8		$E	"
 cat appendix-h.json| ~/go/bin/qrbase45tool  -i /dev/stdin -o /dev/stdout | qrencode  -8 ${QRFLAGS}  --l $E -o x.png 2>/dev/null && gs || echo FAIL
