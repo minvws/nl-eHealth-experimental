@@ -7,6 +7,9 @@
 * b45: use base45 encoding
 * zl: use zlib for compression
 * C: use CBOR
+* Az: uze Aztec rather than Qr.
+
+Note - the Aztec is set to '25%' (detault is 23%) as to match the normal 'Q' level.
 
 ```
 encoding        ECC         payload     pixels                       modules
@@ -33,6 +36,7 @@ zl/8            Q            913        137 x 137       18769 pixels (level 30)
 zl/b45/2        Q           1330        137 x 137       18769 pixels (level 30)
 C/zl/8          Q            883        133 x 133       17689 pixels (level 29)
 C/zl/b45/2      Q           1287        133 x 133       17689 pixels (level 29)
+C/zl/b45/2/Az   Q           1287        133 x 133       17689 pixels
 
 plain/8         H           1391        FAIL (max at 40@H is 1273 bytes)
 b45/8           H           2027        FAIL (max at 40@H is 1273 bytes)

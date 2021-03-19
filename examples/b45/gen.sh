@@ -13,6 +13,9 @@ cat <<EOM
 * b45: use base45 encoding
 * zl: use zlib for compression
 * C: use CBOR
+* Az: uze Aztec rather than Qr.
+
+Note - the Aztec is set to '25%' (detault is 23%) as to match the normal 'Q' level.
 
 \`\`\`
 encoding        ECC         payload     pixels                       modules
@@ -66,6 +69,19 @@ cat appendix-h.json| json2cbor | openssl zlib | gs -8
 /bin/echo -n "C/zl/b45/2	$E	"
 cat appendix-h.json| json2cbor | openssl zlib | ~/go/bin/qrbase45tool  -i /dev/stdin -o /dev/stdout | gs
 
+if [ $E = "Q" ]; then
+/bin/echo -n "C/zl/b45/2/Az	$E	"
+cat appendix-h.json| json2cbor | openssl zlib | ~/go/bin/qrbase45tool  -i /dev/stdin -o /dev/stdout > x.raw
+aztec-png -f x.raw -s 1 -b 1 -c 25 x.png
+X=`cat x.raw | wc -c`
+
+F=`file x.png | sed -e 's/.*data, //' -e 's/,.*//'`
+set $F
+L=`expr $1 \* $3`
+echo "$X	$F 	$L pixels"
+fi
+
 echo
 done | expand
 
+rm -f x.raw x.png xx.png
