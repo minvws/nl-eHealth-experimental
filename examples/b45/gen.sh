@@ -1,5 +1,22 @@
+#!/bin/sh
+
 QRFLAGS="-m 0 -s 1"
 set -e
+
+cat <<EOM
+
+# Various encoding options.
+
+* plain: as is
+* 8: force 8 bits even if less bits/symbol (e.g. 5.5. bits for base45) are an option
+* 2: use best bits per symbol (i.e. less than 8 if possible) 
+* b45: use base45 encoding
+* zl: use zlib for compression
+* C: use CBOR
+
+\`\`\`
+encoding        ECC         payload     pixels                       modules
+EOM
 
 gs() {
 rm -f x.png; touch x.png
@@ -50,5 +67,5 @@ cat appendix-h.json| json2cbor | openssl zlib | gs -8
 cat appendix-h.json| json2cbor | openssl zlib | ~/go/bin/qrbase45tool  -i /dev/stdin -o /dev/stdout | gs
 
 echo
-done
+done | expand
 
