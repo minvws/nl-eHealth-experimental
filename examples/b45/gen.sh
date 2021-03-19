@@ -39,7 +39,7 @@ do
 	echo "$X	$F 	$L pixels (level $l)"
 	return
 done
-echo "$X	FAIL"
+echo "$X	FAIL (max at 40@H is 1273 bytes)"
 }
 
 for E in L M Q H

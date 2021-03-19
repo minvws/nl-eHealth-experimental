@@ -27,16 +27,16 @@ C/zl/8          M            883        113 x 113       12769 pixels (level 24)
 C/zl/b45/2      M           1287        113 x 113       12769 pixels (level 24)
 
 plain/8         Q           1391        165 x 165       27225 pixels (level 37)
-b45/8           Q           2027        FAIL
+b45/8           Q           2027        FAIL (max at 40@H is 1273 bytes)
 b45/2           Q           2027        165 x 165       27225 pixels (level 37)
 zl/8            Q            913        137 x 137       18769 pixels (level 30)
 zl/b45/2        Q           1330        137 x 137       18769 pixels (level 30)
 C/zl/8          Q            883        133 x 133       17689 pixels (level 29)
 C/zl/b45/2      Q           1287        133 x 133       17689 pixels (level 29)
 
-plain/8         H           1391        FAIL
-b45/8           H           2027        FAIL
-b45/2           H           2027        FAIL
+plain/8         H           1391        FAIL (max at 40@H is 1273 bytes)
+b45/8           H           2027        FAIL (max at 40@H is 1273 bytes)
+b45/2           H           2027        FAIL (max at 40@H is 1273 bytes)
 zl/8            H            913        153 x 153       23409 pixels (level 34)
 zl/b45/2        H           1330        153 x 153       23409 pixels (level 34)
 C/zl/8          H            883        149 x 149       22201 pixels (level 33)
