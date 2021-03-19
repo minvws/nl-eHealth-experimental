@@ -5,7 +5,7 @@ gs() {
 F=`file x.png | sed -e 's/.*data, //' -e 's/,.*//'`
 set $F
 L=`expr $1 \* $3`
-echo "$F 	$L cells"
+echo "$F 	$L pixels"
 }
 
 for E in L M H Q
