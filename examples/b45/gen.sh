@@ -4,6 +4,7 @@ set -e
 gs() {
 rm -f x.png; touch x.png
 cat > x.raw
+X=`cat x.raw | wc -c`
 l=40
 for i in 40 39 38 37 36 35 34 33 32 31 30 29 28 27 26 25 24 23 20 19 18 17 16 15 14 13 12 11 10 9 8
 do
@@ -14,7 +15,6 @@ do
 		continue
 	fi
 
-	X=`cat x.raw | wc -c`
 
 	F=`file x.png | sed -e 's/.*data, //' -e 's/,.*//'`
 	set $F
@@ -22,7 +22,7 @@ do
 	echo "$X	$F 	$L pixels (level $l)"
 	return
 done
-echo FAIL
+echo "$X	FAIL"
 }
 
 for E in L M Q H
