@@ -1,0 +1,61 @@
+@prefix fhir: <http://hl7.org/fhir/> .doco
+
+
+[ a fhir:Immunization;
+  fhir:nodeRole fhir:treeRoot; # if this is the parser root
+
+  # from Resource: .id, .meta, .implicitRules, and .language
+  # from DomainResource: .text, .contained, .extension, and .modifierExtension
+  fhir:Immunization.identifier [ Identifier ], ... ; # 0..* Business identifier
+  fhir:Immunization.status [ code ]; # 1..1 completed | entered-in-error | not-done
+  fhir:Immunization.statusReason [ CodeableConcept ]; # 0..1 Reason not done
+  fhir:Immunization.vaccineCode [ CodeableConcept ]; # 1..1 Vaccine product administered
+  fhir:Immunization.patient [ Reference(Patient) ]; # 1..1 Who was immunized
+  fhir:Immunization.encounter [ Reference(Encounter) ]; # 0..1 Encounter immunization was part of
+  # Immunization.occurrence[x] : 1..1 Vaccine administration date. One of these 2
+    fhir:Immunization.occurrenceDateTime [ dateTime ]
+    fhir:Immunization.occurrenceString [ string ]
+  fhir:Immunization.recorded [ dateTime ]; # 0..1 When the immunization was first captured in the subject's record
+  fhir:Immunization.primarySource [ boolean ]; # 0..1 Indicates context the data was recorded in
+  fhir:Immunization.reportOrigin [ CodeableConcept ]; # 0..1 Indicates the source of a secondarily reported record
+  fhir:Immunization.location [ Reference(Location) ]; # 0..1 Where immunization occurred
+  fhir:Immunization.manufacturer [ Reference(Organization) ]; # 0..1 Vaccine manufacturer
+  fhir:Immunization.lotNumber [ string ]; # 0..1 Vaccine lot number
+  fhir:Immunization.expirationDate [ date ]; # 0..1 Vaccine expiration date
+  fhir:Immunization.site [ CodeableConcept ]; # 0..1 Body site vaccine  was administered
+  fhir:Immunization.route [ CodeableConcept ]; # 0..1 How vaccine entered body
+  fhir:Immunization.doseQuantity [ Quantity(SimpleQuantity) ]; # 0..1 Amount of vaccine administered
+  fhir:Immunization.performer [ # 0..* Who performed event
+    fhir:Immunization.performer.function [ CodeableConcept ]; # 0..1 What type of performance was done
+    fhir:Immunization.performer.actor [ Reference(Practitioner|PractitionerRole|Organization) ]; # 1..1 Individual or organization who was performing
+  ], ...;
+  fhir:Immunization.note [ Annotation ], ... ; # 0..* Additional immunization notes
+  fhir:Immunization.reasonCode [ CodeableConcept ], ... ; # 0..* Why immunization occurred
+  fhir:Immunization.reasonReference [ Reference(Condition|Observation|DiagnosticReport) ], ... ; # 0..* Why immunization occurred
+  fhir:Immunization.isSubpotent [ boolean ]; # 0..1 Dose potency
+  fhir:Immunization.subpotentReason [ CodeableConcept ], ... ; # 0..* Reason for being subpotent
+  fhir:Immunization.education [ # 0..* Educational material presented to patient
+    fhir:Immunization.education.documentType [ string ]; # 0..1 Educational material document identifier
+    fhir:Immunization.education.reference [ uri ]; # 0..1 Educational material reference pointer
+    fhir:Immunization.education.publicationDate [ dateTime ]; # 0..1 Educational material publication date
+    fhir:Immunization.education.presentationDate [ dateTime ]; # 0..1 Educational material presentation date
+  ], ...;
+  fhir:Immunization.programEligibility [ CodeableConcept ], ... ; # 0..* Patient eligibility for a vaccination program
+  fhir:Immunization.fundingSource [ CodeableConcept ]; # 0..1 Funding source for the vaccine
+  fhir:Immunization.reaction [ # 0..* Details of a reaction that follows immunization
+    fhir:Immunization.reaction.date [ dateTime ]; # 0..1 When reaction started
+    fhir:Immunization.reaction.detail [ Reference(Observation) ]; # 0..1 Additional information on reaction
+    fhir:Immunization.reaction.reported [ boolean ]; # 0..1 Indicates self-reported reaction
+  ], ...;
+  fhir:Immunization.protocolApplied [ # 0..* Protocol followed by the provider
+    fhir:Immunization.protocolApplied.series [ string ]; # 0..1 Name of vaccine series
+    fhir:Immunization.protocolApplied.authority [ Reference(Organization) ]; # 0..1 Who is responsible for publishing the recommendations
+    fhir:Immunization.protocolApplied.targetDisease [ CodeableConcept ], ... ; # 0..* Vaccine preventatable disease being targetted
+    # Immunization.protocolApplied.doseNumber[x] : 1..1 Dose number within series. One of these 2
+      fhir:Immunization.protocolApplied.doseNumberPositiveInt [ positiveInt ]
+      fhir:Immunization.protocolApplied.doseNumberString [ string ]
+    # Immunization.protocolApplied.seriesDoses[x] : 0..1 Recommended number of doses for immunity. One of these 2
+      fhir:Immunization.protocolApplied.seriesDosesPositiveInt [ positiveInt ]
+      fhir:Immunization.protocolApplied.seriesDosesString [ string ]
+  ], ...;
+]

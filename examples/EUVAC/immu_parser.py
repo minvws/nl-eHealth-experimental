@@ -1,5 +1,16 @@
-import json
-from enum import auto, Enum
+from min_data_set import Gender, MinDataSet, MinDataSetFactory
+
+
+def _map_patient_gender(gender: str) -> Gender:
+    # often localization specific, we'll assume US English
+    ret_gender: Gender = Gender.O  # default case until we know otherwise
+    if gender and len(gender) > 0:
+        g = gender[0]
+        if g == "F":
+            ret_gender = Gender.F
+        elif g == "M":
+            ret_gender = Gender.M
+    return ret_gender
 
 
 class ImmuEntryParser:
@@ -36,49 +47,77 @@ class ImmuEntryParser:
         3. pick up the fields required as per Annex 1 spec (eHN) wrt desired level of disclosure
     """
 
-    class DisclosureLevel(Enum):
-        """Enum for disclosure level. The disclosure level is representative
-        of the intended use of the vaccination certificate and governs in accordance
-        with the EU eHealthNetwork Annex 1 Minimum Dataset Specification for
-        Vaccination Certificates
-        """
-
-        PV = auto()  # private venue, level 0
-        BC = auto()  # border control, level 1
-        MD = auto()  # medical, level 2
-
     @staticmethod
-    def json(entry: dict, patient: dict, disclosure_level: DisclosureLevel) -> str:
+    def get_min_data_set(
+        resource: dict,
+        patient: dict,
+        disclosure_level: MinDataSetFactory.DisclosureLevel,
+    ) -> MinDataSet:
         """
-        :param entry: a (nested) dict structure (usually created via json module from JSON str)
-        :type entry: dict
+        :param resource: a (nested) dict structure representing one item of { entry.resource }
+        :type resource: dict
         :param patient: the resolved FHIR reference to patient
         :type entry: dict
         :param disclosure_level: controls the amount of data generated in the output JSON
         :type disclosure_level: :class: DisclosureLevel
-        :return: JSON containing a much reduced version of the input entry,
-        as a function of disclosure_level
-        :rtype: str
+        :return: MinDataSet derived class corresponding to the disclosure level
+        :rtype: MinDataSet 
+        :exception: ValueError if resourceType is not "Immunization"
         """
+        if resource["resourceType"] != "Immunization":
+            raise ValueError(
+                f'resource["resourceType"] expected to be "Immunization", is: {resource["resourceType"]}'
+            )
 
-        # always present:
-        disclosure_entry = {
-            "LegalName": patient["name"],
-            "DiseaseOrAgentTargeted": entry["protocolApplied"]["targetDisease"],
-        }
+        min_data_set: MinDataSet = MinDataSetFactory.create(
+            disclosure_level=disclosure_level
+        )
 
-        # patient
-        if disclosure_level == ImmuEntryParser.DisclosureLevel.MD:
-            disclosure_entry["PersonID"] = patient["identifier"]
-            disclosure_entry["AdministrativeGender"] = patient["gender"]
-            disclosure_entry["DateOfBirth"] = patient["birthDate"]
+        # TODO: populate min_data_set
+        if (
+            "protocolApplied" in resource
+            and "targetDisease" in resource["protocolApplied"]
+        ):
+            dat = resource["protocolApplied"]["targetDisease"]
+        else:
+            dat = "Unknown"
 
-        # vaccine
-        if disclosure_level == ImmuEntryParser.DisclosureLevel.MD:
-            disclosure_entry["VaccineProphylaxis"] = entry["vaccineCode"]
-            # ...
+        if (
+            disclosure_level == MinDataSetFactory.DisclosureLevel.PV
+            or disclosure_level == MinDataSetFactory.DisclosureLevel.BC
+            or disclosure_level == MinDataSetFactory.DisclosureLevel.MD
+        ):
+            pv: dict = min_data_set.pv
+            pv["legalName"] = patient["name"]
+            pv["diseaseOrAgentTargeted"] = dat
+            pv["startDateOfValidity"] = "2019-12-31"
+
+        if (
+            disclosure_level == MinDataSetFactory.DisclosureLevel.BC
+            or disclosure_level == MinDataSetFactory.DisclosureLevel.MD
+        ):
+            min_data_set.certificate.UVCI = "Unknown"  # Need this from an IIS
+
+        if disclosure_level == MinDataSetFactory.DisclosureLevel.MD:
+            md: dict = min_data_set.md
+            # patient
+            md["personId"] = patient["identifier"]
+            md["gender"] = _map_patient_gender(gender=patient["gender"])
+            md["dateOfBirth"] = patient["birthDate"]
+            # TODO: vaccine
+            md["marketingAuthorizationHolder"] = ""
+            md["vaccineCode"] = resource["vaccineCode"]["coding"]
+            md["vaccineMedicinalProduct"] = ""
+            md["batchLotNumber"] = ""
+            md["dateOfVaccination"] = ""
+            md["administeringCentre"] = ""
+            md["healthProfessionalId"] = ""
+            md["countryOfVaccination"] = ""
+            md["numberInSeries"] = ""
+            md["nextVaccinationDate"] = ""
 
         # vaccine cert
-        # TODO: this is the more difficult one: no standardized IIS interface for the information
+        # # TODO: this is the more difficult one: no standardized IIS interface for the information
+        min_data_set.certificate.issuer = ""
 
-        return json.dumps(disclosure_entry)
+        return min_data_set
