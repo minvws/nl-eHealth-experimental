@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <AssemblyName>NL.Mefitihe.Encoding.Base45</AssemblyName>
+    <RootNamespace>NL.Mefitihe.Encoding</RootNamespace>
+  </PropertyGroup>
+
+</Project>
