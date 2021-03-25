@@ -13,6 +13,7 @@ from cose.keys.keytype import KtyOKP
 from cose.keys.keyops import SignOp, VerifyOp
 
 from cryptography import x509
+from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.serialization import load_pem_private_key
 from cryptography.hazmat.backends.openssl import ec
 from cryptography.hazmat.primitives.asymmetric.ec import EllipticCurvePublicKey
@@ -20,13 +21,25 @@ from cryptography.hazmat.primitives import serialization
 
 from binascii import unhexlify, hexlify
 
+# Note - we only need the public key for the KeyID calcualtion - we're not actually using it.
+with open('dsc-worker.pem','rb') as file:
+  pem = file.read()
+cert = x509.load_pem_x509_certificate(pem)
+fingerprint = cert.fingerprint(hashes.SHA256())
+
+# Last 8 bytes
+# keyid = fingerprint[-8:]
+
+# First 8 bytes
+keyid = fingerprint[0:8]
+
 with open('dsc-worker.key','rb') as file:
   pem = file.read()
 keyfile= load_pem_private_key(pem, password=None)
 priv = keyfile.private_bytes(encoding=serialization.Encoding.Raw, format=serialization.PrivateFormat.Raw, encryption_algorithm=serialization.NoEncryption())
 
 msg = Sign1Message(
-	phdr = {Algorithm: EdDSA, KID: b'k1'},
+	phdr = {Algorithm: EdDSA, KID: keyid},
 	payload = 'Hello World'.encode('utf-8')
 )
 
