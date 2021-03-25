@@ -1,5 +1,6 @@
 #!env python3.8
 import attr
+import zlib
 
 from cose.messages import Sign1Message, CoseMessage
 from cose.keys import CoseKey
@@ -19,7 +20,8 @@ from cryptography.hazmat.primitives import serialization
 from binascii import unhexlify, hexlify
 import sys
 
-encoded = sys.stdin.buffer.read()
+cin = sys.stdin.buffer.read()
+encoded = zlib.decompress(cin)
 
 with open('dsc-worker.pem','rb') as file:
   pem = file.read()
