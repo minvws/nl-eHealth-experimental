@@ -14,7 +14,7 @@ for i in 1 2 3 4 worker
 do
 openssl genpkey -algorithm ED25519 > dsc-$i.key 
 openssl req -new \
-	-subj '/CN=DSC number $i of Friesland/C=FR/' \
+	-subj "/CN=DSC number $i of Friesland/C=FR/" \
 	-key dsc-$i.key -nodes |
 openssl x509 -req -CA csca.pem -CAkey csca.key -set_serial $RANDOM \
 	-days 1780  \
