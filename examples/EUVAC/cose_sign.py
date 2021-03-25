@@ -1,6 +1,7 @@
 #!env python3.8
 import attr, sys
 import zlib
+import base45 
 
 from cose.messages import Sign1Message, CoseMessage
 from cose.keys import CoseKey
@@ -40,6 +41,9 @@ cose_key = CoseKey.from_dict(cose_key)
 
 msg.key = cose_key
 encoded = msg.encode()
-out = zlib.compress(encoded,9)
 
-sys.stdout.buffer.write(out)
+out = zlib.compress(encoded,9)
+# sys.stdout.buffer.write(out)
+
+b45 = base45.encode(out)
+sys.stdout.write(b45)

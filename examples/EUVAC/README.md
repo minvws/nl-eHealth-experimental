@@ -33,5 +33,7 @@ I am using the current, stable FHIR Release 4 endpoints on these public FHIR tes
 
 ## Testing cose
 
+Take the string 'Hello'; COSE it, ZLIB compress and then Base45 and back.
+
 1. generate the CSCA and DSC with ```./gen-csca-dsc.sh```	
 2. run the command: ``` python3.8 cose_sign.py | python3.8 cose_verify.py```
