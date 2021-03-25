@@ -33,5 +33,5 @@ I am using the current, stable FHIR Release 4 endpoints on these public FHIR tes
 
 ## Testing cose
 
-1. generate the CSCA and DSC with ```./gen-csca-dsc.sh``	
+1. generate the CSCA and DSC with ```./gen-csca-dsc.sh```	
 2. run the command: ``` python3.8 cose_sign.py | python3.8 cose_verify.py```
