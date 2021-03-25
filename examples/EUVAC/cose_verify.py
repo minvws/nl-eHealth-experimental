@@ -32,8 +32,7 @@ with open('dsc-worker.pem','rb') as file:
 cert = x509.load_pem_x509_certificate(pem)
 pub = cert.public_key().public_bytes(encoding=serialization.Encoding.Raw,format=serialization.PublicFormat.Raw)
 fingerprint = cert.fingerprint(hashes.SHA256())
-keyid = fingerprint[0:8]
-
+keyid = fingerprint[-8:]
 
 decoded = CoseMessage.decode(encoded)
 
