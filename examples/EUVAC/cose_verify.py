@@ -1,7 +1,8 @@
 #!env python3.8
+
 import attr
 import zlib
-import base45
+from base45 import b45decode
 
 from cose.messages import Sign1Message, CoseMessage
 from cose.keys import CoseKey
@@ -23,8 +24,7 @@ from binascii import unhexlify, hexlify
 import sys
 
 b45in = sys.stdin.read()
-cin = base45.decode(b45in)
-# cin = sys.stdin.buffer.read()
+cin = b45decode(b45in)
 encoded = zlib.decompress(cin)
 
 with open('dsc-worker.pem','rb') as file:

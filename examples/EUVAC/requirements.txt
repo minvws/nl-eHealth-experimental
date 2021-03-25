@@ -10,4 +10,5 @@ urllib3==1.26.4
 cose
 attr=0.3.1
 pyca
+base45
 
