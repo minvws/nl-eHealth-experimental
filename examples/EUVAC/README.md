@@ -30,3 +30,8 @@ I am using the current, stable FHIR Release 4 endpoints on these public FHIR tes
 | Firely | https://server.fire.ly/r4/ |
 | SmileCDR | https://try.smilecdr.com:8000/baseR4/ |
 | Cerner Open Sandbox | https://fhir-open.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/ |
+
+## Testing cose
+
+1. generate the CSCA and DSC with ```./gen-csca-dsc.sh``	
+2. run the command: ``` python3.8 cose_sign.py | python3.8 cose_verify.py```
