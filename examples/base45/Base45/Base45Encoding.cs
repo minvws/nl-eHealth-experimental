@@ -40,6 +40,7 @@ namespace NL.Mefitihe.Encoding
             return result.ToString();
         }
 
+        //TODO add TryDecode.
         public byte[] Decode(string value)
         {
             if (value == null)
