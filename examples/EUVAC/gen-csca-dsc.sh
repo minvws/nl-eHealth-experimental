@@ -2,8 +2,12 @@
 #
 # CSCA key
 #
-openssl genpkey -algorithm ED25519 > csca.key
-openssl req -x509 \
+set -e
+
+OPENSSL=${OPENSSL:=openssl}
+
+${OPENSSL} genpkey -algorithm ED25519 > csca.key
+${OPENSSL} req -x509 \
 	-subj '/CN=National CSCA of Friesland/C=FR/' \
 	-key csca.key \
 	-out csca.pem -nodes \
@@ -12,11 +16,12 @@ openssl req -x509 \
 # DSC keys
 for i in 1 2 3 4 worker
 do
-openssl genpkey -algorithm ED25519 > dsc-$i.key 
-openssl req -new \
+R=$( ${OPENSSL} rand -hex 16 )
+${OPENSSL} genpkey -algorithm ED25519 > dsc-$i.key 
+${OPENSSL} req -new \
 	-subj "/CN=DSC number $i of Friesland/C=FR/" \
 	-key dsc-$i.key -nodes |
-openssl x509 -req -CA csca.pem -CAkey csca.key -set_serial $RANDOM \
+${OPENSSL} x509 -req -CA csca.pem -CAkey csca.key -set_serial 0x$R \
 	-days 1780  \
 	-out dsc-$i.pem
 done
@@ -24,4 +29,4 @@ done
 cat dsc-*.pem > masterlist-dsc.pem
 
 # Remove unneeded keys and certs
-rm csca.key dsc-?.key dsc-?.pem
+rm -f csca.key dsc-?.key dsc-?.pem
