@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="EN">
+<head>
+  <title>FHIR2QR</title>
+  <style>
+    body
+    {
+      background-color: thistle;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <h1>FHIR 2 QR</h1>
+    <div>
+      This queries the given FHIR server for Immunization resources, and will:
+      <ol>
+        <li>convert the returned JSON to an eHN Vaccination Minimum Data Set as per Annex 1,</li>
+        <li>semantically compress it,</li>
+        <li>serialize it,</li>
+        <li>encrypt it,</li>
+        <li>LZMA compress it,</li>
+        <li><a href="https://tools.ietf.org/html/draft-faltstrom-base45-02">Base45</a> encode it</li>
+        <!-- <li> generate QR code from it </li> -->
+      </ol>
+    </div>
+    <form action="/fhir2qr" method="post">
+      <label for="fhir_server">FHIR Server:</label>
+      <input type="text" id="fhir_server" name="fhir_server" value="https://server.fire.ly/r4/" readonly><br>
+      <input type="submit" value="Run Fhir2QR query"><br>
+    </form>
+  </div>
+</body>
+</html>

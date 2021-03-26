@@ -9,13 +9,13 @@
    1. ```./run_docker.sh```
 1. other
    1. ```docker build -t nl/euvac .```
-   1. ```docker run --rm -p 8080:3030 nl/euvac```
+   1. ```docker run --rm -p 9090:5000 nl/euvac```
 
 ## Default Settings
 ### Port Mappings
-By default we map 8080 on host to 3030 in the docker container with the
-```-p 8080:3030``` argument to ```docker run```. The target port of 3030 is set in the docker, 
-but feel free to map some other host port to 3030, as required. 
+By default we map 9090 on host to 5000 in the docker container with the
+```-p 9090:5000``` argument to ```docker run```. The target port of 5000 is set in the docker, 
+but feel free to map some other host port, as required. 
 
 ### FHIR Test Servers
 A list of public FHIR test servers can be found at:
@@ -48,3 +48,13 @@ For round-trip testing of ```cose_sign.py``` and ```cose_verify.py``` take the s
 1. Generate the CSCA and DSC with ```./gen-csca-dsc.sh```	
 2. Run the command: ```python3.8 cose_sign.py | python3.8 cose_verify.py```
 3. You should see the output: ```Hello World!```
+
+## Testing COSE from Austrian website
+
+Testing against the AT cases:
+
+1. Fetch the Base64 from https://dev.a-sit.at/certservice
+2. Remove the first 2 bytes and do
+
+   ```pbpaste| sed -e 's/^00//' | python3.8 cose_verify.py --base64 --ignore-signature --cbor```
+

@@ -1,21 +1,21 @@
 #!env python3.8
 import sys
 import zlib
-from base45 import b45encode
 
-from cose.algorithms import EdDSA
-from cose.curves import Ed25519
+from base45 import b45encode
+from cose.algorithms import Es256
+from cose.curves import P256
+from cose.algorithms import Es256, EdDSA
+from cose.keys.keyparam import KpKty, KpAlg, EC2KpD, EC2KpX, EC2KpY, EC2KpCurve
 from cose.headers import Algorithm, KID
 from cose.keys import CoseKey
-from cose.keys.keyops import SignOp, VerifyOp
-from cose.keys.keyparam import KpKty, OKPKpCurve, KpKeyOps, OKPKpD
-from cose.keys.keytype import KtyOKP
+from cose.keys.keyparam import KpAlg, EC2KpD, EC2KpCurve
+from cose.keys.keyparam import KpKty
+from cose.keys.keytype import KtyEC2
 from cose.messages import Sign1Message
-
 from cryptography import x509
-from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.serialization import load_pem_private_key
-
 
 # Note - we only need the public key for the KeyID calculation - we're not actually using it.
 with open("dsc-worker.pem", "rb") as file:
@@ -29,25 +29,23 @@ keyid = fingerprint[-8:]
 with open("dsc-worker.key", "rb") as file:
     pem = file.read()
 keyfile = load_pem_private_key(pem, password=None)
-priv = keyfile.private_bytes(
-    encoding=serialization.Encoding.Raw,
-    format=serialization.PrivateFormat.Raw,
-    encryption_algorithm=serialization.NoEncryption(),
-)
+priv = keyfile.private_numbers().private_value.to_bytes(32, byteorder="big")
 
 # Prepare a message to sign; specifying algorithm and keyid
 # that we (will) use
 #
 msg = Sign1Message(
-    phdr={Algorithm: EdDSA, KID: keyid}, payload="Hello World!".encode("utf-8")
+    phdr={Algorithm: Es256, KID: keyid}, payload="Hello World!".encode("utf-8")
 )
 
-# Create the signing key.
+# Create the signing key - use ecdsa-with-SHA256
+# and NIST P256 / secp256r1
+#
 cose_key = {
-    KpKty: KtyOKP,
-    OKPKpCurve: Ed25519,  # Ought to be pk.curve - but the two libs clash
-    KpKeyOps: [SignOp, VerifyOp],
-    OKPKpD: priv,
+    KpKty: KtyEC2,
+    KpAlg: Es256,  # ecdsa-with-SHA256
+    EC2KpCurve: P256,  # Ought to be pk.curve - but the two libs clash
+    EC2KpD: priv,
 }
 
 # Encode the message (which includes signing)
