@@ -31,7 +31,20 @@ I am using the current, stable FHIR Release 4 endpoints on these public FHIR tes
 | SmileCDR | https://try.smilecdr.com:8000/baseR4/ |
 | Cerner Open Sandbox | https://fhir-open.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/ |
 
-## Testing cose
+## Testing COSE (round-trip)
 
-1. generate the CSCA and DSC with ```./gen-csca-dsc.sh```	
-2. run the command: ``` python3.8 cose_sign.py | python3.8 cose_verify.py```
+For round-trip testing of ```cose_sign.py``` and ```cose_verify.py``` take the string ```Hello World!``` and:
+1. COSE sign
+   1. encrpyt into COSE message
+   1. ZLIB compress
+   1. Base45 encode 
+1. COSE verify     
+   1. Base45 decode
+   1. ZLIB decompress
+   1. decrypt from COSE message
+
+### Test Steps
+
+1. Generate the CSCA and DSC with ```./gen-csca-dsc.sh```	
+2. Run the command: ```python3.8 cose_sign.py | python3.8 cose_verify.py```
+3. You should see the output: ```Hello World!```
