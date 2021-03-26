@@ -58,4 +58,3 @@ Testing against the AT cases:
 
    ```pbpaste| sed -e 's/^00//' | python3.8 cose_verify.py --base64 --ignore-signature --cbor```
 
-=======
