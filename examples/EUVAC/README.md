@@ -48,3 +48,14 @@ For round-trip testing of ```cose_sign.py``` and ```cose_verify.py``` take the s
 1. Generate the CSCA and DSC with ```./gen-csca-dsc.sh```	
 2. Run the command: ```python3.8 cose_sign.py | python3.8 cose_verify.py```
 3. You should see the output: ```Hello World!```
+
+## Testing COSE from Austrian website
+
+Testing against the AT cases:
+
+1. Fetch the Base64 from https://dev.a-sit.at/certservice
+2. Remove the first 2 bytes and do
+
+   ```pbpaste| sed -e 's/^00//' | python3.8 cose_verify.py --base64 --ignore-signature --cbor```
+
+=======
