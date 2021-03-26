@@ -1,6 +1,6 @@
 #!env python3.8
 
-import attr
+import sys
 import zlib
 import argparse
 
@@ -10,25 +10,23 @@ import cbor2
 from base45 import b45decode
 from base64 import b64decode
 
-
 from cose.messages import Sign1Message, CoseMessage
-from cose.keys import CoseKey
+from cose.messages import CoseMessage
+
 from cose.headers import Algorithm, KID
 from cose.curves import P256
 from cose.algorithms import Es256,EdDSA
+
+from cose.keys import CoseKey
 from cose.keys.keyparam import KpKty, KpAlg, EC2KpD, EC2KpX, EC2KpY, EC2KpCurve
 from cose.keys.keytype import KtyEC2
 from cose.keys.keyops import SignOp, VerifyOp
+from cose.keys.keyparam import KpKty, OKPKpX, KpKeyOps, OKPKpCurve
+from cose.keys.keytype import KtyOKP
 
 from cryptography import x509
-from cryptography.hazmat.primitives.serialization import load_pem_private_key
 from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.backends.openssl import ec
-from cryptography.hazmat.primitives.asymmetric.ec import EllipticCurvePublicKey
-from cryptography.hazmat.primitives import serialization 
-
-from binascii import unhexlify, hexlify
-import sys
+from cryptography.hazmat.primitives import serialization
 
 parser = argparse.ArgumentParser(description='Parse and validate a base45/zlib/cose/cbor QR.')
 parser.add_argument('-B', '--base64', action='store_true',help='Use base64 instead of base45')
@@ -56,14 +54,12 @@ if not args.ignore_signature:
        pem = file.read()
    cert = x509.load_pem_x509_certificate(pem)
    pub = cert.public_key().public_numbers()
-   #priv = keyfile.private_numbers().private_value.to_bytes(32,byteorder="big")
-
 
    fingerprint = cert.fingerprint(hashes.SHA256())
    keyid = fingerprint[-8:]
 
-   if (decoded.phdr[KID] != keyid):
-    raise Exception('KeyID is unknown (not mine) -- cannot verify.')
+   if decoded.phdr[KID] != keyid:
+        raise Exception("KeyID is unknown (not mine) -- cannot verify.")
 
    decoded.key = CoseKey.from_dict({
         KpKty: KtyEC2,
@@ -73,8 +69,8 @@ if not args.ignore_signature:
         EC2KpY: pub.y.to_bytes(32,byteorder="big")
    })
 
-   if (not decoded.verify_signature()) :
-      raise Exception('faulty sig')
+   if not decoded.verify_signature():
+        raise Exception("faulty sig")
 
 payload = decoded.payload
 
