@@ -21,9 +21,7 @@ from cryptography import x509
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.serialization import load_pem_private_key
 
-parser = argparse.ArgumentParser(
-    description="Sign, B45 and compress a CBOR"
-)
+parser = argparse.ArgumentParser(description="Sign, B45 and compress a CBOR")
 parser.add_argument(
     "-B", "--base64", action="store_true", help="Use base64 instead of base45"
 )
@@ -33,23 +31,29 @@ parser.add_argument(
 parser.add_argument(
     "-z", "--skip-zlib", action="store_true", help="Skip zlib decompression"
 )
-parser.add_argument("-c", "--cbor", action="store_true", help="Encode the input with CBOR first")
+parser.add_argument(
+    "-c", "--cbor", action="store_true", help="Encode the input with CBOR first"
+)
 
 parser.add_argument(
-    "keyfile", default="dsc-worker.key",  nargs='?',
-    help="The private key to sign the request with; using <dsc-worker.key> as the default. PEM format."
+    "keyfile",
+    default="dsc-worker.key",
+    nargs="?",
+    help="The private key to sign the request with; using <dsc-worker.key> as the default. PEM format.",
 )
 parser.add_argument(
-    "certfile", default="dsc-worker.pem",  nargs='?' ,
-    help="The certificate whose 'KeyID to include'; using <dsc-worker.pem> as the default. PEM format."
+    "certfile",
+    default="dsc-worker.pem",
+    nargs="?",
+    help="The certificate whose 'KeyID to include'; using <dsc-worker.pem> as the default. PEM format.",
 )
 args = parser.parse_args()
 
 payload = sys.stdin.buffer.read()
 
 if args.cbor:
-     payload = json.loads(payload.decode("utf-8"))
-     payload = cbor2.dumps(payload)
+    payload = json.loads(payload.decode("utf-8"))
+    payload = cbor2.dumps(payload)
 
 # Note - we only need the public key for the KeyID calculation - we're not actually using it.
 #
@@ -69,9 +73,7 @@ priv = keyfile.private_numbers().private_value.to_bytes(32, byteorder="big")
 # Prepare a message to sign; specifying algorithm and keyid
 # that we (will) use
 #
-msg = Sign1Message(
-    phdr={Algorithm: Es256, KID: keyid}, payload=payload
-)
+msg = Sign1Message(phdr={Algorithm: Es256, KID: keyid}, payload=payload)
 
 # Create the signing key - use ecdsa-with-SHA256
 # and NIST P256 / secp256r1

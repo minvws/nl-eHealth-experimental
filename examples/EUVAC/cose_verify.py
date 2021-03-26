@@ -68,8 +68,10 @@ if not args.ignore_signature:
     keyid = fingerprint[-8:]
 
     if decoded.phdr[KID] != keyid:
-        raise Exception("KeyID is unknown (expected %s, got %s) -- cannot verify." %
-               (hexlify(keyid), hexlify(decoded.phdr[KID])))
+        raise Exception(
+            "KeyID is unknown (expected %s, got %s) -- cannot verify."
+            % (hexlify(keyid), hexlify(decoded.phdr[KID]))
+        )
 
     decoded.key = CoseKey.from_dict(
         {
