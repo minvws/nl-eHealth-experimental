@@ -25,7 +25,7 @@ Jinja2==2.11.3
 lxml==4.6.3
 MarkupSafe==1.1.1
 oscrypto==1.2.1
-packaging==20.9
+packaging==20.925b4e4f4f5d1
 psutil==5.8.0
 pycparser==2.20
 Pygments==2.8.1
