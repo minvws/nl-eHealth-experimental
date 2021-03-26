@@ -46,15 +46,23 @@ For round-trip testing of ```cose_sign.py``` and ```cose_verify.py``` take the s
 ### Test Steps
 
 1. Generate the CSCA and DSC with ```./gen-csca-dsc.sh```	
-2. Run the command: ```python3.8 cose_sign.py | python3.8 cose_verify.py```
-3. You should see the output: ```Hello World!```
+1. Run the command: ```echo "Hello Woprld!" | python3.8 cose_sign.py | python3.8 cose_verify.py```
+1. You should see the output: ```Hello World!```
 
-## Testing COSE from Austrian website
+Or if you want to use JSON also CBOR in and out:
+
+```echo '{ "Foo":1, "Bar":{ "Field1": "a value",   "integer":1212112121 }}' | python3.8 cose_sign.py --cbor | python3.8 cose_verify.py --cbor```
+
+Which should output:
+
+```{"Foo": 1, "Bar": {"Field1": "a value", "integer": 1212112121}}```
+
+# Testing COSE from Austrian website
 
 Testing against the AT cases:
 
 1. Fetch the Base64 from https://dev.a-sit.at/certservice
-2. Remove the first 2 bytes and do
+1. Remove the first 2 bytes and do
 
    ```pbpaste| sed -e 's/^00//' | python3.8 cose_verify.py --base64 --ignore-signature --cbor```
 

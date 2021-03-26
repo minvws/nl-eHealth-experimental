@@ -7,6 +7,8 @@ import zlib
 from base64 import b64decode
 
 import cbor2
+from binascii import unhexlify, hexlify
+
 from base45 import b45decode
 from cose.algorithms import Es256
 from cose.curves import P256
@@ -66,7 +68,8 @@ if not args.ignore_signature:
     keyid = fingerprint[-8:]
 
     if decoded.phdr[KID] != keyid:
-        raise Exception("KeyID is unknown (not mine) -- cannot verify.")
+        raise Exception("KeyID is unknown (expected %s, got %s) -- cannot verify." %
+               (hexlify(keyid), hexlify(decoded.phdr[KID])))
 
     decoded.key = CoseKey.from_dict(
         {

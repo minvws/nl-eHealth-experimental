@@ -1,6 +1,10 @@
 #!env python3.8
 import sys
 import zlib
+import argparse
+import json
+import cbor2
+
 
 from base45 import b45encode
 from cose.algorithms import Es256
@@ -17,8 +21,39 @@ from cryptography import x509
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.serialization import load_pem_private_key
 
+parser = argparse.ArgumentParser(
+    description="Sign, B45 and compress a CBOR"
+)
+parser.add_argument(
+    "-B", "--base64", action="store_true", help="Use base64 instead of base45"
+)
+parser.add_argument(
+    "-b", "--skip-base45", action="store_true", help="Skip base45 decoding"
+)
+parser.add_argument(
+    "-z", "--skip-zlib", action="store_true", help="Skip zlib decompression"
+)
+parser.add_argument("-c", "--cbor", action="store_true", help="Encode the input with CBOR first")
+
+parser.add_argument(
+    "keyfile", default="dsc-worker.key",  nargs='?',
+    help="The private key to sign the request with; using <dsc-worker.key> as the default. PEM format."
+)
+parser.add_argument(
+    "certfile", default="dsc-worker.pem",  nargs='?' ,
+    help="The certificate whose 'KeyID to include'; using <dsc-worker.pem> as the default. PEM format."
+)
+args = parser.parse_args()
+
+payload = sys.stdin.buffer.read()
+
+if args.cbor:
+     payload = json.loads(payload.decode("utf-8"))
+     payload = cbor2.dumps(payload)
+
 # Note - we only need the public key for the KeyID calculation - we're not actually using it.
-with open("dsc-worker.pem", "rb") as file:
+#
+with open(args.certfile, "rb") as file:
     pem = file.read()
 cert = x509.load_pem_x509_certificate(pem)
 fingerprint = cert.fingerprint(hashes.SHA256())
@@ -26,7 +61,7 @@ keyid = fingerprint[-8:]
 
 # Read in the private key that we use to actually sign this
 #
-with open("dsc-worker.key", "rb") as file:
+with open(args.keyfile, "rb") as file:
     pem = file.read()
 keyfile = load_pem_private_key(pem, password=None)
 priv = keyfile.private_numbers().private_value.to_bytes(32, byteorder="big")
@@ -35,7 +70,7 @@ priv = keyfile.private_numbers().private_value.to_bytes(32, byteorder="big")
 # that we (will) use
 #
 msg = Sign1Message(
-    phdr={Algorithm: Es256, KID: keyid}, payload="Hello World!".encode("utf-8")
+    phdr={Algorithm: Es256, KID: keyid}, payload=payload
 )
 
 # Create the signing key - use ecdsa-with-SHA256
