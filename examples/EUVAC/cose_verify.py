@@ -1,32 +1,24 @@
 #!env python3.8
 
+import argparse
+import json
 import sys
 import zlib
-import argparse
-
-import json
-import cbor2
-
-from base45 import b45decode
 from base64 import b64decode
 
-from cose.messages import Sign1Message, CoseMessage
-from cose.messages import CoseMessage
-
-from cose.headers import Algorithm, KID
+import cbor2
+from base45 import b45decode
+from cose.algorithms import Es256
 from cose.curves import P256
 from cose.algorithms import Es256, EdDSA
-
+from cose.headers import KID
 from cose.keys import CoseKey
-from cose.keys.keyparam import KpKty, KpAlg, EC2KpD, EC2KpX, EC2KpY, EC2KpCurve
+from cose.keys.keyparam import KpAlg, EC2KpX, EC2KpY, EC2KpCurve
+from cose.keys.keyparam import KpKty
 from cose.keys.keytype import KtyEC2
-from cose.keys.keyops import SignOp, VerifyOp
-from cose.keys.keyparam import KpKty, OKPKpX, KpKeyOps, OKPKpCurve
-from cose.keys.keytype import KtyOKP
-
+from cose.messages import CoseMessage
 from cryptography import x509
 from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives import serialization
 
 parser = argparse.ArgumentParser(
     description="Parse and validate a base45/zlib/cose/cbor QR."

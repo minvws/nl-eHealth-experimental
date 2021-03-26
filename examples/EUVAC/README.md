@@ -9,13 +9,13 @@
    1. ```./run_docker.sh```
 1. other
    1. ```docker build -t nl/euvac .```
-   1. ```docker run --rm -p 8080:3030 nl/euvac```
+   1. ```docker run --rm -p 9090:5000 nl/euvac```
 
 ## Default Settings
 ### Port Mappings
-By default we map 8080 on host to 3030 in the docker container with the
-```-p 8080:3030``` argument to ```docker run```. The target port of 3030 is set in the docker, 
-but feel free to map some other host port to 3030, as required. 
+By default we map 9090 on host to 5000 in the docker container with the
+```-p 9090:5000``` argument to ```docker run```. The target port of 5000 is set in the docker, 
+but feel free to map some other host port, as required. 
 
 ### FHIR Test Servers
 A list of public FHIR test servers can be found at:

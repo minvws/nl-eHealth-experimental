@@ -1,24 +1,21 @@
 #!env python3.8
 import sys
 import zlib
-from base45 import b45encode
 
-from cose.messages import Sign1Message, CoseMessage
-from cose.keys import CoseKey
-from cose.headers import Algorithm, KID
+from base45 import b45encode
+from cose.algorithms import Es256
 from cose.curves import P256
 from cose.algorithms import Es256, EdDSA
 from cose.keys.keyparam import KpKty, KpAlg, EC2KpD, EC2KpX, EC2KpY, EC2KpCurve
+from cose.headers import Algorithm, KID
+from cose.keys import CoseKey
+from cose.keys.keyparam import KpAlg, EC2KpD, EC2KpCurve
+from cose.keys.keyparam import KpKty
 from cose.keys.keytype import KtyEC2
-from cose.keys.keyops import SignOp, VerifyOp
-from cose.keys.keyparam import KpKty, KpKeyOps
-from cose.keys.keytype import KtyOKP
 from cose.messages import Sign1Message
-
 from cryptography import x509
-from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.serialization import load_pem_private_key
-
 
 # Note - we only need the public key for the KeyID calculation - we're not actually using it.
 with open("dsc-worker.pem", "rb") as file:

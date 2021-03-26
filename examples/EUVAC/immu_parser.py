@@ -1,16 +1,6 @@
 from min_data_set import Gender, MinDataSet, MinDataSetFactory
-
-
-def _map_patient_gender(gender: str) -> Gender:
-    # often localization specific, we'll assume US English
-    ret_gender: Gender = Gender.O  # default case until we know otherwise
-    if gender and len(gender) > 0:
-        g = gender[0]
-        if g == "F":
-            ret_gender = Gender.F
-        elif g == "M":
-            ret_gender = Gender.M
-    return ret_gender
+from fhir_query import FhirQueryImmunization
+from pprint import PrettyPrinter
 
 
 class ImmuEntryParser:
@@ -46,9 +36,34 @@ class ImmuEntryParser:
         2. check its resourceType (must be Immunization given the FHIR query, if not then something strange...)
         3. pick up the fields required as per Annex 1 spec (eHN) wrt desired level of disclosure
     """
+    pp = PrettyPrinter(indent=2)
 
     @staticmethod
-    def get_min_data_set(
+    def extract_entry(qry_entry: dict):
+        # General approach to processing the JSON: we just skip any JSON items that are not of interest to us
+        # We are looking for resourceType of Immunization but we tread carefully, checking for existence
+        # of keys at each step for two reasons:
+        # 1. we can quickly skip over any entries that are not of interest - the sooner the better, and
+        # 2. we don't want any JSON that we are not interested in to disturb our processing by raising
+        # an InvalidKey exception which would be the case if we didn't explicitly check keys at each level
+        # in the JSON hierarchy
+        if "resource" in qry_entry:
+            resource: dict = qry_entry["resource"]
+            if "resourceType" in resource:
+                if resource["resourceType"] == "Immunization":
+                    patient = FhirQueryImmunization.resolve_patient(resource=resource)
+                    min_data_set: MinDataSet = ImmuEntryParser.__get_min_data_set(
+                        resource=resource,
+                        patient=patient,
+                        disclosure_level=MinDataSetFactory.DisclosureLevel.MD,
+                    )
+                    print("min_data_set.pv/bc:")
+                    ImmuEntryParser.pp.pprint(min_data_set.pv)
+                    print("min_data_set.md:")
+                    ImmuEntryParser.pp.pprint(min_data_set.md)
+
+    @staticmethod
+    def __get_min_data_set(
         resource: dict,
         patient: dict,
         disclosure_level: MinDataSetFactory.DisclosureLevel,
@@ -102,7 +117,7 @@ class ImmuEntryParser:
             md: dict = min_data_set.md
             # patient
             md["personId"] = patient["identifier"]
-            md["gender"] = _map_patient_gender(gender=patient["gender"])
+            md["gender"] = ImmuEntryParser.__map_patient_gender(gender=patient["gender"])
             md["dateOfBirth"] = patient["birthDate"]
             # TODO: vaccine
             md["marketingAuthorizationHolder"] = ""
@@ -121,3 +136,15 @@ class ImmuEntryParser:
         min_data_set.certificate.issuer = ""
 
         return min_data_set
+
+    @staticmethod
+    def __map_patient_gender(gender: str) -> Gender:
+        # often localization specific, we'll assume US English
+        ret_gender: Gender = Gender.O  # default case until we know otherwise
+        if gender and len(gender) > 0:
+            g = gender[0]
+            if g == "F":
+                ret_gender = Gender.F
+            elif g == "M":
+                ret_gender = Gender.M
+        return ret_gender

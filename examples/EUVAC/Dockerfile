@@ -1,6 +1,11 @@
 FROM alpine:3.12.4 AS alpine
 
-RUN apk add bash curl python3
+ENTRYPOINT ["/bin/bash", "/home/euvac/entrypoint.sh"]
+WORKDIR /home/euvac
+
+RUN apk add bash build-base cargo curl libffi-dev iptables libxml2-dev libxslt-dev \
+            openssl openssl-dev python3 py3-pip python3-dev rust
+RUN apk add -u awall
 
 # dotnet dependencies:
 RUN apk add icu-libs krb5-libs libgcc libintl libssl1.1 libstdc++ zlib
@@ -10,13 +15,26 @@ RUN addgroup -S euvac && \
     (echo euvac ; echo euvac) | passwd euvac
 
 USER euvac
-WORKDIR /home/euvac
+
 RUN curl -sSL https://dot.net/v1/dotnet-install.sh | /bin/bash /dev/stdin -c 5.0
-COPY entrypoint.sh /home/euvac
+
+COPY entrypoint.sh \
+     cose_sign.py \
+     cose_verify.py \
+     fhir2qr.py \
+     fhir_query.py \
+     gen-csca-dsc.sh \
+     immu_context.jsonld \
+     immu_parser.py \
+     min_data_set.py \
+     /home/euvac/
+COPY static /home/euvac/static
+COPY requirements.txt /tmp/
+
+RUN /home/euvac/gen-csca-dsc.sh
 
 USER root
-# IANA 3030 -> Arepa Cas
-EXPOSE 3030
-ENTRYPOINT ["/bin/bash", "/home/euvac/entrypoint.sh"]
 
-USER euvac
+RUN pip3 install wheel
+RUN pip3 install -r /tmp/requirements.txt
+COPY flask.json /usr/share/awall/optional/
