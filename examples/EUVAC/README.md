@@ -37,3 +37,11 @@ Take the string 'Hello'; COSE it, ZLIB compress and then Base45 and back.
 
 1. generate the CSCA and DSC with ```./gen-csca-dsc.sh```	
 2. run the command: ``` python3.8 cose_sign.py | python3.8 cose_verify.py```
+
+Testing against the AU cases:
+
+1. Fetch the Base64 from https://dev.a-sit.at/certservice
+2. Remove the first 2 bytes and do
+
+   ```pbpaste| sed -e 's/^00//' | python3.8 cose_verify.py --base64 --ignore-signature --cbor```
+

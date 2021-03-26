@@ -2,15 +2,22 @@
 
 import attr
 import zlib
+import argparse
+
+import json
+import cbor2
+
 from base45 import b45decode
+from base64 import b64decode
+
 
 from cose.messages import Sign1Message, CoseMessage
 from cose.keys import CoseKey
 from cose.headers import Algorithm, KID
-from cose.algorithms import EdDSA
-from cose.curves import Ed25519
-from cose.keys.keyparam import KpKty, OKPKpD, OKPKpX, KpKeyOps, OKPKpCurve
-from cose.keys.keytype import KtyOKP
+from cose.curves import P256
+from cose.algorithms import Es256,EdDSA
+from cose.keys.keyparam import KpKty, KpAlg, EC2KpD, EC2KpX, EC2KpY, EC2KpCurve
+from cose.keys.keytype import KtyEC2
 from cose.keys.keyops import SignOp, VerifyOp
 
 from cryptography import x509
@@ -23,17 +30,35 @@ from cryptography.hazmat.primitives import serialization
 from binascii import unhexlify, hexlify
 import sys
 
-b45in = sys.stdin.read()
-cin = b45decode(b45in)
-encoded = zlib.decompress(cin)
+parser = argparse.ArgumentParser(description='Parse and validate a base45/zlib/cose/cbor QR.')
+parser.add_argument('-B', '--base64', action='store_true',help='Use base64 instead of base45')
+parser.add_argument('-b', '--skip-base45', action='store_true',help='Skip base45 decoding')
+parser.add_argument('-z', '--skip-zlib', action='store_true',help='Skip zlib decompression')
+parser.add_argument('-i', '--ignore-signature', action='store_true',help='Ignore the signature, do not validate')
+parser.add_argument('-c', '--cbor', action='store_true',help='Decode CBOR')
+parser.add_argument('cert', help='Certificate to validate against', default='dsc-worker.pem', nargs='?')
+args = parser.parse_args()
 
-decoded = CoseMessage.decode(encoded)
+cin = sys.stdin.buffer.read()
 
-if len(sys.argv) != 2 or sys.argv[1] != '--ignore-signature':
-   with open('dsc-worker.pem','rb') as file:
+if args.base64:
+   cin = b64decode(cin.decode("ASCII"))
+else:
+   if not args.skip_base45:
+        cin = b45decode(cin.decode("ASCII"))
+if not args.skip_zlib:
+   cin = zlib.decompress(cin)
+
+decoded = CoseMessage.decode(cin)
+
+if not args.ignore_signature:
+   with open(args.cert,'rb') as file:
        pem = file.read()
    cert = x509.load_pem_x509_certificate(pem)
-   pub = cert.public_key().public_bytes(encoding=serialization.Encoding.Raw,format=serialization.PublicFormat.Raw)
+   pub = cert.public_key().public_numbers()
+   #priv = keyfile.private_numbers().private_value.to_bytes(32,byteorder="big")
+
+
    fingerprint = cert.fingerprint(hashes.SHA256())
    keyid = fingerprint[-8:]
 
@@ -41,13 +66,21 @@ if len(sys.argv) != 2 or sys.argv[1] != '--ignore-signature':
     raise Exception('KeyID is unknown (not mine) -- cannot verify.')
 
    decoded.key = CoseKey.from_dict({
-        KpKty: KtyOKP,
-        OKPKpCurve: Ed25519, 
-        KpKeyOps: [SignOp, VerifyOp],
-        OKPKpX: pub,
+        KpKty: KtyEC2,
+        EC2KpCurve: P256, # Ought o be pk.curve - but the two libs clash
+        KpAlg: Es256, # ecdsa-with-SHA256
+        EC2KpX: pub.x.to_bytes(32,byteorder="big"),
+        EC2KpY: pub.y.to_bytes(32,byteorder="big")
    })
 
    if (not decoded.verify_signature()) :
       raise Exception('faulty sig')
 
-print(decoded.payload)
+payload = decoded.payload
+
+if args.cbor:
+   payload = json.dumps(cbor2.loads(payload))
+   print(payload)
+   sys.exit(0)
+
+sys.stdout.buffer.write(payload)
