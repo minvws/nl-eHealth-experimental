@@ -1,6 +1,7 @@
+from flask import Flask, request, send_from_directory
 from fhir_query import FhirQueryImmunization
-from flask import Flask, request, url_for
 from immu_parser import ImmuEntryParser
+from min_data_set import MinDataSet
 
 
 class Fhir2QR:
@@ -17,21 +18,32 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    return url_for("static", filename="index.html")
+    return send_from_directory(directory="static", filename="index.html")
 
 
 @app.route("/fhir2qr", methods=["POST"])
-def fhir2rr(fhir_server: str):
+def fhir2qr():
+    fhir_server = request.form["fhir_server"]
     fhir2qr_query = Fhir2QR(fhir_server=fhir_server)
     qry_res: dict = fhir2qr_query.fhir_query_immu()
     ret_data: dict = {}
 
-    if "entry" in qry_res:
-        for entry in qry_res["entry"]:
-            parsed_entry: dict = ImmuEntryParser.extract_entry(qry_entry=entry)
-            ret_data.update(parsed_entry)
-    if "resourceType" in qry_res:
-        if qry_res["resourceType"] == "Bundle":
-            total_matches = qry_res["total"]
-            ret_data["Total Matches"] = total_matches
+    if qry_res is not None:
+        if "entry" in qry_res:
+            for entry in qry_res["entry"]:
+                min_data_set: MinDataSet = ImmuEntryParser.extract_entry(
+                    qry_entry=entry
+                )
+                if min_data_set is not None:
+                    ret_data.update(min_data_set.pv)
+                    if min_data_set.md is not None:
+                        ret_data.update(min_data_set.md)
+        if "resourceType" in qry_res:
+            if qry_res["resourceType"] == "Bundle":
+                total_matches = qry_res["total"]
+                ret_data["Total Matches"] = total_matches
+    else:
+        ret_data[
+            "FHIR2QR"
+        ] = f"No entries found to match FHIR query on FHIR server: {fhir_server}"
     return ret_data

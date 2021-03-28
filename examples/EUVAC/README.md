@@ -9,13 +9,13 @@
    1. ```./run_docker.sh```
 1. other
    1. ```docker build -t nl/euvac .```
-   1. ```docker run --rm -p 9090:5000 nl/euvac```
+   1. ```docker run --rm -p 9010:5000 nl/euvac```
 
 ## Default Settings
 ### Port Mappings
-By default we map 9090 on host to 5000 in the docker container with the
-```-p 9090:5000``` argument to ```docker run```. The target port of 5000 is set in the docker, 
-but feel free to map some other host port, as required. 
+By default we map 9010 on host to 5000 in the docker container with the
+```-p 9010:5000``` argument to ```docker run```. The target port of 5000 is set in the docker, 
+but feel free to map some other host port, as required.
 
 ### FHIR Test Servers
 A list of public FHIR test servers can be found at:
@@ -30,6 +30,12 @@ I am using the current, stable FHIR Release 4 endpoints on these public FHIR tes
 | Firely | https://server.fire.ly/r4/ |
 | SmileCDR | https://try.smilecdr.com:8000/baseR4/ |
 | Cerner Open Sandbox | https://fhir-open.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/ |
+
+### FHIR2QR Home Page
+Assuming you have used the default host:container port mapping of 9010:NNNN, 
+then you should be able to open a browser in your host environment (the one in which 
+the docker daemon is running), enter ```localhost:9010``` in the URL/Address bar and 
+view the FHIR2QR home page.
 
 ## Testing COSE (round-trip)
 
@@ -46,7 +52,7 @@ For round-trip testing of ```cose_sign.py``` and ```cose_verify.py``` take the s
 ### Test Steps
 
 1. Generate the CSCA and DSC with ```./gen-csca-dsc.sh```	
-1. Run the command: ```echo "Hello Woprld!" | python3.8 cose_sign.py | python3.8 cose_verify.py```
+1. Run the command: ```echo "Hello World!" | python3.8 cose_sign.py | python3.8 cose_verify.py```
 1. You should see the output: ```Hello World!```
 
 Or if you want to use JSON also CBOR in and out:

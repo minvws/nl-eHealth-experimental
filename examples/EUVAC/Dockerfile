@@ -10,6 +10,14 @@ RUN apk add -u awall
 # dotnet dependencies:
 RUN apk add icu-libs krb5-libs libgcc libintl libssl1.1 libstdc++ zlib
 
+RUN pip3 install wheel
+COPY requirements.txt /tmp/
+RUN pip3 install -r /tmp/requirements.txt
+# rust only required for building crypto libs, can be removed from image once crypto built (requirements.txt)
+RUN apk del rust
+RUN rm /tmp/requirements.txt
+COPY flask.json /usr/share/awall/optional/
+
 RUN addgroup -S euvac && \
     adduser -s /bin/bash -G euvac -S euvac && \
     (echo euvac ; echo euvac) | passwd euvac
@@ -29,12 +37,5 @@ COPY entrypoint.sh \
      min_data_set.py \
      /home/euvac/
 COPY static /home/euvac/static
-COPY requirements.txt /tmp/
 
 RUN /home/euvac/gen-csca-dsc.sh
-
-USER root
-
-RUN pip3 install wheel
-RUN pip3 install -r /tmp/requirements.txt
-COPY flask.json /usr/share/awall/optional/
