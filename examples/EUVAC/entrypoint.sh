@@ -6,4 +6,5 @@ ip addr
 # modprobe -v iptable_nat
 awall enable flask
 export FLASK_APP=fhir2qr.py
+export FLASK_DEBUG=1
 flask run --host 0.0.0.0
