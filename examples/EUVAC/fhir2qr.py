@@ -11,6 +11,7 @@ import argparse
 import json
 import cbor2
 import segno as qr
+import ujson
 
 from base45 import b45encode
 from cose.algorithms import Es256
@@ -86,12 +87,12 @@ def fhir2json():
         ret_data[
             "FHIR2QR"
         ] = f"No entries found to match FHIR query on FHIR server: {fhir_server}"
-    return ret_data
+    return ujson.dumps(ret_data)
 
 
 @app.route("/fhir2jsoncbor", methods=["POST", "GET"])
 def fhir2jsoncbor():
-    data = fhir2json()
+    data = ujson.loads(fhir2json())
     cb = cbor2.dumps(data)
     # return Response(cb,mimetype='text/plain')
     return cb
@@ -145,3 +146,28 @@ def fhir2jsoncborcosezlibb45qr():
     qr.make(data, error="Q").save(buff, kind="png", scale=6)
     buff.seek(0)
     return send_file(buff, mimetype="image/png")
+
+
+@app.route("/fhir2size", methods=["POST", "GET"])
+def fhir2size():
+    step1 = fhir2json()
+
+    len_fhir = 0
+    len_json = len(ujson.dumps(fhir2json()))
+    len_cbor = len(fhir2jsoncbor())
+    len_cose = len(fhir2jsoncborcose())
+    len_zlib = len(fhir2jsoncborcosezlib())
+
+    b45 = fhir2jsoncborcosezlibb45()
+    len_b45 = len(b45)
+
+    img = qr.make(b45, error="Q")
+    img_s = len(img.matrix)
+
+    win = len_json - len_zlib
+    winp = int(100 * win / len_json)
+
+    return Response(
+        f"Sizes:\n JSON:   {len_json}\n CBOR:   {len_cbor}\n COSE:   {len_cose}\n ZLIB:   {len_zlib}\n B45 :   {len_b45}\n QR mode: {img.mode} (Should be 2/alphanumeric/b45)\n QR code: {img.version} (1..40)\n QR matrix: {img_s}x{img_s} (raw pixels without border)\n\nWin: {winp}%; {win} bytes saved on {len_json} bytes (FHIR was {len_fhir} bytes)",
+        mimetype="text/plain",
+    )
