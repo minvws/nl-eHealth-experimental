@@ -1,7 +1,31 @@
-from flask import Flask, request, send_from_directory
+from flask import Flask, request, send_from_directory, Response, send_file
 from fhir_query import FhirQueryImmunization
 from immu_parser import ImmuEntryParser
 from min_data_set import MinDataSet
+from werkzeug.routing import BaseConverter
+
+import sys
+import io
+import zlib
+import argparse
+import json
+import cbor2
+import segno as qr
+
+from base45 import b45encode
+from cose.algorithms import Es256
+from cose.curves import P256
+from cose.algorithms import Es256, EdDSA
+from cose.keys.keyparam import KpKty, KpAlg, EC2KpD, EC2KpX, EC2KpY, EC2KpCurve
+from cose.headers import Algorithm, KID
+from cose.keys import CoseKey
+from cose.keys.keyparam import KpAlg, EC2KpD, EC2KpCurve
+from cose.keys.keyparam import KpKty
+from cose.keys.keytype import KtyEC2
+from cose.messages import Sign1Message
+from cryptography import x509
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.serialization import load_pem_private_key
 
 
 class Fhir2QR:
@@ -16,13 +40,29 @@ class Fhir2QR:
 app = Flask(__name__)
 
 
+class RegexConverter(BaseConverter):
+    def __init__(self, url_map, *items):
+        super(RegexConverter, self).__init__(url_map)
+        self.regex = items[0]
+
+
+app.url_map.converters["regex"] = RegexConverter
+
+
 @app.route("/")
 def index():
     return send_from_directory(directory="static", filename="index.html")
 
 
-@app.route("/fhir2qr", methods=["POST"])
-def fhir2qr():
+@app.route('/<regex("[a-z0-9\-]+\.(pem|key)"):file>')
+def cryptofile(file):
+    return send_from_directory(
+        directory="static", filename=file, mimetype="application/x-pem-file"
+    )
+
+
+@app.route("/fhir2json", methods=["POST", "GET"])
+def fhir2json():
     fhir_server = request.form["fhir_server"]
     fhir2qr_query = Fhir2QR(fhir_server=fhir_server)
     qry_res: dict = fhir2qr_query.fhir_query_immu()
@@ -47,3 +87,61 @@ def fhir2qr():
             "FHIR2QR"
         ] = f"No entries found to match FHIR query on FHIR server: {fhir_server}"
     return ret_data
+
+
+@app.route("/fhir2jsoncbor", methods=["POST", "GET"])
+def fhir2jsoncbor():
+    data = fhir2json()
+    cb = cbor2.dumps(data)
+    # return Response(cb,mimetype='text/plain')
+    return cb
+
+
+@app.route("/fhir2jsoncborcose", methods=["POST", "GET"])
+def fhir2jsoncborcose():
+    data = fhir2jsoncbor()
+    with open("dsc-worker.pem", "rb") as file:
+        pem = file.read()
+    cert = x509.load_pem_x509_certificate(pem)
+    fingerprint = cert.fingerprint(hashes.SHA256())
+    keyid = fingerprint[-8:]
+
+    with open("dsc-worker.key", "rb") as file:
+        pem = file.read()
+    keyfile = load_pem_private_key(pem, password=None)
+    priv = keyfile.private_numbers().private_value.to_bytes(32, byteorder="big")
+
+    msg = Sign1Message(phdr={Algorithm: Es256, KID: keyid}, payload=data)
+
+    cose_key = {
+        KpKty: KtyEC2,
+        KpAlg: Es256,  # ecdsa-with-SHA256
+        EC2KpCurve: P256,  # Ought to be pk.curve - but the two libs clash
+        EC2KpD: priv,
+    }
+    msg.key = CoseKey.from_dict(cose_key)
+
+    return msg.encode()
+
+
+@app.route("/fhir2jsoncborcosezlib", methods=["POST", "GET"])
+def fhir2jsoncborcosezlib():
+    data = fhir2jsoncborcose()
+    return zlib.compress(data, 9)
+
+
+@app.route("/fhir2jsoncborcosezlibb45", methods=["POST", "GET"])
+def fhir2jsoncborcosezlibb45():
+    data = fhir2jsoncborcosezlib()
+    b45 = b45encode(data)
+    return b45
+
+
+@app.route("/fhir2jsoncborcosezlibb45qr", methods=["POST", "GET"])
+def fhir2jsoncborcosezlibb45qr():
+    data = fhir2jsoncborcosezlibb45()
+    # return qr.make(data,error='Q').svg_inline()
+    buff = io.BytesIO()
+    qr.make(data, error="Q").save(buff, kind="png", scale=6)
+    buff.seek(0)
+    return send_file(buff, mimetype="image/png")

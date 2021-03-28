@@ -29,4 +29,4 @@ done
 cat dsc-*.pem > masterlist-dsc.pem
 
 # Remove unneeded keys and certs
-rm -f csca.key dsc-?.key dsc-?.pem csca.pem
+rm -f csca.key dsc-?.key dsc-?.pem 

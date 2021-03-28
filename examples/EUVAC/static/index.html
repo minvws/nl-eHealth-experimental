@@ -13,21 +13,44 @@
   <div>
     <h1>FHIR 2 QR</h1>
     <div>
+     <form action="/fhir2qr" method="post">
+      <label for="fhir_server">FHIR Server:</label>
+      Use: <input type="text" id="fhir_server" name="fhir_server" value="https://server.fire.ly/r4/" readonly><br>
+
       This queries the given FHIR server for Immunization resources, and will:
       <ol>
-        <li>convert the returned JSON to an eHN Vaccination Minimum Data Set as per Annex 1,</li>
-        <li>semantically compress it,</li>
-        <li>serialize it,</li>
-        <li>encrypt it,</li>
-        <li>LZMA compress it,</li>
-        <li><a href="https://tools.ietf.org/html/draft-faltstrom-base45-02">Base45</a> encode it</li>
+        <li>convert the returned JSON to an eHN Vaccination Minimum Data Set as per Annex 1
+          <input type="submit" value="show" formaction="fhir2json"/>,
+          </li>
+        <li>semantically compress it,
+        <li>serialize it,
+          <input type="submit" value="show" formaction="fhir2jsoncbor"/>,
+	</li>
+        <li>digitally sign it with:
+	<ul>
+		<li> Country CSCA as a <a href="csca.pem">PEM file</a>.
+		</li>
+		<li> Country DSCS list as a <a href="masterlist-dsc.pem">PEM file</a>.
+		</li>
+		<li> DSCS used as a <a href="dsc-worker.pem">PEM file</a> (plain concatenation; not a LDIFF).
+		</li>
+		<li> private key as a <a href="dsc-worker.key">PEM file</a> (<i>which you normally would not get!</i>).
+		</li>
+	</ul>
+          <input type="submit" value="show" formaction="fhir2jsoncborcose"/>,
+        </li>
+        <li>LZMA compress it,
+          <input type="submit" value="show" formaction="fhir2jsoncborcosezlib"/>,
+	</li>
+        <li><a href="https://tools.ietf.org/html/draft-faltstrom-base45-02">Base45</a> encode it
+          <input type="submit" value="show" formaction="fhir2jsoncborcosezlibb45"/>,
+	</li>
         <!-- <li> generate QR code from it </li> -->
+         <input type="submit" value="show qr" formaction="fhir2jsoncborcosezlibb45qr"/>,
       </ol>
+      <p>Or 
+         <input type="submit" value="show the sizes" formaction="fhir2size"/>.
     </div>
-    <form action="/fhir2qr" method="post">
-      <label for="fhir_server">FHIR Server:</label>
-      <input type="text" id="fhir_server" name="fhir_server" value="https://server.fire.ly/r4/" readonly><br>
-      <input type="submit" value="Run Fhir2QR query"><br>
     </form>
   </div>
 </body>

@@ -26,7 +26,7 @@ USER euvac
 
 RUN curl -sSL https://dot.net/v1/dotnet-install.sh | /bin/bash /dev/stdin -c 5.0
 
-COPY entrypoint.sh \
+COPY --chown=euvac:euvac entrypoint.sh \
      cose_sign.py \
      cose_verify.py \
      fhir2qr.py \
@@ -36,6 +36,9 @@ COPY entrypoint.sh \
      immu_parser.py \
      min_data_set.py \
      /home/euvac/
-COPY static /home/euvac/static
+COPY --chown=euvac:euvac static /home/euvac/static
 
 RUN /home/euvac/gen-csca-dsc.sh
+RUN ls -la /home/euvac/static
+RUN cp csca.pem dsc-worker.pem masterlist-dsc.pem /home/euvac/static
+RUN cp dsc-worker.key /home/euvac/static

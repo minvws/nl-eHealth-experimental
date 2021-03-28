@@ -50,3 +50,4 @@ sphinxemoji==0.1.8
 SQLAlchemy==1.4.3
 urllib3==1.26.4
 Werkzeug==1.0.1
+segno>=1.3
