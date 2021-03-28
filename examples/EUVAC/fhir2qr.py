@@ -64,9 +64,17 @@ def cryptofile(file):
 
 @app.route("/fhir2json", methods=["POST", "GET"])
 def fhir2json():
-    fhir_server = request.form["fhir_server"]
-    fhir2qr_query = Fhir2QR(fhir_server=fhir_server)
-    qry_res: dict = fhir2qr_query.fhir_query_immu()
+    fhir_json = request.form["fhir"]
+    if not fhir_json or len(fhir_json) < 2:
+      # fhir_server = request.form["fhir_server"]
+      # fhir2qr_query = Fhir2QR(fhir_server=fhir_server)
+      fhir2qr_query = Fhir2QR(fhir_server=None)
+      qry_res: dict = fhir2qr_query.fhir_query_immu()
+    else:
+      qry_res = json.loads(fhir_json)
+
+    print(qry_res);
+
     ret_data: dict = {}
 
     if qry_res is not None:
