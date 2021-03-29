@@ -4,12 +4,6 @@ from pyld import jsonld
 from typing import Any, Optional
 
 
-class Gender(Enum):
-    M = auto()
-    F = auto()
-    O = auto()
-
-
 class Certificate:
     """
     Simple POD data struct for certificate fields
@@ -122,7 +116,7 @@ class MinDataSetMD(MinDataSetBC):
         self.__md = dict(
             personId="",
             dateOfBirth="",
-            gender=Gender.O,
+            gender="O",
             marketingAuthorizationHolder="",
             vaccineCode="",
             vaccineMedicinalProduct="",

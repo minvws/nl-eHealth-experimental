@@ -1,3 +1,3 @@
-#!/bin/bash -e
+#!/bin/sh
 
 docker build -t nl/euvac .

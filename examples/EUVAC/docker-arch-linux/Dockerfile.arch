@@ -1,0 +1,44 @@
+FROM archlinux:base-devel
+
+ENTRYPOINT ["/bin/bash", "/home/euvac/entrypoint_arch.sh"]
+
+RUN pacman --sync --sysupgrade --refresh  --noconfirm
+RUN pacman --sync --noconfirm extra/cargo libxslt python3 python-pip rust
+
+# installs as root in sbin...
+# RUN pacman --sync --noconfirm dotnet-sdk
+
+RUN useradd --system --user-group --create-home --shell /bin/bash euvac && \
+    (echo euvac ; echo euvac) | passwd euvac
+
+WORKDIR /home/euvac
+USER euvac
+
+# installs as standard user
+RUN curl -sSL https://dot.net/v1/dotnet-install.sh | /bin/bash /dev/stdin -c 5.0
+
+COPY ../entrypoint_arch.sh \
+     cose_sign.py \
+     cose_verify.py \
+     fhir2qr.py \
+     fhir_query.py \
+     gen-csca-dsc.sh \
+     immu_context.jsonld \
+     immu_parser.py \
+     min_data_set.py \
+     /home/euvac/
+COPY ../static /home/euvac/static/
+COPY ../requirements.txt /tmp/
+
+RUN /home/euvac/gen-csca-dsc.sh
+
+USER root
+
+RUN pip3 install wheel
+RUN pip3 install -r /tmp/requirements.txt
+RUN pacman --sync --noconfirm nftables
+RUN pacman --remove --unneeded --noconfirm rust
+COPY ../nftables.conf /etc/
+
+USER euvac
+RUN ls /home/euvac/static

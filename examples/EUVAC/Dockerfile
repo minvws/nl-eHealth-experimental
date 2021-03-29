@@ -10,6 +10,14 @@ RUN apk add -u awall
 # dotnet dependencies:
 RUN apk add icu-libs krb5-libs libgcc libintl libssl1.1 libstdc++ zlib
 
+RUN pip3 install wheel
+COPY requirements.txt /tmp/
+RUN pip3 install -r /tmp/requirements.txt
+# rust only required for building crypto libs, can be removed from image once crypto built (requirements.txt)
+RUN apk del rust
+RUN rm /tmp/requirements.txt
+COPY flask.json /usr/share/awall/optional/
+
 RUN addgroup -S euvac && \
     adduser -s /bin/bash -G euvac -S euvac && \
     (echo euvac ; echo euvac) | passwd euvac
@@ -18,7 +26,7 @@ USER euvac
 
 RUN curl -sSL https://dot.net/v1/dotnet-install.sh | /bin/bash /dev/stdin -c 5.0
 
-COPY entrypoint.sh \
+COPY --chown=euvac:euvac entrypoint.sh \
      cose_sign.py \
      cose_verify.py \
      fhir2qr.py \
@@ -28,13 +36,9 @@ COPY entrypoint.sh \
      immu_parser.py \
      min_data_set.py \
      /home/euvac/
-COPY static /home/euvac/static
-COPY requirements.txt /tmp/
+COPY --chown=euvac:euvac static /home/euvac/static
 
 RUN /home/euvac/gen-csca-dsc.sh
-
-USER root
-
-RUN pip3 install wheel
-RUN pip3 install -r /tmp/requirements.txt
-COPY flask.json /usr/share/awall/optional/
+RUN ls -la /home/euvac/static
+RUN cp csca.pem dsc-worker.pem masterlist-dsc.pem /home/euvac/static
+RUN cp dsc-worker.key /home/euvac/static
