@@ -1,0 +1,18 @@
+{
+  "name": "euvac",
+  "version": "0.0.1",
+  "description": "EUVac demo in Javascript",
+  "scripts": {
+    "sign": "node cose_sign.js",
+    "verify": "node cose_verifyn.js"
+  },
+  "license": "EUPL",
+  "dependencies": {
+    "@fidm/asn1": "^1.0",
+    "@fidm/x509": "^1.2.1",
+    "cose-js": "^0.4",
+    "crypto-js": "^4.0",
+    "node-forge": "^0.10.0",
+    "sha256-uint8array": "^0.10.0"
+  }
+}
