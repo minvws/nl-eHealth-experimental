@@ -4,6 +4,7 @@ import zlib
 import argparse
 import json
 import cbor2
+from base64 import b64decode
 
 
 from base45 import b45encode
@@ -61,7 +62,7 @@ with open(args.certfile, "rb") as file:
     pem = file.read()
 cert = x509.load_pem_x509_certificate(pem)
 fingerprint = cert.fingerprint(hashes.SHA256())
-keyid = fingerprint[-8:]
+keyid = fingerprint[0:8]
 
 # Read in the private key that we use to actually sign this
 #
@@ -88,15 +89,19 @@ cose_key = {
 # Encode the message (which includes signing)
 #
 msg.key = CoseKey.from_dict(cose_key)
-encoded = msg.encode()
+out = msg.encode()
 
 # Compress with ZLIB
 #
-out = zlib.compress(encoded, 9)
-# sys.stdout.buffer.write(out)
+if not args.skip_zlib:
+    out = zlib.compress(out, 9)
 
 # And base45 encode the result
 #
-b45 = b45encode(out)
+if args.base64:
+    out = b64encode(out).encode('ascii')
+else:
+   if not args.skip_base45:
+      out = b45encode(out).encode('ascii')
 
-sys.stdout.write(b45)
+sys.stdout.buffer.write(out)
