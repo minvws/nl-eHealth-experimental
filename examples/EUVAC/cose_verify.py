@@ -65,12 +65,22 @@ if not args.ignore_signature:
     pub = cert.public_key().public_numbers()
 
     fingerprint = cert.fingerprint(hashes.SHA256())
-    keyid = fingerprint[-8:]
+    # keyid = fingerprint[-8:]
+    keyid = fingerprint[0:8]
 
-    if decoded.phdr[KID] != keyid:
+    print(keyid)
+    print(decoded)
+
+    given_kid = None
+    if KID in decoded.phdr.keys():
+       given_kid = decoded.phdr[KID]
+    else:
+       given_kid = decoded.uhdr[KID]
+
+    if given_kid != keyid:
         raise Exception(
             "KeyID is unknown (expected %s, got %s) -- cannot verify."
-            % (hexlify(keyid), hexlify(decoded.phdr[KID]))
+            % (hexlify(keyid), hexlify(given_kid))
         )
 
     decoded.key = CoseKey.from_dict(
