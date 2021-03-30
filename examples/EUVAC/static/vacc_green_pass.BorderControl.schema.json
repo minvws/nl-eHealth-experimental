@@ -1,0 +1,53 @@
+﻿{
+    "$schema" : "http://json-schema.org/schema#",
+    "$id" : "https://github.com/nl-eHealth-experimental/examples/EUVAC/vaccinationDisclosure.BorderControl.schema.json",
+    "type" : "object",
+    "properties" : {
+      "dsc": { "type": "string", "minLength": 12, "maxLength": 12, "$comment": "8 bytes of SHA256 of DSC certificate in base45." },
+      "nam": { "type": "string", "$comment": "legal name" },
+      "v": { "type": "array", "items": "#/definitions/vaccinationEvent", "minItems": 1 },
+      "c": { "type": "#/definitions/certificate" },
+      "t": { "type": "#/definitions/test" },
+      "r": { "type": "#/definitions/recovery" }
+    },
+    "required": ["dsc","nam","v","c"],
+    "definitions" : {
+        "vaccinationEvent" : {
+            "type" : "object",
+            "properties" : {
+                "tg" : {"type":"string", "$comment" : "Disease or Agent Targeted" },
+                "fr" : {"type":"string", "format":"date", "$comment" : "Valid From" }
+            },
+            "required": ["tg","fr"]
+        },
+        "certificate": {
+            "type": "object",
+            "properties": {
+                "id" : {"type":"string", "$comment" : "Identifier UVCI" },
+                "is" : {"type":"string", "$comment" : "Issuer" },
+                "ia" : {"type":"string", "$comment" : "Issuing Authority" },
+                "st" : {"type":"string", "format":"date-time", "$comment" : "Valid from" },
+                "en" : {"type":"string", "format":"date-time", "$comment" : "Valid until" },
+                "vr" : {"type":"string", "$comment" : "Schema version, semver" }
+            },
+            "required": ["id", "is", "ia", "st", "en", "vr"]
+        },
+        "test": {
+          "type": "object",
+          "properties": {
+            "tg" : {"type":"string", "$comment" : "Disease or Agent Targeted" },
+            "ip" : {"type":"string", "$comment" : "Infectious period." },
+            "st" : {"type":"string", "minLength": 1, "maxLength": 1, "enum": ["P", "N", "O"], "$comment" : "TBA. Status _ve, -ve, other?" }
+          },
+          "required": ["tg", "ip", "st"]
+        },
+        "recovery": {
+          "type": "object",
+          "properties": {
+            "tg" : {"type":"string", "$comment" : "Disease or Agent Targeted" },
+            "fr" : {"type":"string", "format":"date", "$comment" : "Valid From" }
+          },
+          "required": ["tg", "fr"]
+        }
+    }
+}
