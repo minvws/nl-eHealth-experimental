@@ -27,7 +27,7 @@ I am using the current, stable FHIR Release 4 endpoints on these public FHIR tes
 
 | Name | FHIR R4 Service Root URL |
 | ---: | :----------------------- |
-| HL7 EU FHIR | https://hl7eu.onfhir.io/r4 |
+| HL7 EU FHIR | https://hl7eu.onfhir.io/r4/ |
 | Firely | https://server.fire.ly/r4/ |
 
 ### FHIR2QR Home Page
