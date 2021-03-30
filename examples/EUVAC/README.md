@@ -27,9 +27,8 @@ I am using the current, stable FHIR Release 4 endpoints on these public FHIR tes
 
 | Name | FHIR R4 Service Root URL |
 | ---: | :----------------------- |
+| HL7 EU FHIR | https://hl7eu.onfhir.io/r4/ |
 | Firely | https://server.fire.ly/r4/ |
-| SmileCDR | https://try.smilecdr.com:8000/baseR4/ |
-| Cerner Open Sandbox | https://fhir-open.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/ |
 
 ### FHIR2QR Home Page
 Assuming you have used the default host:container port mapping of 9010:NNNN, 
@@ -71,4 +70,3 @@ Testing against the AT cases:
 1. Remove the first 2 bytes and do
 
    ```pbpaste| sed -e 's/^00//' | python3.8 cose_verify.py --base64 --ignore-signature --cbor```
-
