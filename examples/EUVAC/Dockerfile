@@ -27,7 +27,6 @@ USER euvac
 RUN curl -sSL https://dot.net/v1/dotnet-install.sh | /bin/bash /dev/stdin -c 5.0
 
 COPY --chown=euvac:euvac static /home/euvac/static/
-
 COPY --chown=euvac:euvac gen-csca-dsc.sh /home/euvac/
 RUN /home/euvac/gen-csca-dsc.sh
 RUN mv csca.pem dsc-worker.pem masterlist-dsc.pem dsc-worker.key /home/euvac/static/

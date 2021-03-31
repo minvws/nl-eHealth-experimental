@@ -1,20 +1,29 @@
 import requests
+from typing import Optional
+
 
 class FhirQueryImmunization:
     """ Performs FHIR Immunization queries against an HL7 FHIR R4 Server """
 
-    # SERVICE_ROOT_URL = "https://fhir-open.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/"    # Cerner
-    # SERVICE_ROOT_URL = "https://try.smilecdr.com:8000/baseR4/"    # SmileCDR
-    SERVICE_ROOT_URL = "https://server.fire.ly/r4/"  # fire.ly
+    # SERVICE_ROOT_URL = "https://server.fire.ly/r4/"  # fire.ly
+    SERVICE_ROOT_URL = "https://hl7eu.onfhir.io/r4/"    # HL7 EU FHIR Server
     ACCEPT_HEADER = {"Accept": "application/fhir+json"}
 
     @staticmethod
-    def find():
+    def find(fhir_server: Optional[str] = None) -> dict:
+        """
+        :param fhir_server: Service Root URL for FHIR server,
+        can be None in which case SERVICE_ROOT_URL will be used
+        :return: FHIR query result as dict
+        """
         try:
+            if fhir_server is None:
+                fhir_server = FhirQueryImmunization.SERVICE_ROOT_URL
             resp = requests.get(
-                f"{FhirQueryImmunization.SERVICE_ROOT_URL}Immunization",
+                f"{fhir_server}Immunization",
                 headers=FhirQueryImmunization.ACCEPT_HEADER,
-                params={"_summary": "data", "date": "ge2021-01-01"},
+                params={"_summary": "data", "date": "ge2021-01-01",
+                        "_include": "*"},
             )
             resp.raise_for_status()
             dict_resp = resp.json()

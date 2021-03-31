@@ -1,23 +1,18 @@
-from flask import Flask, request, send_from_directory, Response, send_file
+from flask import Flask, render_template, request, send_from_directory, Response, send_file
 from fhir_query import FhirQueryImmunization
 from immu_parser import ImmuEntryParser
 from min_data_set import MinDataSet
 from werkzeug.routing import BaseConverter
 
-import sys
 import io
 import zlib
-import argparse
-import json
+
 import cbor2
 import segno as qr
 import ujson
-
 from base45 import b45encode
 from cose.algorithms import Es256
 from cose.curves import P256
-from cose.algorithms import Es256, EdDSA
-from cose.keys.keyparam import KpKty, KpAlg, EC2KpD, EC2KpX, EC2KpY, EC2KpCurve
 from cose.headers import Algorithm, KID
 from cose.keys import CoseKey
 from cose.keys.keyparam import KpAlg, EC2KpD, EC2KpCurve
@@ -29,12 +24,15 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.serialization import load_pem_private_key
 
 
+_page_state: dict = {}
+
+
 class Fhir2QR:
     def __init__(self, fhir_server: str):
         self.__fhir_server: str = fhir_server
 
     def fhir_query_immu(self) -> dict:
-        qry_res = FhirQueryImmunization.find()
+        qry_res = FhirQueryImmunization.find(fhir_server=self.__fhir_server)
         return qry_res
 
 
@@ -52,41 +50,47 @@ app.url_map.converters["regex"] = RegexConverter
 
 @app.route("/")
 def index():
-    return send_from_directory(directory="static", filename="index.html")
+    return render_template("index.html")
 
 
 @app.route('/<regex("[a-z0-9\-]+\.(pem|key)"):file>')
 def cryptofile(file):
     return send_from_directory(
-        directory="static", filename=file, mimetype="application/x-pem-file"
+        directory="templates", filename=file, mimetype="application/x-pem-file"
     )
 
 
-@app.route("/fhir2json", methods=["POST", "GET"])
+@app.route("/query_fhir_server", methods=["POST"])
+def query_fhir_server():
+    selected_server = request.form["fhir_servers"]
+    fhir2qr_query = Fhir2QR(fhir_server=selected_server)
+    qry_res: str = ujson.dumps(fhir2qr_query.fhir_query_immu())
+    _page_state['selected_server'] = selected_server
+    _page_state['qry_res'] = qry_res
+    return render_template("index.html", page_state=_page_state)
+
+
+@app.route("/favicon.ico", methods=["GET"])
+def favicon():
+    return send_from_directory(
+        directory="static", filename="favicon.ico", mimetype="image/x-icon"
+    )
+
+
+@app.route("/fhir2json", methods=["POST"])
 def fhir2json():
-    fhir_json = request.form["fhir"]
-    if not fhir_json or len(fhir_json) < 2:
-      # fhir_server = request.form["fhir_server"]
-      # fhir2qr_query = Fhir2QR(fhir_server=fhir_server)
-      fhir2qr_query = Fhir2QR(fhir_server=None)
-      qry_res: dict = fhir2qr_query.fhir_query_immu()
-    else:
-      qry_res = json.loads(fhir_json)
-
-    print(qry_res);
-
     ret_data: dict = {}
-
+    qry_res = request.form["qry_res"]
     if qry_res is not None:
         if "entry" in qry_res:
-            for entry in qry_res["entry"]:
-                min_data_set: MinDataSet = ImmuEntryParser.extract_entry(
-                    qry_entry=entry
-                )
-                if min_data_set is not None:
-                    ret_data.update(min_data_set.pv)
-                    if min_data_set.md is not None:
-                        ret_data.update(min_data_set.md)
+            # for demo we just take the first entry
+            min_data_set: MinDataSet = ImmuEntryParser.extract_entry(
+                qry_entry=qry_res["entry"]
+            )
+            if min_data_set is not None:
+                ret_data.update(min_data_set.pv)
+                if min_data_set.md is not None:
+                    ret_data.update(min_data_set.md)
         if "resourceType" in qry_res:
             if qry_res["resourceType"] == "Bundle":
                 total_matches = qry_res["total"]
@@ -94,8 +98,8 @@ def fhir2json():
     else:
         ret_data[
             "FHIR2QR"
-        ] = f"No entries found to match FHIR query on FHIR server: {fhir_server}"
-    return ujson.dumps(ret_data)
+        ] = f"No entries found to match FHIR query"
+    return render_template("index.html", fhir_2_json_mds=ujson.dumps(ret_data))
 
 
 @app.route("/fhir2jsoncbor", methods=["POST", "GET"])
