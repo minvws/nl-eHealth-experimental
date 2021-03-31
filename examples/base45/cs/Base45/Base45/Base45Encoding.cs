@@ -103,7 +103,7 @@ namespace NL.MinVWS.Encoding
             if (remainderSize != 2) 
                 return result;
             
-            result[^1] = (byte)(buffer[^2] + BaseSize * buffer[^1]);
+            result[^1] = BitConverter.GetBytes(buffer[^2] + BaseSize * buffer[^1])[0];
             return result;
         }
     }
