@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace NL.Mefitihe.Encoding
 {
@@ -29,98 +27,72 @@ namespace NL.Mefitihe.Encoding
             if (buffer == null)
                 throw new ArgumentNullException(nameof(buffer));
 
-            var result = new StringBuilder();
-            var twoBytes = (buffer.Length / 2) * 2;
-            for (var i = 0; i < twoBytes; i += 2)
-                result.Append(IntToStringFast(buffer[i] * 256 + buffer[i + 1]));
+            var result = new char[buffer.Length / 2 * 3 + (buffer.Length % 2 == 1 ? 2 : 0)];
 
-            if (buffer.Length % 2 == 1)
-                result.Append(IntToStringFast(buffer.Last()).PadRight(2, _Encoding[0]));
+            if (result.Length == 0)
+                return string.Empty;
 
-            return result.ToString();
+            var resultIndex = 0;
+            var count2 = buffer.Length / 2 * 2;
+            for (var i = 0; i < count2; i += 2)
+            {
+                var value = buffer[i] * 256 + buffer[i + 1];
+                result[resultIndex++] = _Encoding[value % 45];
+                result[resultIndex++] = _Encoding[value / 45 % 45];
+                result[resultIndex++] = _Encoding[value / 2025 % 45];
+            }
+
+            if (buffer.Length % 2 == 0)
+                return new string(result);
+
+            result[resultIndex] = _Encoding[buffer[^1] % 45];
+            
+            //TODO test for buffer[^1] <= or < 45 ????
+            result[^1] = buffer[^1] <= 45 ? _Encoding[0] : _Encoding[buffer[^1] / 45 % 45]; 
+
+            return new string(result);
         }
 
-        //TODO add TryDecode.
         public byte[] Decode(string value)
         {
             if (value == null)
-                throw new ArgumentNullException(nameof(value)); //TODO or return new byte[0] ?
+                throw new ArgumentNullException(nameof(value));
 
             if (value.Length == 0)
-                return new byte[0];
+                return Array.Empty<byte>();
 
-            var mod = value.Length % 3;
-            if (mod == 1)
+            var mod3 = value.Length % 3;
+            if (mod3 == 1)
                 throw new FormatException("Incorrect length.");
 
-            if (value.Any(x => !_Decoding.ContainsKey(x))) //Storing the mapping at this point undesirable cos it doubles memory usage
-                throw new FormatException("Invalid characters.");
+            var buffer = new int[value.Length];
+            for (var i = 0; i < value.Length; i++)
+            {
+                if (_Decoding.TryGetValue(value[i], out var decoded))
+                {
+                    buffer[i] = decoded;
+                    continue; //Earliest return on expected path.
+                }
 
-            var div = value.Length / 3;
-            var result = new byte[div * 2 + (mod == 2 ? 1 : 0)];
+                throw new FormatException($"Invalid character at position {i}.");
+            }
+
+            var div3 = buffer.Length / 3;
+            var result = new byte[div3 * 2 + (mod3 == 2 ? 1 : 0)];
             var resultIndex = 0;
-            for (var i = 0; i < div * 3; i += 3)
+            var count3 = div3 * 3;
+            for (var i = 0;  i < count3; )
             {
-                var chunk = DecodeChunk(value.ToCharArray(i, 3));
-                Array.Copy(chunk, 0, result, resultIndex, 2);
-                resultIndex += 2;
+                var val = buffer[i++] + 45 * buffer[i++] + 2025 * buffer[i++];
+                result[resultIndex++] = Convert.ToByte(val / 256 % 256); 
+                result[resultIndex++] = Convert.ToByte(val % 256);
             }
 
-            if (mod == 2)
-            {
-                var chunk = DecodeChunk(value.ToCharArray(div * 3, 2));
-                Array.Copy(chunk, 0, result, resultIndex, 1);
-            }
-
+            if (mod3 != 2) 
+                return result;
+            
+            result[^1] = Convert.ToByte(buffer[^2] + 45 * buffer[^1]);
             return result;
-        }
-
-        private static byte[] DecodeChunk(char[] chunk)
-        {
-            var value = ChunkToInt(chunk);
-            var buffer = new byte[chunk.Length - 1]; //Cos value length 3 -> 2 bytes and 2 -> 1.
-            for (var j = buffer.Length - 1; j >= 0; j--)
-            {
-                buffer[j] = Convert.ToByte(value % 256);
-                value /= 256;
-            }
-
-            return buffer.ToArray();
-        }
-
-        private static int ChunkToInt(char[] chunk)
-        {
-            var result = 0;
-            var factor = 1;
-            foreach (var i in chunk)
-            {
-                result += _Decoding[i] * factor;
-                factor *= 45;
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Inspired by https://stackoverflow.com/questions/923771/quickest-way-to-convert-a-base-10-number-to-any-base-in-net
-        /// TODO fill the result directly in reverse and murder the do while
-        /// </summary>
-        private static string IntToStringFast(int value)
-        {
-            const int bufferSize = 3;
-            var i = bufferSize;
-            var buffer = new char[i];
-            do
-            {
-                buffer[--i] = _Encoding[value % 45];
-                value = value / 45;
-            }
-            while (value > 0);
-
-            var result = new char[bufferSize - i];
-            Array.Copy(buffer, i, result, 0, bufferSize - i);
-
-            return new string(result.Reverse().ToArray());
         }
     }
 }

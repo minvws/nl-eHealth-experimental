@@ -18,6 +18,27 @@ namespace NL.Mefitihe.Encoding.Tests
             Assert.Equal(output, encoded);
         }
 
+
+        [Theory]
+        [InlineData(0, "")]
+        [InlineData(1, "00")]
+        [InlineData(10, "000000000000000")]
+        public void EncodeArrayOfZeros(int len, string output)
+        {
+            var encoded = new Base45Encoding().Encode(new byte[len]);
+            Assert.Equal(output, encoded);
+        }
+
+        [Theory]
+        [InlineData(0, "")]
+        [InlineData(1, "00")]
+        [InlineData(10, "000000000000000")]
+        public void DecodeArrayOfZeros(int len, string output)
+        {
+            var decoded = new Base45Encoding().Decode(output);
+            Assert.Equal(new byte[len], decoded);
+        }
+
         [Theory]
         [InlineData("", "")]
         [InlineData("0", "31")]
@@ -33,7 +54,7 @@ namespace NL.Mefitihe.Encoding.Tests
         [Fact]
         public void EncodeNullGoBang()
         {
-            Assert.Throws<ArgumentNullException>(() => new Base45Encoding().Decode(null));
+            Assert.Throws<ArgumentNullException>(() => new Base45Encoding().Encode(null));
         }
 
         [Fact]
