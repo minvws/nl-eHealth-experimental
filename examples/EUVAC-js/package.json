@@ -10,9 +10,10 @@
   "dependencies": {
     "@fidm/asn1": "^1.0",
     "@fidm/x509": "^1.2.1",
+    "cbor": "^7.0.4",
     "cose-js": "^0.4",
-    "crypto-js": "^4.0",
-    "node-forge": "^0.10.0",
-    "sha256-uint8array": "^0.10.0"
+    "pako": "^2.0",
+    "sha256-uint8array": "^0.10.0",
+    "uint8-to-base64": "^0.2.0"
   }
 }
