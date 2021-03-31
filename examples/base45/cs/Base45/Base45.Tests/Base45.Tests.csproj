@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <AssemblyName>NL.MinVWS.Encoding.Base45.Tests</AssemblyName>
+    <RootNamespace>NL.MinVWS.Encoding.Base45.Tests</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit" Version="2.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Base45\Base45.csproj" />
+  </ItemGroup>
+
+</Project>
