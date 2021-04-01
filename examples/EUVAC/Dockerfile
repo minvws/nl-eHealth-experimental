@@ -32,8 +32,6 @@ COPY --chown=euvac:euvac gen-csca-dsc.sh /home/euvac/
 RUN /home/euvac/gen-csca-dsc.sh
 RUN mv csca.pem dsc-worker.pem masterlist-dsc.pem dsc-worker.key /home/euvac/static/
 
-COPY --chown=euvac:euvac templates /home/euvac/templates/
-
 COPY --chown=euvac:euvac entrypoint.sh \
      cose_sign.py \
      cose_verify.py \
