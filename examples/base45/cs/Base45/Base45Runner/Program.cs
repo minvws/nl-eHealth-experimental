@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: EUPL-1.2
 
 using System;
+using System.Diagnostics;
 
 namespace NL.MinVWS.Encoding.Base45.Runner
 {
@@ -12,8 +13,13 @@ namespace NL.MinVWS.Encoding.Base45.Runner
         {
             var buffer = new byte[Convert.ToInt64(args[0])];
             new Random().NextBytes(buffer);
-            Console.WriteLine(BitConverter.ToString(buffer));
-            Console.WriteLine(new Base45Encoding().Encode(buffer));
+            //Console.WriteLine(BitConverter.ToString(buffer));
+            var encoded = Base45Encoding.Encode(buffer);
+            var s = new Stopwatch();
+            s.Start();
+            var decoded = Base45Encoding.Decode(encoded);
+            s.Stop();
+            Console.WriteLine(s.ElapsedMilliseconds);
         }
     }
 }

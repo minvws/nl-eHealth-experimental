@@ -18,18 +18,17 @@ namespace NL.MinVWS.Encoding.Base45.Tests
         public void Encode(string input, string output)
         {
             var buffer = System.Text.Encoding.ASCII.GetBytes(input);
-            var encoded = new Base45Encoding().Encode(buffer);
+            var encoded = Base45Encoding.Encode(buffer);
             Assert.Equal(output, encoded);
         }
 
         [Fact]
         public void Boundary45Equal()
         {
-            var encoding = new Base45Encoding();
             var buffer = new byte[] { 45 };
-            var encoded = encoding.Encode(buffer);
+            var encoded = Base45Encoding.Encode(buffer);
             Assert.Equal(2, encoded.Length);
-            var decoded = encoding.Decode(encoded);
+            var decoded = Base45Encoding.Decode(encoded);
             Assert.Equal(buffer, decoded);
         }
 
@@ -39,7 +38,7 @@ namespace NL.MinVWS.Encoding.Base45.Tests
         [InlineData(10, "000000000000000")]
         public void EncodeArrayOfZeros(int len, string output)
         {
-            var encoded = new Base45Encoding().Encode(new byte[len]);
+            var encoded = Base45Encoding.Encode(new byte[len]);
             Assert.Equal(output, encoded);
         }
 
@@ -49,7 +48,7 @@ namespace NL.MinVWS.Encoding.Base45.Tests
         [InlineData(10, "000000000000000")]
         public void DecodeArrayOfZeros(int len, string output)
         {
-            var decoded = new Base45Encoding().Decode(output);
+            var decoded = Base45Encoding.Decode(output);
             Assert.Equal(new byte[len], decoded);
         }
 
@@ -61,20 +60,20 @@ namespace NL.MinVWS.Encoding.Base45.Tests
         [InlineData("base-45", "UJCLQE7W581")]
         public void Decode(string output, string input)
         {
-            var decoded = new Base45Encoding().Decode(input);
+            var decoded = Base45Encoding.Decode(input);
             Assert.Equal(output, System.Text.Encoding.ASCII.GetString(decoded));
         }
 
         [Fact]
         public void EncodeNullGoBang()
         {
-            Assert.Throws<ArgumentNullException>(() => new Base45Encoding().Encode(null));
+            Assert.Throws<ArgumentNullException>(() => Base45Encoding.Encode(null));
         }
 
         [Fact]
         public void DecodeNullGoBang()
         {
-            Assert.Throws<ArgumentNullException>(() => new Base45Encoding().Decode(null));
+            Assert.Throws<ArgumentNullException>(() => Base45Encoding.Decode(null));
         }
 
         [Theory]
@@ -83,7 +82,7 @@ namespace NL.MinVWS.Encoding.Base45.Tests
         [InlineData("1234567")]
         public void DecodeInvalidLengthGoBang(string input)
         {
-            var ex = Assert.Throws<FormatException>(() => new Base45Encoding().Decode(input));
+            var ex = Assert.Throws<FormatException>(() => Base45Encoding.Decode(input));
             Assert.Contains("length", ex.Message);
         }
 
@@ -92,7 +91,7 @@ namespace NL.MinVWS.Encoding.Base45.Tests
         [InlineData("^^^^^^")]
         public void DecodeInvalidCharacterGoBang(string input)
         {
-            var ex = Assert.Throws<FormatException>(() => new Base45Encoding().Decode(input));
+            var ex = Assert.Throws<FormatException>(() => Base45Encoding.Decode(input));
             Assert.Contains("character", ex.Message);
         }
     }

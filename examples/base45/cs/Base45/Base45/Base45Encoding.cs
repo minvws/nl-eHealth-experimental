@@ -9,8 +9,11 @@ namespace NL.MinVWS.Encoding
 {
     /// <summary>
     /// https://tools.ietf.org/html/draft-faltstrom-baseBaseSize-01
+    /// TL/DR:
+    /// This encoding takes a byte array, splits it into 2 byte chunks and encodes each chunk as 3 characters.
+    /// Any remaining byte is encoded as 2 characters, padded with a '0' when the remaining byte has value &lt; 45.
     /// </summary>
-    public class Base45Encoding
+    public static class Base45Encoding
     {
         private const int BaseSize = 45;
         private const int BaseSizeSquared = 2025;
@@ -25,15 +28,15 @@ namespace NL.MinVWS.Encoding
                                                     'U', 'V', 'W', 'X', 'Y', 'Z', ' ', '$', '%', '*', 
                                                     '+', '-', '.', '/', ':' };
 
-        private static readonly Dictionary<char, int> _Decoding = new(BaseSize);
+        private static readonly Dictionary<char, byte> _Decoding = new(BaseSize);
 
         static Base45Encoding()
         {
-            for(var i = 0; i < _Encoding.Length; ++i)
+            for(byte i = 0; i < _Encoding.Length; ++i)
                 _Decoding.Add(_Encoding[i], i);
         }
-        
-        public string Encode(byte[] buffer)
+
+        public static string Encode(byte[] buffer)
         {
             if (buffer == null)
                 throw new ArgumentNullException(nameof(buffer));
@@ -57,14 +60,13 @@ namespace NL.MinVWS.Encoding
             if (buffer.Length % ChunkSize == 0)
                 return new string(result);
 
-            result[resultIndex] = _Encoding[buffer[^1] % BaseSize];
-            
+            result[^2] = _Encoding[buffer[^1] % BaseSize];
             result[^1] = buffer[^1] < BaseSize ? _Encoding[0] : _Encoding[buffer[^1] / BaseSize % BaseSize]; 
 
             return new string(result);
         }
 
-        public byte[] Decode(string value)
+        public static byte[] Decode(string value)
         {
             if (value == null)
                 throw new ArgumentNullException(nameof(value));
@@ -76,8 +78,8 @@ namespace NL.MinVWS.Encoding
             if (remainderSize == 1)
                 throw new FormatException("Incorrect length.");
 
-            var buffer = new int[value.Length];
-            for (var i = 0; i < value.Length; i++)
+            var buffer = new byte[value.Length];
+            for (var i = 0; i < value.Length; ++i)
             {
                 if (_Decoding.TryGetValue(value[i], out var decoded))
                 {
@@ -95,15 +97,14 @@ namespace NL.MinVWS.Encoding
             for (var i = 0;  i < wholeChunkLength; )
             {
                 var val = buffer[i++] + BaseSize * buffer[i++] + BaseSizeSquared * buffer[i++];
-                var bytes = BitConverter.GetBytes(val);
-                result[resultIndex++] = bytes[1];
-                result[resultIndex++] = bytes[0];
+                result[resultIndex++] = (byte)(val / ByteSize); //result is always in the range 0-255 - % ByteSize omitted.
+                result[resultIndex++] = (byte)(val % ByteSize); 
             }
 
-            if (remainderSize != 2) 
+            if (remainderSize == 0) 
                 return result;
             
-            result[^1] = BitConverter.GetBytes(buffer[^2] + BaseSize * buffer[^1])[0];
+            result[^1] = (byte)(buffer[^2] + BaseSize * buffer[^1]); //result is always in the range 0-255 - % ByteSize omitted.
             return result;
         }
     }
