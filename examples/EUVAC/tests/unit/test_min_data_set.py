@@ -42,12 +42,10 @@ class TestMinDataSetPV:
     # factory tested separately, no need to re-test here
     def test_fields_pv(self):
         min_data_set: MinDataSet = MinDataSetFactory.create(MinDataSetFactory.DisclosureLevel.PV)
-
         assert min_data_set.certificate is not None
         assert isinstance(min_data_set.certificate, Certificate)
         vacc_cert: Certificate = min_data_set.certificate
-        assert isinstance(vacc_cert.UVCI, Optional[None])       # for DisclosureLevel.PV
-
+        assert vacc_cert.UVCI == Optional[None]     # NOTE: "== Optional[None]" not the same as "is not None"
         assert min_data_set.pv is not None
         pv = min_data_set.pv
         assert isinstance(pv, dict)
