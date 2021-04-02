@@ -18,7 +18,7 @@ class FhirQueryImmunization:
             )
             resp.raise_for_status()
             dict_resp = resp.json()
-            return dict_resp
+            return dict_resp, str(resp.request)
         except requests.exceptions.HTTPError as http_err:
             print(f"HTTP error: {http_err}")
         except Exception as err:

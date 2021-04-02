@@ -1,35 +1,10 @@
 <!DOCTYPE html>
 <html lang="EN">
 <head>
+  <link rel="stylesheet" href="styles.css">
   <title>FHIR2QR</title>
-  <style>
-    body
-    {
-      background-color: thistle;
-    }
-  </style>
+  <script src="scripts.js" type="application/javascript"></script>
 </head>
-<script>
-function import_url() {
-    const te = document.getElementById('fhir');
-    const ue = document.getElementById('url');
-    const url = ue.value;
-
-    console.log("fetching " + url);
-
-    te.value="...fetching";
-    fetch(url)
-      .then(function(reply) {
-          reply.text().then(function(payload) {
-                te.value = payload;
-          });
-         console.log("ok");
-      })
-      .catch(function(err) {
-         console.log("fetching " + url + " failed: "+err);
-      });
-    };
-</script>
 <body>
   <div>
     <h1>FHIR 2 QR</h1>
@@ -42,7 +17,8 @@ function import_url() {
       by <button onclick="import_url()">importing</button> it.
 <br/>
      <form action="/fhir2qr" method="post">
-         <textarea name=fhir id=fhir rows=20 cols=80><div w3-include-html="fhir_query_res.html"/></textarea>
+         <textarea name="fhir" id="fhir" rows="20" cols="80"></textarea>
+         <script type="application/javascript">fhir_query_res("fhir")</script>
       </li>
         <li>convert the returned JSON to an eHN Vaccination Minimum Data Set as per Annex 1
           <input type="submit" value="show" formaction="fhir2json"/>,

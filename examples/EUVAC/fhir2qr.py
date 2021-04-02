@@ -55,6 +55,21 @@ def index():
     return send_from_directory(directory="static", filename="index.html")
 
 
+@app.route("/scripts.js")
+def scripts():
+    return send_from_directory(directory="static", filename="scripts.js")
+
+
+@app.route("/styles.css")
+def styles():
+    return send_from_directory(directory="static", filename="styles.css")
+
+
+@app.route("/fhir_query_res.json")
+def fhir_query_res():
+    return send_from_directory(directory="static", filename="fhir_query_res.json")
+
+
 @app.route('/<regex("[a-z0-9\-]+\.(pem|key)"):file>')
 def cryptofile(file):
     return send_from_directory(
@@ -65,15 +80,16 @@ def cryptofile(file):
 @app.route("/fhir2json", methods=["POST", "GET"])
 def fhir2json():
     fhir_json = request.form["fhir"]
-    if not fhir_json or len(fhir_json) < 2:
-      # fhir_server = request.form["fhir_server"]
-      # fhir2qr_query = Fhir2QR(fhir_server=fhir_server)
-      fhir2qr_query = Fhir2QR(fhir_server=None)
-      qry_res: dict = fhir2qr_query.fhir_query_immu()
-    else:
-      qry_res = json.loads(fhir_json)
 
-    print(qry_res);
+    if not fhir_json or len(fhir_json) < 2:
+        fhir_server = (
+            request.form["fhir_server"] if "fhir_server" in request.form else ""
+        )
+        fhir2qr_query = Fhir2QR(fhir_server=fhir_server)
+        qry_res, req = fhir2qr_query.fhir_query_immu()
+        print(req)
+    else:
+        qry_res = json.loads(fhir_json)
 
     ret_data: dict = {}
 
