@@ -1,23 +1,14 @@
-from flask import Flask, request, send_from_directory, Response, send_file
-from fhir_query import FhirQueryImmunization
-from immu_parser import ImmuEntryParser
-from min_data_set import MinDataSet
-from werkzeug.routing import BaseConverter
-
-import sys
-import io
-import zlib
-import argparse
-import json
 import cbor2
-import segno as qr
+import io
+import json
 import ujson
+import zlib
+
+import segno as qr
 
 from base45 import b45encode
 from cose.algorithms import Es256
 from cose.curves import P256
-from cose.algorithms import Es256, EdDSA
-from cose.keys.keyparam import KpKty, KpAlg, EC2KpD, EC2KpX, EC2KpY, EC2KpCurve
 from cose.headers import Algorithm, KID
 from cose.keys import CoseKey
 from cose.keys.keyparam import KpAlg, EC2KpD, EC2KpCurve
@@ -27,6 +18,12 @@ from cose.messages import Sign1Message
 from cryptography import x509
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.serialization import load_pem_private_key
+from flask import Flask, request, send_from_directory, Response, send_file
+from werkzeug.routing import BaseConverter
+
+from fhir_query import FhirQueryImmunization
+from immu_parser import ImmuEntryParser
+from min_data_set import MinDataSet
 
 
 class Fhir2QR:
@@ -55,19 +52,9 @@ def index():
     return send_from_directory(directory="static", filename="index.html")
 
 
-@app.route("/scripts.js")
-def scripts():
-    return send_from_directory(directory="static", filename="scripts.js")
-
-
-@app.route("/styles.css")
-def styles():
-    return send_from_directory(directory="static", filename="styles.css")
-
-
-@app.route("/fhir_query_res.json")
-def fhir_query_res():
-    return send_from_directory(directory="static", filename="fhir_query_res.json")
+@app.route('/<regex("scripts.js|styles.css|fhir_query_res.json"):file>')
+def scripts_styles(file):
+    return send_from_directory(directory="static", filename=file)
 
 
 @app.route('/<regex("[a-z0-9\-]+\.(pem|key)"):file>')
@@ -80,11 +67,8 @@ def cryptofile(file):
 @app.route("/fhir2json", methods=["POST", "GET"])
 def fhir2json():
     fhir_json = request.form["fhir"]
-
+    fhir_server = request.form["fhir_server"] if "fhir_server" in request.form else ""
     if not fhir_json or len(fhir_json) < 2:
-        fhir_server = (
-            request.form["fhir_server"] if "fhir_server" in request.form else ""
-        )
         fhir2qr_query = Fhir2QR(fhir_server=fhir_server)
         qry_res, req = fhir2qr_query.fhir_query_immu()
         print(req)

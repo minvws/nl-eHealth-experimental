@@ -1,5 +1,6 @@
 import requests
 
+
 class FhirQueryImmunization:
     """ Performs FHIR Immunization queries against an HL7 FHIR R4 Server """
 
