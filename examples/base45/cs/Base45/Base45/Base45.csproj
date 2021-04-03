@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <AssemblyName>NL.MinVWS.Encoding.Base45</AssemblyName>
+    <RootNamespace>NL.MinVWS.Encoding</RootNamespace>
+  </PropertyGroup>
+
+</Project>
