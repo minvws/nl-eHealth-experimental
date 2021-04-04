@@ -4,9 +4,8 @@ import requests
 class FhirQueryImmunization:
     """ Performs FHIR Immunization queries against an HL7 FHIR R4 Server """
 
-    # SERVICE_ROOT_URL = "https://fhir-open.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/"    # Cerner
-    # SERVICE_ROOT_URL = "https://try.smilecdr.com:8000/baseR4/"    # SmileCDR
-    SERVICE_ROOT_URL = "https://server.fire.ly/r4/"  # fire.ly
+    # SERVICE_ROOT_URL = "https://server.fire.ly/r4/"  # fire.ly
+    SERVICE_ROOT_URL = "https://hl7eu.onfhir.io/r4/"  # EU HL7
     ACCEPT_HEADER = {"Accept": "application/fhir+json"}
 
     @staticmethod
@@ -15,7 +14,7 @@ class FhirQueryImmunization:
             resp = requests.get(
                 f"{FhirQueryImmunization.SERVICE_ROOT_URL}Immunization",
                 headers=FhirQueryImmunization.ACCEPT_HEADER,
-                params={"_summary": "data", "date": "ge2021-01-01"},
+                params={"_include": "*", "date": "ge2021-01-01"},
             )
             resp.raise_for_status()
             dict_resp = resp.json()
@@ -27,24 +26,33 @@ class FhirQueryImmunization:
 
     @staticmethod
     def resolve_patient(resource: dict) -> dict:
-        patient_uri = resource["patient"]
-        # Patient class?
-        return {
-            "name": "Gaby",
-            "identifier": "ABC",
-            "gender": "F",
-            "birthDate": "2001-01-01",
-        }
-        # try:
-        #     resp = requests.get(
-        #         patient_uri,
-        #         headers=FhirQueryImmunization.ACCEPT_HEADER,
-        #         params={"_summary": "data"},
-        #     )
-        #     resp.raise_for_status()
-        #     dict_resp = resp.json()
-        #     return dict_resp
-        # except requests.exceptions.HTTPError as http_err:
-        #     print(f"HTTP error: {http_err}")
-        # except Exception as err:
-        #     print(f"Other(requests) error: {err}")
+        patient: dict = resource["patient"]
+        if "reference" not in patient:
+            # reference already resolved (via "?_include=" in FHIR query?), so just return it
+            return patient
+
+        patient_uri = patient["reference"]
+        ret: dict = {"name": {}, "identifier": "", "gender": "", "birthDate": ""}
+        try:
+            resp = requests.get(
+                f"{FhirQueryImmunization.SERVICE_ROOT_URL}{patient_uri}",
+                headers=FhirQueryImmunization.ACCEPT_HEADER,
+                params={"_summary": "data"},
+            )
+            resp.raise_for_status()
+            dict_resp = resp.json()
+            patient_resp: dict = {}
+            # take first name element in list, this tends to be the "default" version in use
+            if "name" in dict_resp:
+                patient_resp["name"] = dict_resp["name"][0]
+            if "birthDate" in dict_resp:
+                patient_resp["birthDate"] = dict_resp["birthDate"]
+            if "gender" in dict_resp:
+                patient_resp["gender"] = dict_resp["gender"]
+            if "identifier" in dict_resp:
+                patient_resp["identifier"] = dict_resp["identifier"]
+            return patient_resp
+        except requests.exceptions.HTTPError as http_err:
+            print(f"HTTP error: {http_err}")
+        except Exception as err:
+            print(f"Other(requests) error: {err}")
