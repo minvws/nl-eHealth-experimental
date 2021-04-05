@@ -41,7 +41,7 @@ class ImmuEntryParser:
     pp = PrettyPrinter(indent=2)
 
     @staticmethod
-    def extract_entry(qry_entry: dict) -> Optional[MinDataSet]:
+    def extract_entry(qry_entry: dict, disclosure_level: MinDataSetFactory.DisclosureLevel) -> Optional[MinDataSet]:
         # General approach to processing the JSON: we just skip any JSON items that are not of interest to us
         # We are looking for resourceType of Immunization but we tread carefully, checking for existence
         # of keys at each step for two reasons:
@@ -57,7 +57,7 @@ class ImmuEntryParser:
                     min_data_set: MinDataSet = ImmuEntryParser.__get_min_data_set(
                         resource=resource,
                         patient=patient,
-                        disclosure_level=MinDataSetFactory.DisclosureLevel.MD,
+                        disclosure_level=disclosure_level,
                     )
                     return min_data_set
         return None
@@ -103,9 +103,13 @@ class ImmuEntryParser:
             or disclosure_level == MinDataSetFactory.DisclosureLevel.MD
         ):
             pv: dict = min_data_set.pv
-            pv["legalName"] = patient["name"]
+            # no validation checking for the following lines accessing "patient", allow exceptions to propagate
+            # e.g. it is _expected_ that "name" is present in patient, if not it is an error
+            # it is also expected that the name parts "given" and "family" are at least 1 character, etc
+            patient_name: dict = patient["name"]
+            pv["legalName"] = f'{patient_name["given"][0][0]}.{patient_name["family"][0]}.'
             pv["diseaseOrAgentTargeted"] = dat
-            pv["startDateOfValidity"] = "2019-12-31"
+            pv["startDateOfValidity"] = "YYYY-MM-DD"
 
         if (
             disclosure_level == MinDataSetFactory.DisclosureLevel.BC

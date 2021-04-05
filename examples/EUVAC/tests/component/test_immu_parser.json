@@ -1,0 +1,74 @@
+{
+  "resourceType": "Bundle",
+  "id": "2b0186ce-1d38-4179-82b3-57fd8e66a7ad",
+  "type": "searchset",
+  "total": 1,
+  "link": [
+    {
+      "relation": "self",
+      "url": "https://hl7eu.onfhir.io/r4/Immunization?_id=b66b9951-5548-450e-b6f8-085eb55e35cf&_page=1"
+    }
+  ],
+  "entry": [
+    {
+      "fullUrl": "https://hl7eu.onfhir.io/r4/Immunization/b66b9951-5548-450e-b6f8-085eb55e35cf",
+      "resource": {
+        "resourceType": "Immunization",
+        "id": "b66b9951-5548-450e-b6f8-085eb55e35cf",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2021-03-28T17:48:56.745Z"
+        },
+        "status": "completed",
+        "vaccineCode": {
+          "coding": [
+            {
+              "code": "1119349007",
+              "system": "http://snomed.info/sct",
+              "display": "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 messenger ribonucleic acid"
+            }
+          ],
+          "text": "Comirnaty"
+        },
+        "patient": {
+          "reference": "Patient/f012c5d1-ac66-4c58-9afa-5ea068c17b99"
+        },
+        "occurrenceDateTime": "2020-12-02",
+        "location": {
+          "reference": "Location/edecbb5e-19d4-4b9f-8c3a-d45d07d2c8a4"
+        },
+        "manufacturer": {
+          "display": "BioNTech Manufacturing GmbH"
+        },
+        "lotNumber": "B1235742",
+        "performer": [
+          {
+            "actor": {
+              "display": "MUDr. Aleš Procházka"
+            }
+          }
+        ],
+        "protocolApplied": [
+          {
+            "targetDisease": [
+              {
+                "coding": [
+                  {
+                    "code": "840533007",
+                    "system": "http://snomed.info/sct",
+                    "display": "SARS-CoV-2"
+                  }
+                ]
+              }
+            ],
+            "doseNumberPositiveInt": 1,
+            "seriesDosesPositiveInt": 2
+          }
+        ]
+      },
+      "search": {
+        "mode": "match"
+      }
+    }
+  ]
+}

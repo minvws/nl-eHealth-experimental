@@ -12,8 +12,8 @@ class Certificate:
     def __init__(self):
         self.issuer = ""
         self.UVCI: str = Optional[None]  # NOT completed for DisclosureLevel PV
-        self.validFrom = "2019-12-31"
-        self.validUntil = "2019-12-31"
+        self.validFrom = ""
+        self.validUntil = ""
         self.schemaVersion = ""
         self.issuingAuthorityCountry = ""
 

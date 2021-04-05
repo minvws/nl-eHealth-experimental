@@ -1,11 +1,6 @@
-from flask import Flask, render_template, request, send_from_directory, Response, send_file
-from fhir_query import FhirQueryImmunization
-from immu_parser import ImmuEntryParser
-from min_data_set import MinDataSet
-from werkzeug.routing import BaseConverter
-
 import io
 import zlib
+from typing import Tuple
 
 import cbor2
 import segno as qr
@@ -22,7 +17,14 @@ from cose.messages import Sign1Message
 from cryptography import x509
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.serialization import load_pem_private_key
+from flask import Flask, request, send_from_directory, Response, send_file
+from werkzeug.routing import BaseConverter
 
+from fhir_query import FhirQueryImmunization
+from immu_parser import ImmuEntryParser
+from min_data_set import MinDataSet, MinDataSetFactory
+
+app = Flask(__name__)
 
 _page_state: dict = {}
 
@@ -31,12 +33,47 @@ class Fhir2QR:
     def __init__(self, fhir_server: str):
         self.__fhir_server: str = fhir_server
 
-    def fhir_query_immu(self) -> dict:
-        qry_res = FhirQueryImmunization.find(fhir_server=self.__fhir_server)
-        return qry_res
+    def fhir_query_immu(self) -> Tuple[dict, str]:
+        qry_res, resp = FhirQueryImmunization.find(fhir_server=self.__fhir_server)
+        return qry_res, resp
 
+    def annex1_min_data_set(
+        self, qry_res: dict, disclosure_level: MinDataSetFactory.DisclosureLevel
+    ) -> dict:
+        """
+        :param qry_res: the result of a FHIR query contained as a dict (result of e.g.json.loads())
+        :type qry_res: dict
+        :param disclosure_level: Disclosure Level according to EU eHealthNetwork Annex 1 Minimum Data Set
+        :type disclosure_level: MinDataSetFactory.DisclosureLevel
+        :return: dict containing EU eHealthNetwork Annex 1 Minimum Data Set
+        """
+        if qry_res is None:
+            return {}
+        ret_data: dict = self.__process_entries(qry_res=qry_res, disclosure_level=disclosure_level)
+        if "resourceType" in qry_res:
+            if qry_res["resourceType"] == "Bundle":
+                total_matches = qry_res["total"]
+                ret_data["Total Matches"] = total_matches
+        return ret_data
 
-app = Flask(__name__)
+    def __process_entries(self, qry_res: dict, disclosure_level: MinDataSetFactory.DisclosureLevel) -> dict:
+        ret_data = {}
+        if "entry" in qry_res:
+            min_data_sets_annex1 = list()
+            for entry in qry_res["entry"]:
+                min_data_set: MinDataSet = ImmuEntryParser.extract_entry(
+                    qry_entry=entry, disclosure_level=disclosure_level
+                )
+                if min_data_set is not None:
+                    min_data_annex1 = min_data_set.pv
+                    if (
+                            disclosure_level == MinDataSetFactory.DisclosureLevel.MD
+                            and min_data_set.md is not None
+                    ):
+                        min_data_annex1.update(min_data_set.md)
+                    min_data_sets_annex1.append(min_data_annex1)
+            ret_data.update({"entries": min_data_sets_annex1})
+        return ret_data
 
 
 class RegexConverter(BaseConverter):
@@ -53,6 +90,11 @@ def index():
     return render_template("index.html")
 
 
+@app.route('/<regex("scripts.js|styles.css|fhir_query_res.json"):file>')
+def scripts_styles(file):
+    return send_from_directory(directory="static", filename=file)
+
+
 @app.route('/<regex("[a-z0-9\-]+\.(pem|key)"):file>')
 def cryptofile(file):
     return send_from_directory(
@@ -60,46 +102,16 @@ def cryptofile(file):
     )
 
 
-@app.route("/query_fhir_server", methods=["POST"])
-def query_fhir_server():
-    selected_server = request.form["fhir_servers"]
-    fhir2qr_query = Fhir2QR(fhir_server=selected_server)
-    qry_res: str = ujson.dumps(fhir2qr_query.fhir_query_immu())
-    _page_state['selected_server'] = selected_server
-    _page_state['qry_res'] = qry_res
-    return render_template("index.html", page_state=_page_state)
-
-
-@app.route("/favicon.ico", methods=["GET"])
-def favicon():
-    return send_from_directory(
-        directory="static", filename="favicon.ico", mimetype="image/x-icon"
-    )
-
-
-@app.route("/fhir2json", methods=["POST"])
+@app.route("/fhir2json", methods=["POST", "GET"])
 def fhir2json():
-    ret_data: dict = {}
-    qry_res = request.form["qry_res"]
-    if qry_res is not None:
-        if "entry" in qry_res:
-            # for demo we just take the first entry
-            min_data_set: MinDataSet = ImmuEntryParser.extract_entry(
-                qry_entry=qry_res["entry"]
-            )
-            if min_data_set is not None:
-                ret_data.update(min_data_set.pv)
-                if min_data_set.md is not None:
-                    ret_data.update(min_data_set.md)
-        if "resourceType" in qry_res:
-            if qry_res["resourceType"] == "Bundle":
-                total_matches = qry_res["total"]
-                ret_data["Total Matches"] = total_matches
-    else:
-        ret_data[
-            "FHIR2QR"
-        ] = f"No entries found to match FHIR query"
-    return render_template("index.html", fhir_2_json_mds=ujson.dumps(ret_data))
+    fhir_server = request.form["fhir_server"] if "fhir_server" in request.form else ""
+    fhir2qr = Fhir2QR(fhir_server=fhir_server)
+    qry_res, req = fhir2qr.fhir_query_immu()
+    app.logger.info(f"*** FHIR req: {req}")
+    min_data_set: dict = fhir2qr.annex1_min_data_set(
+        qry_res=qry_res, disclosure_level=MinDataSetFactory.DisclosureLevel.PV
+    )
+    return ujson.dumps(min_data_set)
 
 
 @app.route("/fhir2jsoncbor", methods=["POST", "GET"])
