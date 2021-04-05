@@ -16,64 +16,23 @@ from cose.messages import Sign1Message
 from cryptography import x509
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.serialization import load_pem_private_key
-from flask import Flask, request, send_from_directory, Response, render_template, send_file
+from flask import (
+    Flask,
+    request,
+    send_from_directory,
+    Response,
+    render_template,
+    send_file,
+)
 from typing import Tuple
 from werkzeug.routing import BaseConverter
 
-from fhir_query import FhirQueryImmunization
-from immu_parser import ImmuEntryParser
-from min_data_set import MinDataSet, MinDataSetFactory
+from fhir_query import FhirQuery
+from min_data_set import MinDataSetFactory
 
 app = Flask(__name__)
 
 _page_state: dict = {}
-
-
-class Fhir2QR:
-    def __init__(self, fhir_server: str):
-        self.__fhir_server: str = fhir_server
-
-    def fhir_query_immu(self):
-        (qry_res, resp) = FhirQueryImmunization.find(fhir_server=self.__fhir_server)
-        return qry_res, resp
-
-    def annex1_min_data_set(
-        self, qry_res: dict, disclosure_level: MinDataSetFactory.DisclosureLevel
-    ) -> dict:
-        """
-        :param qry_res: the result of a FHIR query contained as a dict (result of e.g.json.loads())
-        :type qry_res: dict
-        :param disclosure_level: Disclosure Level according to EU eHealthNetwork Annex 1 Minimum Data Set
-        :type disclosure_level: MinDataSetFactory.DisclosureLevel
-        :return: dict containing EU eHealthNetwork Annex 1 Minimum Data Set
-        """
-        if qry_res is None:
-            return {}
-        ret_data: dict = self.__process_entries(qry_res=qry_res, disclosure_level=disclosure_level)
-        if "resourceType" in qry_res:
-            if qry_res["resourceType"] == "Bundle":
-                total_matches = qry_res["total"]
-                ret_data["Total Matches"] = total_matches
-        return ret_data
-
-    def __process_entries(self, qry_res: dict, disclosure_level: MinDataSetFactory.DisclosureLevel) -> dict:
-        ret_data = {}
-        if "entry" in qry_res:
-            min_data_sets_annex1 = list()
-            for entry in qry_res["entry"]:
-                min_data_set: MinDataSet = ImmuEntryParser.extract_entry(
-                    qry_entry=entry, disclosure_level=disclosure_level
-                )
-                if min_data_set is not None:
-                    min_data_annex1 = min_data_set.pv
-                    if (
-                            disclosure_level == MinDataSetFactory.DisclosureLevel.MD
-                            and min_data_set.md is not None
-                    ):
-                        min_data_annex1.update(min_data_set.md)
-                    min_data_sets_annex1.append(min_data_annex1)
-            ret_data.update({"entries": min_data_sets_annex1})
-        return ret_data
 
 
 class RegexConverter(BaseConverter):
@@ -102,15 +61,22 @@ def cryptofile(file):
     )
 
 
+@app.route("/query_fhir_server", methods=["POST", "GET"])
+def query_fhir_server():
+    fhir_server = request.form["fhir_server"] if "fhir_server" in request.form else None
+    qry_res, _ = FhirQuery.find(fhir_server=fhir_server)
+    _page_state["qry_res"] = qry_res
+    return render_template("index.html", page_state=_page_state)
+
+
 @app.route("/fhir2json", methods=["POST", "GET"])
 def fhir2json():
-    fhir_server = request.form["fhir_server"] if "fhir_server" in request.form else None
-    fhir2qr = Fhir2QR(fhir_server=fhir_server)
-    qry_res, req = fhir2qr.fhir_query_immu()
-    app.logger.info(f"*** FHIR req: {req}")
-    min_data_set: dict = fhir2qr.annex1_min_data_set(
-        qry_res=qry_res, disclosure_level=MinDataSetFactory.DisclosureLevel.PV
+    # pre-cond: /query_fhir_server called prior in order to set: _page_state["qry_res"]
+    min_data_set: dict = FhirQuery.annex1_min_data_set(
+        qry_res=_page_state["qry_res"],
+        disclosure_level=MinDataSetFactory.DisclosureLevel.PV,
     )
+    _page_state["min_data_set"] = min_data_set
     return ujson.dumps(min_data_set)
 
 

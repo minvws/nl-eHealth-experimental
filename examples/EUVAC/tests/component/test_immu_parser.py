@@ -24,7 +24,7 @@ class TestImmuParser:
         with open(TestImmuParser.JSON_TEST_DATA, "r") as f:
             json_data: dict = json.load(f)
             assert json_data
-            # we extract the first (and only) entry from the Bundle:
+            # we extract the first entry only from the Bundle, as tests same for all instances
             assert "entry" in json_data
             assert "resource" in json_data["entry"][0]
             qry_entry: dict = json_data["entry"][0]
@@ -48,7 +48,7 @@ class TestImmuParser:
             assert "property md not supported for concrete type" in str(ex_run.value)
             # test data specific to disclosure level PV (JSON test data can be found in TestImmuParser.JSON_TEST_DATA)
             pv = min_data_set.pv
-            assert "F.O." == pv["legalName"]
+            assert "D.A." == pv["legalName"]
 
     def test_load_json_bc(self):
         pass

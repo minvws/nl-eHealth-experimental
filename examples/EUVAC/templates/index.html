@@ -10,7 +10,7 @@
 <p>This queries the given FHIR server for Immunization resources, and will:</p>
     <ol>
         <li>
-            <form action="/fhir2json" method="post">
+            <form action="/query_fhir_server" method="post">
                 <label for="fhir_server">Fetch JSON from </label>
                 <select id="fhir_server" name="fhir_server">
                 {%  if 'selected_server' in page_state %}
