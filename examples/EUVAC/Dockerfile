@@ -28,8 +28,8 @@ COPY --chown=euvac:euvac gen-csca-dsc.sh /home/euvac/
 RUN /home/euvac/gen-csca-dsc.sh
 
 COPY --chown=euvac:euvac static /home/euvac/static/
-COPY --chown=euvac:euvac templates /home/euvac/templates/
 RUN cp csca.pem dsc-worker.pem masterlist-dsc.pem dsc-worker.key /home/euvac/static/
+COPY --chown=euvac:euvac templates /home/euvac/templates/
 
 COPY --chown=euvac:euvac \
      cose_sign.py \

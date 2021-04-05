@@ -77,7 +77,7 @@ def fhir2json():
         disclosure_level=MinDataSetFactory.DisclosureLevel.PV,
     )
     _page_state["min_data_set"] = min_data_set
-    return ujson.dumps(min_data_set)
+    return render_template("index.html", page_state=_page_state)
 
 
 @app.route("/fhir2jsoncbor", methods=["POST", "GET"])

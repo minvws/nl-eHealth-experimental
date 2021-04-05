@@ -41,10 +41,10 @@
 <form action="/fhir2qr" method="post">
         <li>convert the returned JSON to an eHN Vaccination Minimum Data Set as per Annex 1
             <input formaction="fhir2json" formmethod="post"  type="submit" value="show"/>,
-            {% if 'fhir_2_json_mds' in page_state %}
-              {% if page_state.fhir_2_json_mds %}
-              <label for="fhir_2_json">First result entry as Min Data Set / Disclosure Level Medical:</label><br>
-              <textarea cols=80 id=fhir_2_json name=fhir_2_json rows=10>{page_state.fhir_2_json_mds}}</textarea>
+            {% if 'min_data_set' in page_state %}
+              {% if page_state.min_data_set %}
+              <label for="fhir_2_json">Min Data Set / Disclosure Level "Private Venue":</label><br>
+              <textarea cols=80 id=fhir_2_json name=fhir_2_json rows=10>{{page_state.min_data_set}}</textarea>
               {% endif %}
             {% endif %}
         </li>
