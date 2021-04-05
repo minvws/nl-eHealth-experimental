@@ -23,7 +23,7 @@ from werkzeug.routing import BaseConverter
 
 from fhir_query import FhirQueryImmunization
 from immu_parser import ImmuEntryParser
-from min_data_set import MinDataSet
+from min_data_set import MinDataSet, MinDataSetFactory
 
 
 class Fhir2QR:
@@ -66,27 +66,32 @@ def cryptofile(file):
 
 @app.route("/fhir2json", methods=["POST", "GET"])
 def fhir2json():
-    fhir_json = request.form["fhir"]
     fhir_server = request.form["fhir_server"] if "fhir_server" in request.form else ""
-    if not fhir_json or len(fhir_json) < 2:
-        fhir2qr_query = Fhir2QR(fhir_server=fhir_server)
-        qry_res, req = fhir2qr_query.fhir_query_immu()
-        print(req)
-    else:
-        qry_res = json.loads(fhir_json)
+    fhir2qr_query = Fhir2QR(fhir_server=fhir_server)
+    qry_res, req = fhir2qr_query.fhir_query_immu()
+    app.logger.info(f"*** FHIR req: {req}")
 
     ret_data: dict = {}
 
     if qry_res is not None:
         if "entry" in qry_res:
+            min_data_sets_annex1 = list()
+            disclosure_level: MinDataSetFactory.DisclosureLevel = MinDataSetFactory.DisclosureLevel.PV
             for entry in qry_res["entry"]:
                 min_data_set: MinDataSet = ImmuEntryParser.extract_entry(
-                    qry_entry=entry
+                    qry_entry=entry, disclosure_level=disclosure_level
                 )
                 if min_data_set is not None:
-                    ret_data.update(min_data_set.pv)
-                    if min_data_set.md is not None:
-                        ret_data.update(min_data_set.md)
+                    min_data_annex1 = min_data_set.pv
+                    if (
+                        disclosure_level == MinDataSetFactory.DisclosureLevel.MD
+                        and min_data_set.md is not None
+                    ):
+                        min_data_annex1.update(min_data_set.md)
+                    app.logger.info(f"*** min data annex 1 {min_data_annex1}")
+                    min_data_sets_annex1.append(min_data_annex1)
+            app.logger.info(f"*** min data sets annex 1 {min_data_sets_annex1}")
+            ret_data.update({"entries": min_data_sets_annex1})
         if "resourceType" in qry_res:
             if qry_res["resourceType"] == "Bundle":
                 total_matches = qry_res["total"]
