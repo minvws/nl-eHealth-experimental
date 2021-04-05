@@ -1,10 +1,9 @@
 import io
-import zlib
-from typing import Tuple
-
 import cbor2
 import segno as qr
 import ujson
+import zlib
+
 from base45 import b45encode
 from cose.algorithms import Es256
 from cose.curves import P256
@@ -17,7 +16,8 @@ from cose.messages import Sign1Message
 from cryptography import x509
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.serialization import load_pem_private_key
-from flask import Flask, request, send_from_directory, Response, send_file
+from flask import Flask, request, send_from_directory, Response, render_template, send_file
+from typing import Tuple
 from werkzeug.routing import BaseConverter
 
 from fhir_query import FhirQueryImmunization
@@ -33,8 +33,8 @@ class Fhir2QR:
     def __init__(self, fhir_server: str):
         self.__fhir_server: str = fhir_server
 
-    def fhir_query_immu(self) -> Tuple[dict, str]:
-        qry_res, resp = FhirQueryImmunization.find(fhir_server=self.__fhir_server)
+    def fhir_query_immu(self):
+        (qry_res, resp) = FhirQueryImmunization.find(fhir_server=self.__fhir_server)
         return qry_res, resp
 
     def annex1_min_data_set(
@@ -98,13 +98,13 @@ def scripts_styles(file):
 @app.route('/<regex("[a-z0-9\-]+\.(pem|key)"):file>')
 def cryptofile(file):
     return send_from_directory(
-        directory="templates", filename=file, mimetype="application/x-pem-file"
+        directory="static", filename=file, mimetype="application/x-pem-file"
     )
 
 
 @app.route("/fhir2json", methods=["POST", "GET"])
 def fhir2json():
-    fhir_server = request.form["fhir_server"] if "fhir_server" in request.form else ""
+    fhir_server = request.form["fhir_server"] if "fhir_server" in request.form else None
     fhir2qr = Fhir2QR(fhir_server=fhir_server)
     qry_res, req = fhir2qr.fhir_query_immu()
     app.logger.info(f"*** FHIR req: {req}")

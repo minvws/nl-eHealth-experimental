@@ -2,7 +2,6 @@ import requests
 from typing import Optional, Tuple
 
 
-
 class FhirQueryImmunization:
     """ Performs FHIR Immunization queries against an HL7 FHIR R4 Server """
 
@@ -11,7 +10,7 @@ class FhirQueryImmunization:
     ACCEPT_HEADER = {"Accept": "application/fhir+json"}
 
     @staticmethod
-    def find(fhir_server: Optional[str] = None) -> Tuple[dict, str]:
+    def find(fhir_server: Optional[str] = None):
         """
         :param fhir_server: Service Root URL for FHIR server,
         can be None in which case SERVICE_ROOT_URL will be used
@@ -41,7 +40,6 @@ class FhirQueryImmunization:
             return patient
 
         patient_uri = patient["reference"]
-        ret: dict = {"name": {}, "identifier": "", "gender": "", "birthDate": ""}
         try:
             resp = requests.get(
                 f"{FhirQueryImmunization.SERVICE_ROOT_URL}{patient_uri}",

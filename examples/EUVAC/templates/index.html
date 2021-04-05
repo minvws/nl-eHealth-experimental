@@ -1,21 +1,18 @@
 <!DOCTYPE html>
 <html lang="EN">
 <head>
-    <title>FHIR2QR</title>
-    <style type="text/css">
-        body {
-            background-color: thistle;
-        }
-    </style>
+  <link rel="stylesheet" href="styles.css">
+  <title>FHIR2QR</title>
+  <script src="scripts.js" type="application/javascript"></script>
 </head>
 <body>
 <h1>FHIR 2 QR</h1>
 <p>This queries the given FHIR server for Immunization resources, and will:</p>
     <ol>
         <li>
-            <form action="/query_fhir_server" method="post">
-                <label for="fhir_servers">Fetch JSON from </label>
-                <select id="fhir_servers" name="fhir_servers">
+            <form action="/fhir2json" method="post">
+                <label for="fhir_server">Fetch JSON from </label>
+                <select id="fhir_server" name="fhir_server">
                 {%  if 'selected_server' in page_state %}
                     {% if page_state.selected_server == "https://hl7eu.onfhir.io/r4/" %}
                         <option value="https://hl7eu.onfhir.io/r4/" selected>https://hl7eu.onfhir.io/r4/</option>
@@ -28,7 +25,7 @@
                         <option value="https://server.fire.ly/r4/">https://server.fire.ly/r4/</option>
                     {% endif %}
                 {% else %}
-                    <option value="https://hl7eu.onfhir.io/r4/">https://hl7eu.onfhir.io/r4/</option>
+                    <option value="https://hl7eu.onfhir.io/r4/" selected>https://hl7eu.onfhir.io/r4/</option>
                     <option value="https://server.fire.ly/r4/">https://server.fire.ly/r4/</option>
                 {%  endif %}
                 </select>
