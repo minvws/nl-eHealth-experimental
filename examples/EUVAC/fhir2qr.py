@@ -1,11 +1,10 @@
-import cbor2
 import io
-import json
-import ujson
 import zlib
+from typing import Tuple
 
+import cbor2
 import segno as qr
-
+import ujson
 from base45 import b45encode
 from cose.algorithms import Es256
 from cose.curves import P256
@@ -25,17 +24,54 @@ from fhir_query import FhirQueryImmunization
 from immu_parser import ImmuEntryParser
 from min_data_set import MinDataSet, MinDataSetFactory
 
+app = Flask(__name__)
+
 
 class Fhir2QR:
     def __init__(self, fhir_server: str):
         self.__fhir_server: str = fhir_server
 
-    def fhir_query_immu(self) -> dict:
-        qry_res = FhirQueryImmunization.find()
-        return qry_res
+    def fhir_query_immu(self) -> Tuple[dict, str]:
+        qry_res, resp = FhirQueryImmunization.find()
+        return qry_res, resp
 
+    def annex1_min_data_set(
+        self, qry_res: dict, disclosure_level: MinDataSetFactory.DisclosureLevel
+    ) -> dict:
+        """
+        :param qry_res: the result of a FHIR query contained as a dict (result of e.g.json.loads())
+        :type qry_res: dict
+        :param disclosure_level: Disclosure Level according to EU eHealthNetwork Annex 1 Minimum Data Set
+        :type disclosure_level: MinDataSetFactory.DisclosureLevel
+        :return: dict containing EU eHealthNetwork Annex 1 Minimum Data Set
+        """
+        if qry_res is None:
+            return {}
+        ret_data: dict = self.__process_entries(qry_res=qry_res, disclosure_level=disclosure_level)
+        if "resourceType" in qry_res:
+            if qry_res["resourceType"] == "Bundle":
+                total_matches = qry_res["total"]
+                ret_data["Total Matches"] = total_matches
+        return ret_data
 
-app = Flask(__name__)
+    def __process_entries(self, qry_res: dict, disclosure_level: MinDataSetFactory.DisclosureLevel) -> dict:
+        ret_data = {}
+        if "entry" in qry_res:
+            min_data_sets_annex1 = list()
+            for entry in qry_res["entry"]:
+                min_data_set: MinDataSet = ImmuEntryParser.extract_entry(
+                    qry_entry=entry, disclosure_level=disclosure_level
+                )
+                if min_data_set is not None:
+                    min_data_annex1 = min_data_set.pv
+                    if (
+                            disclosure_level == MinDataSetFactory.DisclosureLevel.MD
+                            and min_data_set.md is not None
+                    ):
+                        min_data_annex1.update(min_data_set.md)
+                    min_data_sets_annex1.append(min_data_annex1)
+            ret_data.update({"entries": min_data_sets_annex1})
+        return ret_data
 
 
 class RegexConverter(BaseConverter):
@@ -67,40 +103,13 @@ def cryptofile(file):
 @app.route("/fhir2json", methods=["POST", "GET"])
 def fhir2json():
     fhir_server = request.form["fhir_server"] if "fhir_server" in request.form else ""
-    fhir2qr_query = Fhir2QR(fhir_server=fhir_server)
-    qry_res, req = fhir2qr_query.fhir_query_immu()
+    fhir2qr = Fhir2QR(fhir_server=fhir_server)
+    qry_res, req = fhir2qr.fhir_query_immu()
     app.logger.info(f"*** FHIR req: {req}")
-
-    ret_data: dict = {}
-
-    if qry_res is not None:
-        if "entry" in qry_res:
-            min_data_sets_annex1 = list()
-            disclosure_level: MinDataSetFactory.DisclosureLevel = MinDataSetFactory.DisclosureLevel.PV
-            for entry in qry_res["entry"]:
-                min_data_set: MinDataSet = ImmuEntryParser.extract_entry(
-                    qry_entry=entry, disclosure_level=disclosure_level
-                )
-                if min_data_set is not None:
-                    min_data_annex1 = min_data_set.pv
-                    if (
-                        disclosure_level == MinDataSetFactory.DisclosureLevel.MD
-                        and min_data_set.md is not None
-                    ):
-                        min_data_annex1.update(min_data_set.md)
-                    app.logger.info(f"*** min data annex 1 {min_data_annex1}")
-                    min_data_sets_annex1.append(min_data_annex1)
-            app.logger.info(f"*** min data sets annex 1 {min_data_sets_annex1}")
-            ret_data.update({"entries": min_data_sets_annex1})
-        if "resourceType" in qry_res:
-            if qry_res["resourceType"] == "Bundle":
-                total_matches = qry_res["total"]
-                ret_data["Total Matches"] = total_matches
-    else:
-        ret_data[
-            "FHIR2QR"
-        ] = f"No entries found to match FHIR query on FHIR server: {fhir_server}"
-    return ujson.dumps(ret_data)
+    min_data_set: dict = fhir2qr.annex1_min_data_set(
+        qry_res=qry_res, disclosure_level=MinDataSetFactory.DisclosureLevel.PV
+    )
+    return ujson.dumps(min_data_set)
 
 
 @app.route("/fhir2jsoncbor", methods=["POST", "GET"])
