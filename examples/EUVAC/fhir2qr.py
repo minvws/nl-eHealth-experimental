@@ -1,23 +1,12 @@
-from flask import Flask, request, send_from_directory, Response, send_file
-from fhir_query import FhirQueryImmunization
-from immu_parser import ImmuEntryParser
-from min_data_set import MinDataSet
-from werkzeug.routing import BaseConverter
-
-import sys
 import io
-import zlib
-import argparse
-import json
 import cbor2
 import segno as qr
 import ujson
+import zlib
 
 from base45 import b45encode
 from cose.algorithms import Es256
 from cose.curves import P256
-from cose.algorithms import Es256, EdDSA
-from cose.keys.keyparam import KpKty, KpAlg, EC2KpD, EC2KpX, EC2KpY, EC2KpCurve
 from cose.headers import Algorithm, KID
 from cose.keys import CoseKey
 from cose.keys.keyparam import KpAlg, EC2KpD, EC2KpCurve
@@ -27,18 +16,23 @@ from cose.messages import Sign1Message
 from cryptography import x509
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.serialization import load_pem_private_key
+from flask import (
+    Flask,
+    request,
+    send_from_directory,
+    Response,
+    render_template,
+    send_file,
+)
+from typing import Tuple
+from werkzeug.routing import BaseConverter
 
-
-class Fhir2QR:
-    def __init__(self, fhir_server: str):
-        self.__fhir_server: str = fhir_server
-
-    def fhir_query_immu(self) -> dict:
-        qry_res = FhirQueryImmunization.find()
-        return qry_res
-
+from fhir_query import FhirQuery
+from min_data_set import MinDataSetFactory
 
 app = Flask(__name__)
+
+_page_state: dict = {}
 
 
 class RegexConverter(BaseConverter):
@@ -52,7 +46,12 @@ app.url_map.converters["regex"] = RegexConverter
 
 @app.route("/")
 def index():
-    return send_from_directory(directory="static", filename="index.html")
+    return render_template("index.html")
+
+
+@app.route('/<regex("scripts.js|styles.css|fhir_query_res.json"):file>')
+def scripts_styles(file):
+    return send_from_directory(directory="static", filename=file)
 
 
 @app.route('/<regex("[a-z0-9\-]+\.(pem|key)"):file>')
@@ -62,40 +61,23 @@ def cryptofile(file):
     )
 
 
+@app.route("/query_fhir_server", methods=["POST", "GET"])
+def query_fhir_server():
+    fhir_server = request.form["fhir_server"] if "fhir_server" in request.form else None
+    qry_res, _ = FhirQuery.find(fhir_server=fhir_server)
+    _page_state["qry_res"] = qry_res
+    return render_template("index.html", page_state=_page_state)
+
+
 @app.route("/fhir2json", methods=["POST", "GET"])
 def fhir2json():
-    fhir_json = request.form["fhir"]
-    if not fhir_json or len(fhir_json) < 2:
-      # fhir_server = request.form["fhir_server"]
-      # fhir2qr_query = Fhir2QR(fhir_server=fhir_server)
-      fhir2qr_query = Fhir2QR(fhir_server=None)
-      qry_res: dict = fhir2qr_query.fhir_query_immu()
-    else:
-      qry_res = json.loads(fhir_json)
-
-    print(qry_res);
-
-    ret_data: dict = {}
-
-    if qry_res is not None:
-        if "entry" in qry_res:
-            for entry in qry_res["entry"]:
-                min_data_set: MinDataSet = ImmuEntryParser.extract_entry(
-                    qry_entry=entry
-                )
-                if min_data_set is not None:
-                    ret_data.update(min_data_set.pv)
-                    if min_data_set.md is not None:
-                        ret_data.update(min_data_set.md)
-        if "resourceType" in qry_res:
-            if qry_res["resourceType"] == "Bundle":
-                total_matches = qry_res["total"]
-                ret_data["Total Matches"] = total_matches
-    else:
-        ret_data[
-            "FHIR2QR"
-        ] = f"No entries found to match FHIR query on FHIR server: {fhir_server}"
-    return ujson.dumps(ret_data)
+    # pre-cond: /query_fhir_server called prior in order to set: _page_state["qry_res"]
+    min_data_set: dict = FhirQuery.annex1_min_data_set(
+        qry_res=_page_state["qry_res"],
+        disclosure_level=MinDataSetFactory.DisclosureLevel.PV,
+    )
+    _page_state["min_data_set"] = min_data_set
+    return ujson.dumps(min_data_set)
 
 
 @app.route("/fhir2jsoncbor", methods=["POST", "GET"])

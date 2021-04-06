@@ -1,5 +1,4 @@
 from min_data_set import MinDataSet, MinDataSetFactory
-from fhir_query import FhirQueryImmunization
 from pprint import PrettyPrinter
 from typing import Optional
 
@@ -41,7 +40,9 @@ class ImmuEntryParser:
     pp = PrettyPrinter(indent=2)
 
     @staticmethod
-    def extract_entry(qry_entry: dict) -> Optional[MinDataSet]:
+    def extract_entry(
+        qry_entry: dict, disclosure_level: MinDataSetFactory.DisclosureLevel
+    ) -> Optional[MinDataSet]:
         # General approach to processing the JSON: we just skip any JSON items that are not of interest to us
         # We are looking for resourceType of Immunization but we tread carefully, checking for existence
         # of keys at each step for two reasons:
@@ -53,26 +54,19 @@ class ImmuEntryParser:
             resource: dict = qry_entry["resource"]
             if "resourceType" in resource:
                 if resource["resourceType"] == "Immunization":
-                    patient = FhirQueryImmunization.resolve_patient(resource=resource)
                     min_data_set: MinDataSet = ImmuEntryParser.__get_min_data_set(
-                        resource=resource,
-                        patient=patient,
-                        disclosure_level=MinDataSetFactory.DisclosureLevel.MD,
+                        resource=resource, disclosure_level=disclosure_level
                     )
                     return min_data_set
         return None
 
     @staticmethod
     def __get_min_data_set(
-        resource: dict,
-        patient: dict,
-        disclosure_level: MinDataSetFactory.DisclosureLevel,
+        resource: dict, disclosure_level: MinDataSetFactory.DisclosureLevel
     ) -> MinDataSet:
         """
         :param resource: a (nested) dict structure representing one item of { entry.resource }
         :type resource: dict
-        :param patient: the resolved FHIR reference to patient
-        :type entry: dict
         :param disclosure_level: controls the amount of data generated in the output JSON
         :type disclosure_level: :class: DisclosureLevel
         :return: MinDataSet derived class corresponding to the disclosure level
@@ -97,15 +91,24 @@ class ImmuEntryParser:
         else:
             dat = "Unknown"
 
+        patient = resource["patient"]
+
         if (
             disclosure_level == MinDataSetFactory.DisclosureLevel.PV
             or disclosure_level == MinDataSetFactory.DisclosureLevel.BC
             or disclosure_level == MinDataSetFactory.DisclosureLevel.MD
         ):
             pv: dict = min_data_set.pv
-            pv["legalName"] = patient["name"]
+            # no validation checking for the following lines accessing "patient", allow exceptions to propagate
+            # e.g. it is _expected_ that "name" is present in patient, if not it is an error
+            # it is also expected that the name parts "given" and "family" are at least 1 character, etc
+            # We take first entry for "name" as this is the "default" name if multiple present
+            patient_name: dict = patient["name"][0]
+            pv[
+                "legalName"
+            ] = f'{patient_name["given"][0][0]}.{patient_name["family"][0]}.'
             pv["diseaseOrAgentTargeted"] = dat
-            pv["startDateOfValidity"] = "2019-12-31"
+            pv["startDateOfValidity"] = "YYYY-MM-DD"
 
         if (
             disclosure_level == MinDataSetFactory.DisclosureLevel.BC
