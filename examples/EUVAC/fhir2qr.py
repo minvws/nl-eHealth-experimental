@@ -88,10 +88,9 @@ def fhir2jsonld():
 
 @app.route("/fhir2jsoncbor", methods=["POST", "GET"])
 def fhir2jsoncbor():
-    data = ujson.loads(fhir2json())
-    cb = cbor2.dumps(data)
-    # return Response(cb,mimetype='text/plain')
-    return cb
+    cb = cbor2.dumps(_page_state["min_data_set_jsonld"])
+    _page_state["min_data_set_jsonld_cborld"] = cb
+    return render_template("index.html", page_state=_page_state)
 
 
 @app.route("/fhir2jsoncborcose", methods=["POST", "GET"])
