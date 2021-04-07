@@ -95,7 +95,6 @@ def fhir2jsoncbor():
 
 @app.route("/fhir2jsoncborcose", methods=["POST", "GET"])
 def fhir2jsoncborcose():
-    data = fhir2jsoncbor()
     with open("dsc-worker.pem", "rb") as file:
         pem = file.read()
     cert = x509.load_pem_x509_certificate(pem)
@@ -107,6 +106,7 @@ def fhir2jsoncborcose():
     keyfile = load_pem_private_key(pem, password=None)
     priv = keyfile.private_numbers().private_value.to_bytes(32, byteorder="big")
 
+    data = _page_state["min_data_set_jsonld_cborld"]
     msg = Sign1Message(phdr={Algorithm: Es256, KID: keyid}, payload=data)
 
     cose_key = {
@@ -117,7 +117,8 @@ def fhir2jsoncborcose():
     }
     msg.key = CoseKey.from_dict(cose_key)
 
-    return msg.encode()
+    _page_state["min_data_set_jsoncborcose"] = msg.encode()
+    return render_template("index.html", page_state=_page_state)
 
 
 @app.route("/fhir2jsoncborcosezlib", methods=["POST", "GET"])

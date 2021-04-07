@@ -57,15 +57,22 @@
               {% endif %}
             {% endif %}
         <li>serialize it,
-            <input formaction="fhir2jsoncbor" type="submit" value="show"/>,
+            <input formaction="fhir2jsoncbor" formmethod="post" type="submit" value="show"/>,
             {% if 'min_data_set_jsonld_cborld' in page_state %}
               {% if page_state.min_data_set_jsonld_cborld %}
-                <label for="fhir_2_jsonld_cborld"><br>Min Data Set / JSON-LD / Disclosure Level "Private Venue":</label><br>
+                <label for="fhir_2_jsonld_cborld"><br>Min Data Set / CBOR-LD / Disclosure Level "Private Venue":</label><br>
                 <textarea cols=80 id=fhir_2_jsonld_cborld name=fhir_2_jsonld_cborld rows=4>{{page_state.min_data_set_jsonld_cborld}}</textarea>
               {% endif %}
             {% endif %}
         </li>
-        <li>digitally sign it <input formaction="fhir2jsoncborcosezlib" type="submit" value="show"/> with:
+        <li>digitally sign it <input formaction="fhir2jsoncborcose" formmethod="post" type="submit" value="show"/>
+            {% if 'min_data_set_jsoncborcose' in page_state %}
+              {% if page_state.min_data_set_jsoncborcose %}
+                <label for="fhir_2_jsoncborcose"><br>Min Data Set / COSE / Disclosure Level "Private Venue":</label><br>
+                <textarea cols=80 id=fhir_2_jsoncborcose name=fhir_2_jsoncborcose rows=4>{{page_state.min_data_set_jsoncborcose}}</textarea>
+              {% endif %}
+            {% endif %}
+         with:
             <ul>
                 <li> private key as a <a href="dsc-worker.key">PEM file</a> (<i>which you normally would not get!</i>).
                 </li>
