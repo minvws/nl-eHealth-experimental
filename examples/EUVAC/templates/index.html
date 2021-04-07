@@ -106,7 +106,23 @@
         </li>
     </ol>
     <p>Or
-        <input formaction="fhir2size" type="submit" value="show the sizes"/> after each step.
+        <input formaction="fhir2size" formmethod="post" type="submit" value="show the sizes"/> after each step:
+        {% if 'sizes' in page_state %}
+          {% if page_state.sizes %}
+            <table title="Sizes">
+            <thead>
+              <th align="right">Parameter:</th>
+              <th align="left">Size</th>
+            </thead>
+            {% for k,v in page_state.sizes.items() %}
+              <tr>
+                <td> {{ k }} </td>
+                <td> {{ v }} </td>
+              </tr>
+            {% endfor %}
+            </table>
+          {% endif %}
+        {% endif %}
 </form>
 </div>
 </body>

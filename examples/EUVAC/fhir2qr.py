@@ -24,6 +24,7 @@ from flask import (
     render_template,
     send_file,
 )
+from sys import getsizeof
 from werkzeug.routing import BaseConverter
 
 from disclosure_level import DisclosureLevel
@@ -42,6 +43,27 @@ class RegexConverter(BaseConverter):
 
 
 app.url_map.converters["regex"] = RegexConverter
+
+
+def __cose_sign(data: bytes) -> bytes:
+    with open("dsc-worker.pem", "rb") as file:
+        pem = file.read()
+    cert = x509.load_pem_x509_certificate(pem)
+    fingerprint = cert.fingerprint(hashes.SHA256())
+    keyid = fingerprint[-8:]
+    with open("dsc-worker.key", "rb") as file:
+        pem = file.read()
+    keyfile = load_pem_private_key(pem, password=None)
+    priv = keyfile.private_numbers().private_value.to_bytes(32, byteorder="big")
+    msg = Sign1Message(phdr={Algorithm: Es256, KID: keyid}, payload=data)
+    cose_key = {
+        KpKty: KtyEC2,
+        KpAlg: Es256,  # ecdsa-with-SHA256
+        EC2KpCurve: P256,  # Ought to be pk.curve - but the two libs clash
+        EC2KpD: priv,
+    }
+    msg.key = CoseKey.from_dict(cose_key)
+    return msg.encode()
 
 
 @app.route("/")
@@ -95,29 +117,9 @@ def fhir2jsoncbor():
 
 @app.route("/fhir2jsoncborcose", methods=["POST", "GET"])
 def fhir2jsoncborcose():
-    with open("dsc-worker.pem", "rb") as file:
-        pem = file.read()
-    cert = x509.load_pem_x509_certificate(pem)
-    fingerprint = cert.fingerprint(hashes.SHA256())
-    keyid = fingerprint[-8:]
-
-    with open("dsc-worker.key", "rb") as file:
-        pem = file.read()
-    keyfile = load_pem_private_key(pem, password=None)
-    priv = keyfile.private_numbers().private_value.to_bytes(32, byteorder="big")
-
-    data = _page_state["min_data_set_jsonld_cborld"]
-    msg = Sign1Message(phdr={Algorithm: Es256, KID: keyid}, payload=data)
-
-    cose_key = {
-        KpKty: KtyEC2,
-        KpAlg: Es256,  # ecdsa-with-SHA256
-        EC2KpCurve: P256,  # Ought to be pk.curve - but the two libs clash
-        EC2KpD: priv,
-    }
-    msg.key = CoseKey.from_dict(cose_key)
-
-    _page_state["min_data_set_jsoncborcose"] = msg.encode()
+    data: bytes = _page_state["min_data_set_jsonld_cborld"]
+    cose_msg: bytes = __cose_sign(data=data)
+    _page_state["min_data_set_jsoncborcose"] = cose_msg
     return render_template("index.html", page_state=_page_state)
 
 
@@ -146,24 +148,40 @@ def fhir2jsoncborcosezlibb45qr():
 
 @app.route("/fhir2size", methods=["POST", "GET"])
 def fhir2size():
-    step1 = fhir2json()
+    fhir_query_response: dict = FhirQuery().find()
+    min_data_set: MinDataSet = MinDataSetFactory.create(DisclosureLevel.PV)
+    min_data_set.parse(qry_res=fhir_query_response)
+    json_std = min_data_set.as_json()
+    json_ld: dict = min_data_set.as_jsonld()
+    cb = cbor2.dumps(json_ld)
+    cose_msg: bytes = __cose_sign(data=cb)
+    cose_compressed: bytes = zlib.compress(cose_msg, 9)
+    b45 = b45encode(cose_compressed)
+    qr_img = qr.make(b45, error="Q")
 
-    len_fhir = 0
-    len_json = len(ujson.dumps(fhir2json()))
-    len_cbor = len(fhir2jsoncbor())
-    len_cose = len(fhir2jsoncborcose())
-    len_zlib = len(fhir2jsoncborcosezlib())
-
-    b45 = fhir2jsoncborcosezlibb45()
-    len_b45 = len(b45)
-
-    img = qr.make(b45, error="Q")
-    img_s = len(img.matrix)
+    len_fhir = getsizeof(fhir_query_response)
+    len_json = getsizeof(json_std)
+    len_json_ld = getsizeof(json_ld)
+    len_cbor = getsizeof(cb)
+    len_cose = getsizeof(cose_msg)
+    len_zlib = getsizeof(cose_compressed)
+    len_b45 = getsizeof(b45)
+    qr_img_s = getsizeof(qr_img.matrix)
 
     win = len_json - len_zlib
     winp = int(100 * win / len_json)
 
-    return Response(
-        f"Sizes:\n JSON:   {len_json}\n CBOR:   {len_cbor}\n COSE:   {len_cose}\n ZLIB:   {len_zlib}\n B45 :   {len_b45}\n QR mode: {img.mode} (Should be 2/alphanumeric/b45)\n QR code: {img.version} (1..40)\n QR matrix: {img_s}x{img_s} (raw pixels without border)\n\nWin: {winp}%; {win} bytes saved on {len_json} bytes (FHIR was {len_fhir} bytes)",
-        mimetype="text/plain",
-    )
+    _page_state["sizes"] = {
+        "FHIR query response": len_fhir,
+        "JSON": len_json,
+        "JSON-LD": len_json_ld,
+        "CBOR": len_cbor,
+        "COSE": len_cose,
+        "LZMA": len_zlib,
+        "Base45": len_b45,
+        "QR mode": f"{qr_img.mode} (Should be 2/alphanumeric/b45)",
+        "QR code": f"{qr_img.version}(1..40)",
+        "QR matrix:": f"{qr_img_s}x{qr_img_s} (raw pixels without border)",
+        "Win:": f"{winp}%; {win} bytes saved with {len_zlib} (LZMA) bytes cf. {len_json} (JSON) bytes (FHIR was {len_fhir} bytes)"
+    }
+    return render_template("index.html", page_state=_page_state)

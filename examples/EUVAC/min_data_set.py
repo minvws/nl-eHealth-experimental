@@ -1,4 +1,4 @@
-import json
+import ujson
 
 from abc import ABC, abstractmethod
 from disclosure_level import DisclosureLevel
@@ -49,7 +49,7 @@ class MinDataSet(ABC):
         pass
 
     def as_json(self) -> str:
-        return json.dumps(self.as_dict_array())
+        return ujson.dumps(self.as_dict_array())
 
     def as_jsonld(self) -> dict:
         # example from: https://pypi.org/project/PyLD/
@@ -75,7 +75,7 @@ class MinDataSet(ABC):
             "https://schema.org/gen": resource["gen"]
         }
         with open(MinDataSet.__JSONLD_CONTEXT_FILE, "r") as ctx:
-            json_ctx: dict = json.load(ctx)
+            json_ctx: dict = ujson.load(ctx)
             compacted: dict = jsonld.compact(json_doc, json_ctx)
             return compacted
 
@@ -118,7 +118,7 @@ class MinDataSetPV(MinDataSet):
         return self.__entries
 
     def as_json(self) -> str:
-        return json.dumps(self.as_dict_array())
+        return ujson.dumps(self.as_dict_array())
 
 
 class MinDataSetBC(MinDataSet):
