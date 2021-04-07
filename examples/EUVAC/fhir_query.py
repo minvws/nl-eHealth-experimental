@@ -16,13 +16,13 @@ class FhirQuery:
         # use "falsy" boolean eval for arg fhir_server here -> empty string also false etc
         self.__fhir_server = fhir_server if fhir_server else FhirQuery.SERVICE_ROOT_URL
         # self.__fhir_server shall end in '/' -> so we don't have to check anywhere else
-        if self.__fhir_server[:-1] != "/":
+        if not self.__fhir_server.endswith("/"):
             self.__fhir_server = self.__fhir_server + "/"
 
-    def find(self, query_params: dict = None):
+    def find(self, query_params: dict = None) -> dict:
         """
         :param query_params:
-        :return: (FHIR query result as dict, HTTP request as str)
+        :return: FHIR query result as dict
         """
         try:
             resp = requests.get(
@@ -34,7 +34,7 @@ class FhirQuery:
             )
             resp.raise_for_status()
             dict_resp = resp.json()
-            return dict_resp, str(resp.request)
+            return dict_resp
         except requests.exceptions.HTTPError as http_err:
             print(f"HTTP error: {http_err}")
         except Exception as err:

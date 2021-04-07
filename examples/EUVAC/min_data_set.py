@@ -72,14 +72,10 @@ class MinDataSetPV(MinDataSet):
     MinimumDataSet for Private Venues
     """
 
-    class __PV(NamedTuple):
-        nam: str
-        gen: str = "U"
-
     def __init__(self):
         super().__init__()
         self.__certificate = Certificate()
-        self.__entries: List[MinDataSetPV.__PV] = list()
+        self.__entries: List[dict] = list()
 
     def parse(self, qry_res: dict) -> None:
         if MinDataSet._has_entries(qry_res=qry_res):
@@ -88,14 +84,15 @@ class MinDataSetPV(MinDataSet):
                 pv: dict = entry_parser.resolve_entry(
                     entry=entry, disclosure_level=DisclosureLevel.PV
                 )
-                self.__entries.append(MinDataSetPV.__PV(nam=pv["nam"], gen=pv["gen"]))
+                if pv:
+                    self.__entries.append(pv)
 
     @property
     def certificate(self) -> Certificate:
         return self.__certificate
 
     def as_dict(self) -> List[dict]:
-        return [entry._asdict() for entry in self.__entries]
+        return self.__entries
 
     def as_json(self) -> str:
         return json.dumps(self.as_dict())
@@ -106,15 +103,9 @@ class MinDataSetBC(MinDataSet):
     MinimumDataSet for Border Control
     """
 
-    class __BC(NamedTuple):
-        nam: str
-        pid: str
-        dob: str
-        gen: str = "U"
-
     def __init__(self):
         super().__init__()
-        self.__entries: List[MinDataSetBC.__BC] = list()
+        self.__entries: List[dict] = list()
 
     def parse(self, qry_res: dict) -> None:
         if MinDataSet._has_entries(qry_res=qry_res):
@@ -123,14 +114,11 @@ class MinDataSetBC(MinDataSet):
                 bc: dict = entry_parser.resolve_entry(
                     entry=entry, disclosure_level=DisclosureLevel.BC
                 )
-                self.__entries.append(
-                    MinDataSetBC.__BC(
-                        nam=bc["nam"], gen=bc["gen"], pid=bc["pid"], dob=bc["dob"]
-                    )
-                )
+                if bc:
+                    self.__entries.append(bc)
 
     def as_dict(self) -> List[dict]:
-        return [entry._asdict() for entry in self.__entries]
+        return self.__entries
 
 
 class MinDataSetMD(MinDataSet):
@@ -138,29 +126,9 @@ class MinDataSetMD(MinDataSet):
     MinimumDataSet for Medical
     """
 
-    class __MD(NamedTuple):
-        nam: str
-        pid: str
-        dob: str
-        gen: str = "U"
-
     def __init__(self):
         super().__init__()
-        self.__entries: List[MinDataSetMD.__MD] = list()
-
-        # TODO: move these fields to class __MD(NamedTuple)
-        self.__md = dict(
-            marketingAuthorizationHolder="",
-            vaccineCode="",
-            vaccineMedicinalProduct="",
-            batchLotNumber="",
-            dateOfVaccination="",
-            administeringCentre="",
-            healthProfessionalId="",
-            countryOfVaccination="",
-            numberInSeries="",
-            nextVaccinationDate="",
-        )
+        self.__entries: List[dict] = list()
 
     def parse(self, qry_res: dict) -> None:
         if MinDataSet._has_entries(qry_res=qry_res):
@@ -169,16 +137,11 @@ class MinDataSetMD(MinDataSet):
                 md: dict = entry_parser.resolve_entry(
                     entry=entry, disclosure_level=DisclosureLevel.MD
                 )
-                # TODO: we could just use map(NamedTuple._make, md) here instead
-                #  - but is less explicit than named arg assignment:
-                self.__entries.append(
-                    MinDataSetMD.__MD(
-                        nam=md["nam"], gen=md["gen"], pid=md["pid"], dob=md["dob"]
-                    )
-                )
+                if md:
+                    self.__entries.append(md)
 
     def as_dict(self) -> List[dict]:
-        return [entry._asdict() for entry in self.__entries]
+        return self.__entries
 
 
 class MinDataSetFactory:

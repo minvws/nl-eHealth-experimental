@@ -26,6 +26,7 @@ from flask import (
 )
 from werkzeug.routing import BaseConverter
 
+from disclosure_level import DisclosureLevel
 from fhir_query import FhirQuery
 from min_data_set import MinDataSetFactory, MinDataSet
 
@@ -63,8 +64,7 @@ def cryptofile(file):
 @app.route("/query_fhir_server", methods=["POST", "GET"])
 def query_fhir_server():
     fhir_server = request.form["fhir_server"] if "fhir_server" in request.form else None
-    qry_res, _ = FhirQuery(fhir_server=fhir_server).find()
-    _page_state["qry_res"] = qry_res
+    _page_state["qry_res"] = FhirQuery(fhir_server=fhir_server).find()
     return render_template("index.html", page_state=_page_state)
 
 
@@ -72,7 +72,7 @@ def query_fhir_server():
 def fhir2json():
     # pre-cond: /query_fhir_server called prior in order to set: _page_state["qry_res"]
 
-    min_data_set: MinDataSet = MinDataSetFactory.create(MinDataSetFactory.DisclosureLevel.PV)
+    min_data_set: MinDataSet = MinDataSetFactory.create(DisclosureLevel.PV)
     min_data_set.parse(qry_res=_page_state["qry_res"])
     _page_state["min_data_set"] = min_data_set.as_json()
     return render_template("index.html", page_state=_page_state)

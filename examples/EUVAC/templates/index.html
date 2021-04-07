@@ -43,7 +43,7 @@
             <input formaction="fhir2json" formmethod="post"  type="submit" value="show"/>,
             {% if 'min_data_set' in page_state %}
               {% if page_state.min_data_set %}
-              <label for="fhir_2_json">Min Data Set / Disclosure Level "Private Venue":</label><br>
+              <label for="fhir_2_json"><br>Min Data Set / Disclosure Level "Private Venue":</label><br>
               <textarea cols=80 id=fhir_2_json name=fhir_2_json rows=10>{{page_state.min_data_set}}</textarea>
               {% endif %}
             {% endif %}

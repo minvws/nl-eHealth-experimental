@@ -34,10 +34,11 @@ COPY --chown=euvac:euvac templates /home/euvac/templates/
 COPY --chown=euvac:euvac \
      cose_sign.py \
      cose_verify.py \
+     disclosure_level.py \
      entrypoint.sh \
      fhir2qr.py \
      fhir_query.py \
      immu_context.jsonld \
-     immu_parser.py \
      min_data_set.py \
+     vacc_entry_parser.py \
      /home/euvac/
