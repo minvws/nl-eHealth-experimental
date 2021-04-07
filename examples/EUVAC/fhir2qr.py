@@ -123,20 +123,20 @@ def fhir2jsoncborcose():
 
 @app.route("/fhir2jsoncborcosezlib", methods=["POST", "GET"])
 def fhir2jsoncborcosezlib():
-    data = fhir2jsoncborcose()
-    return zlib.compress(data, 9)
+    data = _page_state["min_data_set_jsoncborcose"]
+    _page_state["cose_compress"] = zlib.compress(data, 9)
+    return render_template("index.html", page_state=_page_state)
 
 
 @app.route("/fhir2jsoncborcosezlibb45", methods=["POST", "GET"])
 def fhir2jsoncborcosezlibb45():
-    data = fhir2jsoncborcosezlib()
-    b45 = b45encode(data)
-    return b45
+    _page_state["b45"] = b45encode(_page_state["cose_compress"])
+    return render_template("index.html", page_state=_page_state)
 
 
-@app.route("/fhir2jsoncborcosezlibb45qr", methods=["POST", "GET"])
+@app.route("/fhir2b45qr", methods=["POST", "GET"])
 def fhir2jsoncborcosezlibb45qr():
-    data = fhir2jsoncborcosezlibb45()
+    data = _page_state["b45"]
     # return qr.make(data,error='Q').svg_inline()
     buff = io.BytesIO()
     qr.make(data, error="Q").save(buff, kind="png", scale=6)
