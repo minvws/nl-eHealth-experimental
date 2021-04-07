@@ -44,11 +44,18 @@
             {% if 'min_data_set' in page_state %}
               {% if page_state.min_data_set %}
               <label for="fhir_2_json"><br>Min Data Set / Disclosure Level "Private Venue":</label><br>
-              <textarea cols=80 id=fhir_2_json name=fhir_2_json rows=10>{{page_state.min_data_set}}</textarea>
+              <textarea cols=80 id=fhir_2_json name=fhir_2_json rows=5>{{page_state.min_data_set}}</textarea>
               {% endif %}
             {% endif %}
         </li>
         <li>semantically compress it,
+            <input formaction="fhir2jsonld" formmethod="post" type="submit" value="show"/>,
+            {% if 'min_data_set_jsonld' in page_state %}
+              {% if page_state.min_data_set_jsonld %}
+                <label for="fhir_2_jsonld"><br>Min Data Set / JSON-LD / Disclosure Level "Private Venue":</label><br>
+                <textarea cols=80 id=fhir_2_jsonld name=fhir_2_jsonld rows=5>{{page_state.min_data_set_jsonld}}</textarea>
+              {% endif %}
+            {% endif %}
         <li>serialize it,
             <input formaction="fhir2jsoncbor" type="submit" value="show"/>,
         </li>

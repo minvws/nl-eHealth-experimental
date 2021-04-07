@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 from disclosure_level import DisclosureLevel
 from pathlib import Path
 from pyld import jsonld
-from typing import Any, List, NamedTuple, Optional
+from typing import List, Optional
 from vacc_entry_parser import VaccEntryParser
 
 
@@ -45,15 +45,38 @@ class MinDataSet(ABC):
         """
 
     @abstractmethod
-    def as_dict(self) -> List[dict]:
+    def as_dict_array(self) -> List[dict]:
         pass
 
     def as_json(self) -> str:
-        return json.dumps(self.as_dict())
+        return json.dumps(self.as_dict_array())
 
-    def as_json_ld(self) -> Any:
-        with open(MinDataSet.__JSONLD_CONTEXT_FILE, "r") as context:
-            compacted = jsonld.compact(self.as_json(), context.readlines())
+    def as_jsonld(self) -> dict:
+        # example from: https://pypi.org/project/PyLD/
+        #
+        # doc_ex = {
+        #     "http://schema.org/name": "Manu Sporny",
+        #     "http://schema.org/url": {"@id": "http://manu.sporny.org/"},
+        #     "http://schema.org/image": {"@id": "http://manu.sporny.org/images/manu.png"}
+        # }
+        #
+        # context_ex = {
+        #     "name": "http://schema.org/name",
+        #     "homepage": {"@id": "http://schema.org/url", "@type": "@id"},
+        #     "image": {"@id": "http://schema.org/image", "@type": "@id"}
+        # }
+        # compacted = jsonld.compact(doc_ex, context_ex)
+        #
+        # throw together a small JSON-LD version of the doc, somewhat convoluted but that's JSON-LD for you...
+        resource = self.as_dict_array()[0]
+        json_doc = {
+            "https://schema.org/nam": resource["nam"],
+            "https://schema.org/dat": resource["dat"],
+            "https://schema.org/gen": resource["gen"]
+        }
+        with open(MinDataSet.__JSONLD_CONTEXT_FILE, "r") as ctx:
+            json_ctx: dict = json.load(ctx)
+            compacted: dict = jsonld.compact(json_doc, json_ctx)
             return compacted
 
     @staticmethod
@@ -91,11 +114,11 @@ class MinDataSetPV(MinDataSet):
     def certificate(self) -> Certificate:
         return self.__certificate
 
-    def as_dict(self) -> List[dict]:
+    def as_dict_array(self) -> List[dict]:
         return self.__entries
 
     def as_json(self) -> str:
-        return json.dumps(self.as_dict())
+        return json.dumps(self.as_dict_array())
 
 
 class MinDataSetBC(MinDataSet):
@@ -117,7 +140,7 @@ class MinDataSetBC(MinDataSet):
                 if bc:
                     self.__entries.append(bc)
 
-    def as_dict(self) -> List[dict]:
+    def as_dict_array(self) -> List[dict]:
         return self.__entries
 
 
@@ -140,7 +163,7 @@ class MinDataSetMD(MinDataSet):
                 if md:
                     self.__entries.append(md)
 
-    def as_dict(self) -> List[dict]:
+    def as_dict_array(self) -> List[dict]:
         return self.__entries
 
 

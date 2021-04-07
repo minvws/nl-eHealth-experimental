@@ -1,55 +1,33 @@
+import json
 import pytest
 
 from disclosure_level import DisclosureLevel
-from min_data_set import Certificate, MinDataSet, MinDataSetPV, MinDataSetBC, MinDataSetMD, MinDataSetFactory
+from min_data_set import Certificate, MinDataSet, MinDataSetFactory
+from pathlib import Path
+from typing import List
 
 
-class TestMinDataSetFactory:
-    def test_inheritance_hierarchy(self):
-        assert issubclass(MinDataSetPV, MinDataSet)
-        assert issubclass(MinDataSetBC, MinDataSet)
-        assert issubclass(MinDataSetMD, MinDataSet)
-
-    def test_create_pv(self):
-        min_data_set: MinDataSet = MinDataSetFactory.create(DisclosureLevel.PV)
-        assert min_data_set is not None
-        assert isinstance(min_data_set, MinDataSet)
-        assert isinstance(min_data_set, MinDataSetPV)
-        assert not isinstance(min_data_set, MinDataSetBC)
-        assert not isinstance(min_data_set, MinDataSetMD)
-
-    def test_create_bc(self):
-        min_data_set: MinDataSet = MinDataSetFactory.create(DisclosureLevel.BC)
-        assert min_data_set is not None
-        assert isinstance(min_data_set, MinDataSet)
-        assert not isinstance(min_data_set, MinDataSetPV)
-        assert isinstance(min_data_set, MinDataSetBC)
-        assert not isinstance(min_data_set, MinDataSetMD)
-
-    def test_create_md(self):
-        min_data_set: MinDataSet = MinDataSetFactory.create(DisclosureLevel.MD)
-        assert min_data_set is not None
-        assert isinstance(min_data_set, MinDataSet)
-        assert not isinstance(min_data_set, MinDataSetPV)
-        assert not isinstance(min_data_set, MinDataSetBC)
-        assert isinstance(min_data_set, MinDataSetMD)
-
-
-@pytest.mark.skip(reason="changing data member fields")
 class TestMinDataSetPV:
     # factory tested separately, no need to re-test here
-    def test_fields_pv(self):
-        min_data_set: MinDataSet = MinDataSetFactory.create(DisclosureLevel.PV)
-        # assert min_data_set.certificate is not None
-        # assert isinstance(min_data_set.certificate, Certificate)
-        # vacc_cert: Certificate = min_data_set.certificate
-        # assert vacc_cert.UVCI == Optional[None]     # NOTE: "== Optional[None]" not the same as "is not None"
-        # assert min_data_set.pv is not None
-        # pv = min_data_set.pv
-        # assert isinstance(pv, dict)
-        # assert "legalName" in pv
-        # assert "diseaseOrAgentTargeted" in pv
-        # assert "startDateOfValidity" in pv
+    def test_dict(self):
+        with open(Path(Path(__file__).parent.resolve(), "test_min_data_set.json"), "r") as f:
+            qry_res: dict = json.load(f)
+            min_data_set: MinDataSet = MinDataSetFactory.create(DisclosureLevel.PV)
+            min_data_set.parse(qry_res=qry_res)
+            min_data: List[dict] = min_data_set.as_dict_array()
+            assert min_data is not None
+            # TODO: validate fields in min_data
+
+    def test_json(self):
+        pass
+
+    def test_jsonld(self):
+        with open(Path(Path(__file__).parent.resolve(), "test_min_data_set.json"), "r") as f:
+            qry_res: dict = json.load(f)
+            min_data_set: MinDataSet = MinDataSetFactory.create(DisclosureLevel.PV)
+            min_data_set.parse(qry_res=qry_res)
+            min_data: dict = min_data_set.as_jsonld()
+            assert min_data is not None
 
 
 @pytest.mark.skip(reason="changing data member fields")

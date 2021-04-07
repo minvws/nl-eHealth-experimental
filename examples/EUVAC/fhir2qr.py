@@ -71,10 +71,18 @@ def query_fhir_server():
 @app.route("/fhir2json", methods=["POST", "GET"])
 def fhir2json():
     # pre-cond: /query_fhir_server called prior in order to set: _page_state["qry_res"]
-
     min_data_set: MinDataSet = MinDataSetFactory.create(DisclosureLevel.PV)
     min_data_set.parse(qry_res=_page_state["qry_res"])
     _page_state["min_data_set"] = min_data_set.as_json()
+    return render_template("index.html", page_state=_page_state)
+
+
+@app.route("/fhir2jsonld", methods=["POST", "GET"])
+def fhir2jsonld():
+    # pre-cond: /query_fhir_server called prior in order to set: _page_state["qry_res"]
+    min_data_set: MinDataSet = MinDataSetFactory.create(DisclosureLevel.PV)
+    min_data_set.parse(qry_res=_page_state["qry_res"])
+    _page_state["min_data_set_jsonld"] = min_data_set.as_jsonld()
     return render_template("index.html", page_state=_page_state)
 
 
