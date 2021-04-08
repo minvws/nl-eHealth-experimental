@@ -1,52 +1,52 @@
 ﻿{
-    "$schema" : "http://json-schema.org/schema#",
-    "$id" : "https://github.com/nl-eHealth-experimental/examples/EUVAC/vaccinationDisclosure.PrivateVenue.schema.json",
-    "type" : "object",
-    "properties" : {
-      "dsc": { "type": "string", "minLength": 12, "maxLength": 12, "$comment": "8 bytes of SHA256 of DSC certificate in base45." },
-      "nam": { "type": "string", "$comment": "legal name" },
-      "v": { "type": "array", "items": "#/definitions/vaccinationEvent", "minItems": 1 },
-      "c": { "type": "#/definitions/certificate" },
-      "t": { "type": "#/definitions/test" },
-      "r": { "type": "#/definitions/recovery" }
-    },
-    "required": ["dsc","nam","v","c"],
-    "definitions" : {
-        "vaccinationEvent" : {
-            "type" : "object",
-            "properties" : {
-                "tg" : {"type":"string", "$comment" : "Disease or Agent Targeted" },
-                "fr" : {"type":"string", "format":"date", "$comment" : "Valid From" }
-            },
-            "required": ["tg","fr"]
-        },
-        "certificate": {
-            "type": "object",
-            "properties": {
-                "is" : {"type":"string", "$comment" : "Issuer" },
-                "ia" : {"type":"string", "$comment" : "Issuing Authority" },
-                "st" : {"type":"string", "format":"date-time", "$comment" : "Valid from" },
-                "en" : {"type":"string", "format":"date-time", "$comment" : "Valid until" },
-                "vr" : {"type":"string", "$comment" : "Schema version, semver" }
-            },
-            "required": ["is", "ia", "st", "en", "vr"]
-        },
-        "test": {
+  "$schema" : "http://json-schema.org/schema#",
+  "$id" : "https://github.com/nl-eHealth-experimental/examples/EUVAC/vaccinationDisclosure.Medical.schema.json",
+  "type" : "object",
+  "properties" : {
+    "nam": { "type": "string", "$comment": "Initial. FamilyName" },
+    "sex": { "type": "string", "$comment": "patient Gender." },
+    "v": { "type": "array", "items": "#/definitions/vaccinationEvent", "minItems": 1 },
+    "t": { "type": "#/definitions/test" },
+    "r": { "type": "#/definitions/recovery" },
+    "c": { "type": "#/definitions/certificate" },
+    "dsc": { "type": "string", "minLength": 12, "maxLength": 12, "$comment": "8 bytes of SHA256 of DSC certificate in base45." }
+  },
+  "required": [ "nam", "sex", "v", "c", "dsc" ],
+  "definitions" : {
+      "test": {
           "type": "object",
           "properties": {
-            "tg" : {"type":"string", "$comment" : "Disease or Agent Targeted" },
-            "ip" : {"type":"string", "$comment" : "Infectious period." },
-            "st" : {"type":"string", "minLength": 1, "maxLength": 1, "enum": ["P", "N", "O"], "$comment" : "TBA. Status _ve, -ve, other?" }
+              "tg" : {"type":"string", "$comment" : "Disease or Agent Targeted." },
+              "ro" : {"type":"string", "format":"date-time", "$comment" : "Result occurence." },
+              "st" : {"type":"string", "$comment" : "Status." }
           },
-          "required": ["tg", "ip", "st"]
+          "required": ["tg", "ro", "st"]
+      },
+      "vaccinationEvent" : {
+          "type" : "object",
+          "properties" : {
+              "tg" : {"type":"string", "$comment" : "Disease or Agent Targeted as codableConcept." }
+          },
+          "required": ["tg"]
+      },
+      "recovery": {
+        "type": "object",
+        "properties": {
+            "tg" : {"type":"string", "$comment" : "Disease or Agent Targeted as codableConcept." },
+            "fr" : {"type":"string", "format":"date", "$comment" : "Valid From." }
         },
-        "recovery": {
+        "required": ["tg", "fr", "co"]
+      },
+      "certificate": {
           "type": "object",
           "properties": {
-            "tg" : {"type":"string", "$comment" : "Disease or Agent Targeted" },
-            "fr" : {"type":"string", "format":"date", "$comment" : "Valid From" }
+              "is" : {"type":"string", "$comment" : "Issuer" },
+              "st" : {"type":"string", "format":"date-time", "$comment" : "Valid from" },
+              "en" : {"type":"string", "format":"date-time", "$comment" : "Valid until" },
+              "vr" : {"type":"string", "$comment" : "Schema version, semver" },
+              "ia" : {"type":"string", "$comment" : "Issuing Authority" }
           },
-          "required": ["tg", "fr"]
-        }
-    }
+          "required": ["id", "is", "ia", "st", "en", "vr"]
+      }
+  }
 }
