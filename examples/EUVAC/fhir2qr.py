@@ -1,7 +1,6 @@
 import io
 import cbor2
 import segno as qr
-import ujson
 import zlib
 
 from base45 import b45encode
@@ -20,7 +19,6 @@ from flask import (
     Flask,
     request,
     send_from_directory,
-    Response,
     render_template,
     send_file,
 )
@@ -81,6 +79,13 @@ def cryptofile(file):
     return send_from_directory(
         directory="static", filename=file, mimetype="application/x-pem-file"
     )
+
+
+@app.route("/clear_all_fields", methods=["POST"])
+def clear_all_fields():
+    global _page_state
+    _page_state = {}
+    return render_template("index.html", page_state=_page_state)
 
 
 @app.route("/query_fhir_server", methods=["POST", "GET"])

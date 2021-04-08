@@ -7,7 +7,23 @@
 </head>
 <body>
 <h1>FHIR 2 QR</h1>
-<p>This queries the given FHIR server for Immunization resources, and will:</p>
+<table>
+    <tr>
+        <td>
+            <form action="/clear_all_fields" method="post">
+                <button type="submit">Clear All Fields</button>
+            </form>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <br>
+        </td>
+    </tr>
+    <tr>
+        <td>FHIR2QR queries the given FHIR server for Immunization resources, and will:</td>
+    </tr>
+</table>
     <ol>
         <li>
             <form action="/query_fhir_server" method="post">
@@ -29,7 +45,11 @@
                     <option value="https://server.fire.ly/r4/">https://server.fire.ly/r4/</option>
                 {%  endif %}
                 </select>
-                by <button type="submit" value="show">querying</button> it.<br>
+                by
+                <table>
+                    <tr><td><button type="submit" value="show">querying</button> it.<br></td></tr>
+
+                </table>
                 {% if 'qry_res' in page_state %}
                     {% if page_state.qry_res %}
                     <label for="fhir_query_res">FHIR Query results as ujson:</label><br>
