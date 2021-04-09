@@ -178,7 +178,7 @@ def fhir2size():
     len_cose = getsizeof(cose_msg)
     len_zlib = getsizeof(cose_compressed)
     len_b45 = getsizeof(b45)
-    qr_img_s = getsizeof(qr_img.matrix)
+    qr_img_s = len(qr_img.matrix)
 
     win = len_json - len_zlib
     winp = int(100 * win / len_json)
@@ -193,7 +193,7 @@ def fhir2size():
         "Base45: ": len_b45,
         "QR mode: ": f"{qr_img.mode} (Should be 2/alphanumeric/b45)",
         "QR code: ": f"{qr_img.version} (1..40)",
-        "QR matrix: ": f"{qr_img_s}x{qr_img_s} (raw pixels without border)",
+        "QR matrix: ": f"{qr_img_s}x{qr_img_s} (raw pixels without border, number of cells)",
         "Win: ": f"{winp}%; {win} bytes saved with {len_zlib} (LZMA) bytes cf. {len_json} (JSON) bytes (FHIR was {len_fhir} bytes)"
     }
     _page_state["focus_btn"] = "btn_fhir2size"
