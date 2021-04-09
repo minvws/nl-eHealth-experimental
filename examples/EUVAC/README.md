@@ -1,15 +1,20 @@
 # EUVAC - EU Vaccination Certificate Generation
 
 ## Pre-Requisites
-1. [Docker](https://www.docker.com/) should be running 
+1. [Docker](https://www.docker.com/) should be running already if you want to 
+   run the webserver isolated in a docker container
 
 ## Quick Start
+### Standalone
+1. ```./fhir2qr.py```
+### Docker
 1. bash shell 
    1. ```./build_docker.sh```
    1. ```./run_docker.sh```
 1. other
    1. ```docker build -t nl/euvac .```
    1. ```docker run --rm -p 9010:5000 nl/euvac```
+
 
 ## Default Settings
 ### Port Mappings
