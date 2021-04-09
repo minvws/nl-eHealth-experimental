@@ -8,142 +8,157 @@
 <body>
 <h1>FHIR 2 QR</h1>
 <table>
-    <tr>
-        <td>
-            <form action="/clear_all_fields" method="post">
-                <button type="submit">Clear All Fields</button>
-            </form>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <br>
-        </td>
-    </tr>
-    <tr>
-        <td>FHIR2QR queries the given FHIR server for Immunization resources, and will:</td>
-    </tr>
+  <tr>
+    <td>
+      <form action="/clear_all_fields" method="post">
+        <button type="submit">Clear All Fields</button>
+      </form>
+    </td>
+  </tr>
+  <tr>
+    <td><br></td>
+  </tr>
+  <tr>
+    <td>FHIR2QR queries the given FHIR server for Immunization resources, and will:</td>
+  </tr>
 </table>
-    <ol>
-        <li>
-            <form action="/query_fhir_server" method="post">
-                <label for="fhir_server">Fetch JSON from </label>
-                <select id="fhir_server" name="fhir_server">
-                {%  if 'selected_server' in page_state %}
-                    {% if page_state.selected_server == "https://hl7eu.onfhir.io/r4/" %}
-                        <option value="https://hl7eu.onfhir.io/r4/" selected>https://hl7eu.onfhir.io/r4/</option>
-                    {% else %}
-                        <option value="https://hl7eu.onfhir.io/r4/">https://hl7eu.onfhir.io/r4/</option>
-                    {% endif %}
-                    {% if page_state.selected_server == "https://server.fire.ly/r4/" %}
-                        <option value="https://server.fire.ly/r4/" selected>https://server.fire.ly/r4/</option>
-                    {% else %}
-                        <option value="https://server.fire.ly/r4/">https://server.fire.ly/r4/</option>
-                    {% endif %}
-                {% else %}
-                    <option value="https://hl7eu.onfhir.io/r4/" selected>https://hl7eu.onfhir.io/r4/</option>
-                    <option value="https://server.fire.ly/r4/">https://server.fire.ly/r4/</option>
-                {%  endif %}
-                </select>
-                by
-                <table>
-                    <tr><td><button type="submit" value="show">querying</button> it.<br></td></tr>
-
-                </table>
-                {% if 'qry_res' in page_state %}
-                    {% if page_state.qry_res %}
-                    <label for="fhir_query_res">FHIR Query results as ujson:</label><br>
-                    <textarea cols=80 id="fhir_query_res" name="fhir_query_res" rows=20>{{page_state.qry_res}}</textarea>
-                    {% endif %}
-                {% endif %}
-            </form>
-        </li>
-<form action="/fhir2qr" method="post">
-        <li>convert the returned JSON to an eHN Vaccination Minimum Data Set as per Annex 1
-            <input formaction="fhir2json" formmethod="post"  type="submit" value="show"/>,
-            {% if 'min_data_set' in page_state %}
-              {% if page_state.min_data_set %}
-              <label for="fhir_2_json"><br>Min Data Set / Disclosure Level "Private Venue":</label><br>
-              <textarea cols=80 id="fhir_2_json" name="fhir_2_json" rows=4>{{page_state.min_data_set}}</textarea>
-              {% endif %}
-            {% endif %}
-        </li>
-        <li>semantically compress it,
-            <input formaction="fhir2jsonld" formmethod="post" type="submit" value="show"/>,
-            {% if 'min_data_set_jsonld' in page_state %}
-              {% if page_state.min_data_set_jsonld %}
-                <label for="fhir_2_jsonld"><br>Min Data Set / JSON-LD / Disclosure Level "Private Venue":</label><br>
-                <textarea cols=80 id="fhir_2_jsonld" name="fhir_2_jsonld" rows=4>{{page_state.min_data_set_jsonld}}</textarea>
-              {% endif %}
-            {% endif %}
-        <li>serialize it,
-            <input formaction="fhir2jsoncbor" formmethod="post" type="submit" value="show"/>,
-            {% if 'min_data_set_jsonld_cborld' in page_state %}
-              {% if page_state.min_data_set_jsonld_cborld %}
-                <label for="fhir_2_jsonld_cborld"><br>Min Data Set / CBOR-LD / Disclosure Level "Private Venue":</label><br>
-                <textarea cols=80 id="fhir_2_jsonld_cborld" name="fhir_2_jsonld_cborld" rows=4>{{page_state.min_data_set_jsonld_cborld}}</textarea>
-              {% endif %}
-            {% endif %}
-        </li>
-        <li>digitally sign it <input formaction="fhir2jsoncborcose" formmethod="post" type="submit" value="show"/>
-            {% if 'min_data_set_jsoncborcose' in page_state %}
-              {% if page_state.min_data_set_jsoncborcose %}
-                <label for="fhir_2_jsoncborcose"><br>Min Data Set / COSE / Disclosure Level "Private Venue":</label><br>
-                <textarea cols=80 id="fhir_2_jsoncborcose" name="fhir_2_jsoncborcose" rows=7>{{page_state.min_data_set_jsoncborcose}}</textarea>
-              {% endif %}
-            {% endif %}
-         <br/>with:
-            <ul>
-                <li> private key as a <a href="dsc-worker.key">PEM file</a> (<i>which you normally would not get!</i>).
-                </li>
-                <li> and the KeyID of the DSCS certificate <a href="dsc-worker.pem">PEM file</a> (plain concatenation;
-                    not a LDIFF).
-                </li>
-                <li> Which is on this Country DSCS list, available as <a href="masterlist-dsc.pem">PEM file</a>.</li>
-                <li> And which is signed by the Country CSCA, availablea <a href="csca.pem">PEM file</a>.</li>
-            </ul>
-        </li>
-        <li>LZMA compress it,
-            <input formaction="fhir2jsoncborcosezlib" formmethod="post" type="submit" value="show"/>,
-            {% if 'cose_compress' in page_state %}
-              {% if page_state.cose_compress %}
-                <label for="fhir_2_cose_compress"><br>Min Data Set / COSE + LZMA / Disclosure Level "Private Venue":</label><br>
-                <textarea cols=80 id="fhir_2_cose_compress" name="fhir_2_cose_compress" rows=8>{{page_state.cose_compress}}</textarea>
-              {% endif %}
-            {% endif %}
-        </li>
-        <li><a href="https://tools.ietf.org/html/draft-faltstrom-base45-02">Base45</a> encode it
-            <input formaction="fhir2jsoncborcosezlibb45" formmethod="post" type="submit" value="show"/>,
-            {% if 'b45' in page_state %}
-              {% if page_state.b45 %}
-                <label for="fhir_2_b45"><br>Min Data Set / LZMA  + Base45 / Disclosure Level "Private Venue":</label><br>
-                <textarea cols=80 id="fhir_2_b45" name="fhir_2_b45" rows=5>{{page_state.b45}}</textarea>
-              {% endif %}
-            {% endif %}
-        </li>
-        <li> and finally generate QR code from it
-            <input formaction="fhir2b45qr" formmethod="post" type="submit" value="show qr"/>.
-        </li>
-    </ol>
-    <p>Or
-        <input formaction="fhir2size" formmethod="post" type="submit" value="show the sizes"/> after each step:
-        {% if 'sizes' in page_state %}
-          {% if page_state.sizes %}
-            <table title="Sizes">
-            <thead>
-              <th align="right">Parameter:</th>
-              <th align="left">Size</th>
-            </thead>
-            {% for k,v in page_state.sizes.items() %}
-              <tr>
-                <td> {{ k }} </td>
-                <td> {{ v }} </td>
-              </tr>
-            {% endfor %}
-            </table>
+<ol>
+  <li>
+    <form action="/query_fhir_server" method="post">
+      <label for="fhir_server">Fetch JSON from </label>
+      <select id="fhir_server" name="fhir_server">
+        {% if 'selected_server' in page_state %}
+          {% if page_state.selected_server == "https://hl7eu.onfhir.io/r4/" %}
+            <option value="https://hl7eu.onfhir.io/r4/" selected>https://hl7eu.onfhir.io/r4/</option>
+          {% else %}
+            <option value="https://hl7eu.onfhir.io/r4/">https://hl7eu.onfhir.io/r4/</option>
+          {% endif %}
+          {% if page_state.selected_server == "https://server.fire.ly/r4/" %}
+            <option value="https://server.fire.ly/r4/" selected>https://server.fire.ly/r4/</option>
+          {% else %}
+            <option value="https://server.fire.ly/r4/">https://server.fire.ly/r4/</option>
+          {% endif %}
+        {% else %}
+          <option value="https://hl7eu.onfhir.io/r4/" selected>https://hl7eu.onfhir.io/r4/</option>
+          <option value="https://server.fire.ly/r4/">https://server.fire.ly/r4/</option>
+        {% endif %}
+      </select>
+      by
+      <button type="submit" value="show">querying</button>
+      it.<br>
+      {% if 'qry_res' in page_state %}
+        {% if page_state.qry_res %}
+          <label for="fhir_query_res">FHIR Query results as ujson:</label><br>
+          <textarea cols=80 id="fhir_query_res" name="fhir_query_res" rows=20>{{ page_state.qry_res }}</textarea>
+        {% endif %}
+      {% endif %}
+    </form>
+  </li>
+  <div>
+    <form action="/fhir2qr" method="post">
+      <li>convert the returned JSON to an eHN Vaccination Minimum Data Set as per Annex 1
+        <input formaction="fhir2json" formmethod="post" id="btn_fhir_2_json" type="submit" value="show"/>,
+        {% if 'min_data_set' in page_state %}
+          {% if page_state.min_data_set %}
+            <label for="fhir_2_json"><br>Min Data Set / Disclosure Level "Private Venue":</label><br>
+            <textarea cols=80 id="fhir_2_json" name="fhir_2_json" rows=4>{{ page_state.min_data_set }}</textarea>
           {% endif %}
         {% endif %}
+      </li>
+      <li>semantically compress it,
+        <input formaction="fhir2jsonld" formmethod="post" id="btn_fhir_2_jsonld" type="submit" value="show"/>,
+        {% if 'min_data_set_jsonld' in page_state %}
+          {% if page_state.min_data_set_jsonld %}
+            <label for="fhir_2_jsonld"><br>Min Data Set / JSON-LD / Disclosure Level "Private Venue":</label><br>
+            <textarea cols=80 id="fhir_2_jsonld" name="fhir_2_jsonld"
+                      rows=4>{{ page_state.min_data_set_jsonld }}</textarea>
+          {% endif %}
+        {% endif %}
+      </li>
+      <li>serialize it,
+        <input formaction="fhir2jsoncbor" formmethod="post" id="btn_fhir_2_jsonld_cborld" type="submit" value="show"/>,
+        {% if 'min_data_set_jsonld_cborld' in page_state %}
+          {% if page_state.min_data_set_jsonld_cborld %}
+            <label for="fhir_2_jsonld_cborld"><br>Min Data Set / CBOR-LD / Disclosure Level "Private Venue":</label><br>
+            <textarea cols=80 id="fhir_2_jsonld_cborld" name="fhir_2_jsonld_cborld"
+                      rows=4>{{ page_state.min_data_set_jsonld_cborld }}</textarea>
+          {% endif %}
+        {% endif %}
+      </li>
+      <li>digitally sign it <input formaction="fhir2jsoncborcose" formmethod="post" id="btn_fhir_2_jsoncborcose"
+                                   type="submit" value="show"/>
+        {% if 'min_data_set_jsoncborcose' in page_state %}
+          {% if page_state.min_data_set_jsoncborcose %}
+            <label for="fhir_2_jsoncborcose"><br>Min Data Set / COSE / Disclosure Level "Private Venue":</label><br>
+            <textarea cols=80 id="fhir_2_jsoncborcose" name="fhir_2_jsoncborcose"
+                      rows=7>{{ page_state.min_data_set_jsoncborcose }}</textarea>
+          {% endif %}
+        {% endif %}
+        <br/>with:
+        <ul>
+          <li> private key as a <a href="dsc-worker.key">PEM file</a> (<i>which you normally would not get!</i>).
+          </li>
+          <li> and the KeyID of the DSCS certificate <a href="dsc-worker.pem">PEM file</a> (plain concatenation;
+            not a LDIFF).
+          </li>
+          <li> Which is on this Country DSCS list, available as <a href="masterlist-dsc.pem">PEM file</a>.</li>
+          <li> And which is signed by the Country CSCA, availablea <a href="csca.pem">PEM file</a>.</li>
+        </ul>
+      </li>
+      <li>LZMA compress it,
+        <input formaction="fhir2jsoncborcosezlib" formmethod="post" id="btn_fhir_2_cose_compress" type="submit"
+               value="show"/>,
+        {% if 'cose_compress' in page_state %}
+          {% if page_state.cose_compress %}
+            <label for="fhir_2_cose_compress"><br>Min Data Set / COSE + LZMA / Disclosure Level "Private Venue":</label>
+            <br>
+            <textarea cols=80 id="fhir_2_cose_compress" name="fhir_2_cose_compress"
+                      rows=8>{{ page_state.cose_compress }}</textarea>
+          {% endif %}
+        {% endif %}
+      </li>
+      <li><a href="https://tools.ietf.org/html/draft-faltstrom-base45-02">Base45</a> encode it
+        <input formaction="fhir2jsoncborcosezlibb45" formmethod="post" id="btn_fhir_2_b45" type="submit" value="show"/>,
+        {% if 'b45' in page_state %}
+          {% if page_state.b45 %}
+            <label for="fhir_2_b45"><br>Min Data Set / LZMA + Base45 / Disclosure Level "Private Venue":</label><br>
+            <textarea cols=80 id="fhir_2_b45" name="fhir_2_b45" rows=5>{{ page_state.b45 }}</textarea>
+          {% endif %}
+        {% endif %}
+      </li>
+      <li> and finally generate QR code from it
+        <input formaction="fhir2b45qr" formmethod="post" id="btn_fhir2b45qr" type="submit" value="show qr"/>.
+      </li>
+</ol>
+Or
+<input formaction="fhir2size" formmethod="post" id="btn_fhir2size" type="submit" value="show the sizes"/> after each
+step:
+{% if 'sizes' in page_state %}
+  {% if page_state.sizes %}
+    <table title="Sizes">
+      <thead>
+      <tr>
+        <th class="param" scope="col">Parameter:</th>
+        <th class="val" scope="col">Size</th>
+      </tr>
+      </thead>
+      {% for k,v in page_state.sizes.items() %}
+        <tr>
+          <td class="param"> {{ k }} </td>
+          <td class="val"> {{ v }} </td>
+        </tr>
+      {% endfor %}
+    </table>
+  {% endif %}
+{% endif %}
 </form>
+</div>
+<div>
+  {% if 'focus_btn' in page_state %}
+    {% if page_state.focus_btn %}
+      <script type="application/javascript">setFhirFocus("{{page_state.focus_btn}}")</script>
+    {% endif %}
+  {% endif %}
 </div>
 </body>
 </html>

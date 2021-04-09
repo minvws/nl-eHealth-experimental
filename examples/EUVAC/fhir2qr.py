@@ -92,6 +92,7 @@ def clear_all_fields():
 def query_fhir_server():
     fhir_server = request.form["fhir_server"] if "fhir_server" in request.form else None
     _page_state["qry_res"] = FhirQuery(fhir_server=fhir_server).find()
+    _page_state["focus_btn"] = "btn_fhir_2_json"
     return render_template("index.html", page_state=_page_state)
 
 
@@ -101,6 +102,7 @@ def fhir2json():
     min_data_set: MinDataSet = MinDataSetFactory.create(DisclosureLevel.PV)
     min_data_set.parse(qry_res=_page_state["qry_res"])
     _page_state["min_data_set"] = min_data_set.as_json()
+    _page_state["focus_btn"] = "btn_fhir_2_jsonld"
     return render_template("index.html", page_state=_page_state)
 
 
@@ -110,6 +112,7 @@ def fhir2jsonld():
     min_data_set: MinDataSet = MinDataSetFactory.create(DisclosureLevel.PV)
     min_data_set.parse(qry_res=_page_state["qry_res"])
     _page_state["min_data_set_jsonld"] = min_data_set.as_jsonld()
+    _page_state["focus_btn"] = "btn_fhir_2_jsonld_cborld"
     return render_template("index.html", page_state=_page_state)
 
 
@@ -117,6 +120,7 @@ def fhir2jsonld():
 def fhir2jsoncbor():
     cb = cbor2.dumps(_page_state["min_data_set_jsonld"])
     _page_state["min_data_set_jsonld_cborld"] = cb
+    _page_state["focus_btn"] = "btn_fhir_2_jsoncborcose"
     return render_template("index.html", page_state=_page_state)
 
 
@@ -125,6 +129,7 @@ def fhir2jsoncborcose():
     data: bytes = _page_state["min_data_set_jsonld_cborld"]
     cose_msg: bytes = __cose_sign(data=data)
     _page_state["min_data_set_jsoncborcose"] = cose_msg
+    _page_state["focus_btn"] = "btn_fhir_2_cose_compress"
     return render_template("index.html", page_state=_page_state)
 
 
@@ -132,12 +137,14 @@ def fhir2jsoncborcose():
 def fhir2jsoncborcosezlib():
     data = _page_state["min_data_set_jsoncborcose"]
     _page_state["cose_compress"] = zlib.compress(data, 9)
+    _page_state["focus_btn"] = "btn_fhir_2_b45"
     return render_template("index.html", page_state=_page_state)
 
 
 @app.route("/fhir2jsoncborcosezlibb45", methods=["POST", "GET"])
 def fhir2jsoncborcosezlibb45():
     _page_state["b45"] = b45encode(_page_state["cose_compress"])
+    _page_state["focus_btn"] = "btn_fhir2b45qr"
     return render_template("index.html", page_state=_page_state)
 
 
@@ -177,16 +184,17 @@ def fhir2size():
     winp = int(100 * win / len_json)
 
     _page_state["sizes"] = {
-        "FHIR query response": len_fhir,
-        "JSON": len_json,
-        "JSON-LD": len_json_ld,
-        "CBOR": len_cbor,
-        "COSE": len_cose,
-        "LZMA": len_zlib,
-        "Base45": len_b45,
-        "QR mode": f"{qr_img.mode} (Should be 2/alphanumeric/b45)",
-        "QR code": f"{qr_img.version}(1..40)",
-        "QR matrix:": f"{qr_img_s}x{qr_img_s} (raw pixels without border)",
-        "Win:": f"{winp}%; {win} bytes saved with {len_zlib} (LZMA) bytes cf. {len_json} (JSON) bytes (FHIR was {len_fhir} bytes)"
+        "FHIR query response: ": len_fhir,
+        "JSON: ": len_json,
+        "JSON-LD: ": len_json_ld,
+        "CBOR: ": len_cbor,
+        "COSE: ": len_cose,
+        "LZMA:" : len_zlib,
+        "Base45: ": len_b45,
+        "QR mode: ": f"{qr_img.mode} (Should be 2/alphanumeric/b45)",
+        "QR code: ": f"{qr_img.version} (1..40)",
+        "QR matrix: ": f"{qr_img_s}x{qr_img_s} (raw pixels without border)",
+        "Win: ": f"{winp}%; {win} bytes saved with {len_zlib} (LZMA) bytes cf. {len_json} (JSON) bytes (FHIR was {len_fhir} bytes)"
     }
+    _page_state["focus_btn"] = "btn_fhir2size"
     return render_template("index.html", page_state=_page_state)
