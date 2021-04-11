@@ -4,8 +4,7 @@ import zlib
 import argparse
 import json
 import cbor2
-from base64 import b64decode
-
+from base64 import b64encode
 
 from base45 import b45encode
 from cose.algorithms import Es256
@@ -99,6 +98,7 @@ if not args.skip_zlib:
 # And base45 encode the result
 #
 if args.base64:
+    # TODO fix warning encode not a member of bytes
     out = b64encode(out).encode('ascii')
 else:
    if not args.skip_base45:

@@ -27,8 +27,8 @@ from flask import (
 from typing import Tuple
 from werkzeug.routing import BaseConverter
 
+from MinDataSetDisplayFormatter import MinDataSetDisplayFormatter
 from fhir_query import FhirQuery
-from min_data_set import MinDataSetFactory
 
 app = Flask(__name__)
 
@@ -72,13 +72,10 @@ def query_fhir_server():
 @app.route("/fhir2json", methods=["POST", "GET"])
 def fhir2json():
     # pre-cond: /query_fhir_server called prior in order to set: _page_state["qry_res"]
-    min_data_set: dict = FhirQuery.annex1_min_data_set(
-        qry_res=_page_state["qry_res"],
-        disclosure_level=MinDataSetFactory.DisclosureLevel.PV,
-    )
-    _page_state["min_data_set"] = min_data_set
-    return ujson.dumps(min_data_set)
-
+    data = _page_state["qry_res"]
+    display = MinDataSetDisplayFormatter.build(data)
+    _page_state["min_data_set"] = display
+    return ujson.dumps(display)
 
 @app.route("/fhir2jsoncbor", methods=["POST", "GET"])
 def fhir2jsoncbor():
@@ -86,7 +83,6 @@ def fhir2jsoncbor():
     cb = cbor2.dumps(data)
     # return Response(cb,mimetype='text/plain')
     return cb
-
 
 @app.route("/fhir2jsoncborcose", methods=["POST", "GET"])
 def fhir2jsoncborcose():

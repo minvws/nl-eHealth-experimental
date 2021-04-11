@@ -1,0 +1,257 @@
+{
+  "entries": [
+    {
+      "disclosureLevel": "PrivateVenue",
+      "entries": [
+        {
+          "name": "D.ALIGHIERI",
+          "sex": "male",
+          "immunizations": [
+            {
+              "targetDisease": [
+                {
+                  "system": "http:\/\/hl7.org\/fhir\/sid\/icd-10",
+                  "code": "J12.82"
+                }
+              ]
+            },
+            {
+              "targetDisease": [
+                {
+                  "system": "http:\/\/hl7.org\/fhir\/sid\/icd-10",
+                  "code": "J12.82"
+                }
+              ]
+            }
+          ],
+          "certificate": {
+            "issuer": "",
+            "validFrom": "",
+            "validUntil": "",
+            "schemaVersion": "",
+            "issuingAuthorityCountry": ""
+          }
+        },
+        {
+          "name": "M.Rossi",
+          "sex": "female",
+          "immunizations": [
+            {
+              "targetDisease": [
+                {
+                  "system": "http:\/\/hl7.org\/fhir\/sid\/icd-10",
+                  "code": "J12.82"
+                }
+              ]
+            },
+            {
+              "targetDisease": []
+            }
+          ],
+          "certificate": {
+            "issuer": "",
+            "validFrom": "",
+            "validUntil": "",
+            "schemaVersion": "",
+            "issuingAuthorityCountry": ""
+          }
+        },
+        {
+          "name": "M.Rossi",
+          "sex": "female",
+          "immunizations": [
+            {
+              "targetDisease": [
+                {
+                  "system": "http:\/\/hl7.org\/fhir\/sid\/icd-10",
+                  "code": "J12.82"
+                }
+              ]
+            }
+          ],
+          "certificate": {
+            "issuer": "",
+            "validFrom": "",
+            "validUntil": "",
+            "schemaVersion": "",
+            "issuingAuthorityCountry": ""
+          }
+        }
+      ]
+    },
+    {
+      "disclosureLevel": "BorderControl",
+      "entries": [
+        {
+          "name": "D.ALIGHIERI",
+          "personId": "a person Id TBA",
+          "sex": "male",
+          "dateOfBirth": "1971-05-01",
+          "immunizations": [
+            {
+              "targetDesease": [
+                {
+                  "system": "http:\/\/hl7.org\/fhir\/sid\/icd-10",
+                  "code": "J12.82"
+                }
+              ],
+              "vaccineCode": [
+                {
+                  "system": "https:\/\/www.aifa.gov.it\/aic",
+                  "code": "049269018"
+                },
+                {
+                  "system": "http:\/\/snomed.info\/sct",
+                  "code": "1119349007"
+                },
+                {
+                  "system": "http:\/\/www.whocc.no\/atc",
+                  "code": "J07BX03"
+                },
+                {
+                  "system": "http:\/\/id.who.int\/icd11\/mms",
+                  "code": "XM6AT1"
+                }
+              ],
+              "medicalProduct": [],
+              "manufacturer": null,
+              "seriesNumber": null,
+              "occurance": "2021-02-04",
+              "location": null
+            },
+            {
+              "targetDesease": [
+                {
+                  "system": "http:\/\/hl7.org\/fhir\/sid\/icd-10",
+                  "code": "J12.82"
+                }
+              ],
+              "vaccineCode": [
+                {
+                  "system": "https:\/\/www.aifa.gov.it\/aic",
+                  "code": "049269018"
+                },
+                {
+                  "system": "http:\/\/snomed.info\/sct",
+                  "code": "1119349007"
+                },
+                {
+                  "system": "http:\/\/www.whocc.no\/atc",
+                  "code": "J07BX03"
+                },
+                {
+                  "system": "http:\/\/id.who.int\/icd11\/mms",
+                  "code": "XM6AT1"
+                }
+              ],
+              "medicalProduct": [],
+              "manufacturer": null,
+              "seriesNumber": null,
+              "occurance": "2021-02-25",
+              "location": null
+            }
+          ],
+          "certificate": {
+            "issuer": "",
+            "UVCI": "",
+            "validFrom": "",
+            "validUntil": "",
+            "schemaVersion": "",
+            "issuingAuthorityCountry": ""
+          }
+        }
+      ]
+    },
+    {
+      "disclosureLevel": "Medical",
+      "entries": [
+        {
+          "name": "D.ALIGHIERI",
+          "personId": "a person Id TBA",
+          "sex": "male",
+          "dateOfBirth": "1971-05-01",
+          "immunizations": [
+            {
+              "targetDisease": [
+                {
+                  "system": "http:\/\/hl7.org\/fhir\/sid\/icd-10",
+                  "code": "J12.82"
+                }
+              ],
+              "vaccineCode": [
+                {
+                  "system": "https:\/\/www.aifa.gov.it\/aic",
+                  "code": "049269018"
+                },
+                {
+                  "system": "http:\/\/snomed.info\/sct",
+                  "code": "1119349007"
+                },
+                {
+                  "system": "http:\/\/www.whocc.no\/atc",
+                  "code": "J07BX03"
+                },
+                {
+                  "system": "http:\/\/id.who.int\/icd11\/mms",
+                  "code": "XM6AT1"
+                }
+              ],
+              "medicalProduct": [],
+              "manufacturer": null,
+              "seriesNumber": null,
+              "sc": null,
+              "occurance": "2021-02-04",
+              "ao": null,
+              "ap": null,
+              "location": null,
+              "nextOccurance": "TODO yyyy-mm-dd"
+            },
+            {
+              "targetDisease": [
+                {
+                  "system": "http:\/\/hl7.org\/fhir\/sid\/icd-10",
+                  "code": "J12.82"
+                }
+              ],
+              "vaccineCode": [
+                {
+                  "system": "https:\/\/www.aifa.gov.it\/aic",
+                  "code": "049269018"
+                },
+                {
+                  "system": "http:\/\/snomed.info\/sct",
+                  "code": "1119349007"
+                },
+                {
+                  "system": "http:\/\/www.whocc.no\/atc",
+                  "code": "J07BX03"
+                },
+                {
+                  "system": "http:\/\/id.who.int\/icd11\/mms",
+                  "code": "XM6AT1"
+                }
+              ],
+              "medicalProduct": [],
+              "manufacturer": null,
+              "seriesNumber": null,
+              "sc": null,
+              "occurance": "2021-02-25",
+              "ao": null,
+              "ap": null,
+              "location": null,
+              "nextOccurance": "TODO yyyy-mm-dd"
+            }
+          ],
+          "certificate": {
+            "issuer": "",
+            "identifier": "",
+            "validFrom": "",
+            "validTo": "",
+            "schemaVersion": "",
+            "issuingAuthorityCountry": ""
+          }
+        }
+      ]
+    }
+  ]
+}
