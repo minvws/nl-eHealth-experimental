@@ -57,7 +57,7 @@ class DisclosureCertificateBuilder:
         result.ia = DisclosureCertificateBuilder.findIssuingAuthority(cert, disclosureLevel)
         return result
 
-    # TODO this is V1 or V3 - dont believe this is the required value? Setting?
+    # TODO admin 1 sheet says UVCI but this is a dupe of issuing authority?
     @staticmethod
     def findId(cert: x509.Certificate):
         return hexlify(cert.fingerprint(SHA256())).decode('ascii')
