@@ -70,7 +70,7 @@ if not args.ignore_signature:
     with open(args.cert, "rb") as file:
         pem = file.read()
     if args.xy:
-        x, y = [ bytes.fromhex(val) for val in args.xy.split(",") ]
+        x, y = [bytes.fromhex(val) for val in args.xy.split(",")]
         keyid = None
     else:
        cert = x509.load_pem_x509_certificate(pem)

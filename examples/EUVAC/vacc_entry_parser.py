@@ -7,7 +7,6 @@ from PatientImmunizationDirectBuilder import PatientImmunizationDirectBuilder
 
 
 class VaccEntryParser:
-
     """VaccEntryParser
 
     An "entry" corresponds to an instance of the FHIR Immunization model v4.x given at
@@ -48,11 +47,11 @@ class VaccEntryParser:
         """
         self.__qry_res: dict = qry_res
         collector = FhirInfoCollector()
-        self.__fhirInfo = collector.execute(qry_res["entry"])
-        self.__Certificate = certificate
+        self.__fhir_info = collector.execute(qry_res["entry"])
+        self.__certificate = certificate
 
     def resolve_entry(
-        self, entry: dict, disclosure_level: DisclosureLevel
+            self, entry: dict, disclosure_level: DisclosureLevel
     ) -> dict:
         """
         :param entry: one specific entry in the FHIR results to be resolved
@@ -76,24 +75,20 @@ class VaccEntryParser:
     @staticmethod
     def __is_immunization_entry(entry: dict) -> bool:
         is_immu_entry: bool = (
-            entry is not None
-            and "resource" in entry
-            and "resourceType" in entry["resource"]
-            and "Immunization" == entry["resource"]["resourceType"]
+                entry is not None
+                and "resource" in entry
+                and "resourceType" in entry["resource"]
+                and "Immunization" == entry["resource"]["resourceType"]
         )
         return is_immu_entry
 
     def __extract_entry(
-        self, entry: dict, disclosure_level: DisclosureLevel
+            self, entry: dict, disclosure_level: DisclosureLevel
     ) -> dict:
-        ret = {}
-        dat: str = VaccEntryParser.__get_dat(entry=entry)
         # patient: dict = self.__resolve_patient(entry=entry)
-        patientId = JsonParser.findPath(entry, ["resource", "patient", "reference"])[8:]
-        dictResult = PatientImmunizationDirectBuilder.build(self.__fhirInfo, patientId,
-                                                       disclosure_level, self.__Certificate)
-
-        return dictResult
+        patient_id = JsonParser.find_path(entry, ["resource", "patient", "reference"])[8:]
+        return PatientImmunizationDirectBuilder.build(self.__fhir_info, patient_id,
+                                                      disclosure_level, self.__certificate)
 
     def __resolve_patient(self, entry: dict) -> dict:
         # patient as per https://build.fhir.org/ig/hl7-eu/dgc/StructureDefinition-Patient-dgc.html
@@ -115,8 +110,8 @@ class VaccEntryParser:
     def __get_dat(entry: dict) -> str:
         resource: dict = entry["resource"]  # allow InvalidKey exception to propagate
         if (
-            "protocolApplied" in resource
-            and "targetDisease" in resource["protocolApplied"]
+                "protocolApplied" in resource
+                and "targetDisease" in resource["protocolApplied"]
         ):
             dat = resource["protocolApplied"]["targetDisease"]
         else:
@@ -126,11 +121,11 @@ class VaccEntryParser:
     @staticmethod
     def __entry_has_immu_patient_ref(entry: dict) -> bool:
         return (
-            "resource" in entry
-            and "resourceType" in entry["resource"]
-            and "patient" in entry["resource"]
-            and "Immunization" == entry["resource"]["resourceType"]
-            and "reference" in entry["resource"]["patient"]
+                "resource" in entry
+                and "resourceType" in entry["resource"]
+                and "patient" in entry["resource"]
+                and "Immunization" == entry["resource"]["resourceType"]
+                and "reference" in entry["resource"]["patient"]
         )
 
     @staticmethod

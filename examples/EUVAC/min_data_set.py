@@ -41,6 +41,7 @@ class MinDataSet(ABC):
         Parse the FHIR response into the fields appropriate for the particular
         sub-class of MinDataSet.
         :param qry_res: JSON FHIR query response as dict (e.g. as return from json.loads())
+        :param cert: X509 certificate
         :return: None: the data is parsed into the concrete object
         """
 

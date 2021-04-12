@@ -10,7 +10,7 @@ from vacc_entry_parser import VaccEntryParser
 class TestVaccEntryParser:
     # we expect JSON test data to be in same dir as test script
     JSON_TEST_DATA: Path = Path(
-        #TODO handle unicode in - Path(__file__).parent.resolve(), "test_vacc_entry_parser.json"
+        # TODO handle unicode in - Path(__file__).parent.resolve(), "test_vacc_entry_parser.json"
         Path(__file__).parent.resolve(), "test_immu_parser.json"
     )
 

@@ -26,9 +26,13 @@ from flask import (
 )
 
 from werkzeug.routing import BaseConverter
+
+from CertificateReader import CertificateLoader
 from DisclosureLevel import DisclosureLevel
 from fhir_query import FhirQuery
 from min_data_set import MinDataSetFactory, MinDataSet
+
+CERTIFICATE_FILE = "dsc-worker.pem"
 
 app = Flask(__name__)
 
@@ -96,12 +100,6 @@ def query_fhir_server():
     _page_state["focus_btn"] = "btn_fhir_2_json"
     return render_template("index.html", page_state=_page_state)
 
-def readCertificate():
-    with open("dsc-worker.pem", "rb") as file:
-        pem = file.read()
-    cert = x509.load_pem_x509_certificate(pem)
-    return cert
-
 # Was
 # @app.route("/fhir2json", methods=["POST", "GET"])
 # def fhir2json():
@@ -114,12 +112,13 @@ def readCertificate():
 #     return ujson.dumps(min_data_set)
 
 
+
 @app.route("/fhir2json", methods=["POST", "GET"])
 def fhir2json():
     # pre-cond: /query_fhir_server called prior in order to set: _page_state["qry_res"]
     min_data_set: MinDataSet = MinDataSetFactory.create(DisclosureLevel.PrivateVenue)
     qry_res = _page_state["qry_res"]
-    cert = readCertificate()
+    cert = CertificateLoader.load(CERTIFICATE_FILE)
     min_data_set.parse(qry_res, cert)
     _page_state["min_data_set"] = min_data_set.as_json()
     _page_state["focus_btn"] = "btn_fhir_2_jsonld"
@@ -131,7 +130,7 @@ def fhir2jsonld():
     # pre-cond: /query_fhir_server called prior in order to set: _page_state["qry_res"]
     min_data_set: MinDataSet = MinDataSetFactory.create(DisclosureLevel.PrivateVenue)
     qry_res = _page_state["qry_res"]
-    cert = readCertificate()
+    cert = CertificateLoader.load(CERTIFICATE_FILE)
     min_data_set.parse(qry_res, cert)
     _page_state["min_data_set_jsonld"] = min_data_set.as_jsonld()
     _page_state["focus_btn"] = "btn_fhir_2_jsonld_cborld"
@@ -185,7 +184,7 @@ def fhir2size():
     fhir_query_response: dict = FhirQuery().find()
     min_data_set: MinDataSet = MinDataSetFactory.create(DisclosureLevel.PrivateVenue)
     qry_res = _page_state["qry_res"]
-    cert = readCertificate()
+    cert = CertificateLoader.load(CERTIFICATE_FILE)
     min_data_set.parse(qry_res, cert)
     json_std = min_data_set.as_json()
     json_ld: dict = min_data_set.as_jsonld()

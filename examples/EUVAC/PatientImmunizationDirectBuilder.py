@@ -1,3 +1,5 @@
+from cryptography.x509 import Certificate
+
 from BorderControlDisclosureDirectDictMapper import BorderControlDisclosureDirectDictMapper
 from DisclosureLevel import DisclosureLevel
 from FhirInfoCollector import FhirInfo
@@ -7,9 +9,9 @@ from PrivateVenueDisclosureDirectDictMapper import PrivateVenueDisclosureDirectD
 
 class PatientImmunizationDirectBuilder:
     @staticmethod
-    def build(fhirInfo : FhirInfo, patientId: str, disclosure_level: DisclosureLevel, cert):
+    def build(fhirInfo : FhirInfo, patient_id: str, disclosure_level: DisclosureLevel, cert: Certificate) -> dict:
 
-        patient = fhirInfo.immunizedPatients[patientId]
+        patient = fhirInfo.immunized_patients[patient_id]
         if patient is None:
             raise ValueError("qry_entry does not contain an immunized patient.")
 
@@ -19,15 +21,15 @@ class PatientImmunizationDirectBuilder:
 
         if disclosure_level == DisclosureLevel.PrivateVenue:
             b = PrivateVenueDisclosureDirectDictMapper()
-            return b.build(patientId, fhirInfo, cert)
+            return b.build(patient_id, fhirInfo, cert)
 
         if disclosure_level == DisclosureLevel.BorderControl:
             b = BorderControlDisclosureDirectDictMapper()
-            return b.build(patientId, fhirInfo, cert)
+            return b.build(patient_id, fhirInfo, cert)
 
         if disclosure_level == DisclosureLevel.Medical:
             b = MedicalDisclosureDirectDictMapper()
-            return b.build(patientId, fhirInfo, cert)
+            return b.build(patient_id, fhirInfo, cert)
 
         # except:
         #     return None

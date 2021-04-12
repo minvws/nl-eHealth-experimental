@@ -8,7 +8,7 @@ class ImmunizedPatient:
 
 class FhirInfo:
     def __init__(self):
-        self.immunizedPatients = {}
+        self.immunized_patients = {}
         self.immunizations = {}
         self.patients = {}
         self.locations = {}
@@ -18,89 +18,53 @@ class FhirInfo:
 
 class FhirInfoCollector:
     def __init__(self):
-        self._result = FhirInfo()
+        self.__result = FhirInfo()
+
+
     '''
     Cleans up and indexes an initial result of an FHIR search result.
     root is the parent element of a resources collection
     TODO move reference resolving here - such as location
     TODO make this the command to find/build the necessary input for a disclosure
     '''
-    def execute(self, root):
+    def execute(self, root: dict) -> FhirInfo:
         # index contents, strip noise nodes
         for i in root:
-            node = JsonParser.findPathSafe(i, ["resource"])
+            node = JsonParser.find_path_safe(i, ["resource"])
             if node is None:
                 continue
-            nodeType = JsonParser.findPathSafe(i, ["resource", "resourceType"])
-            if nodeType is None:
+            node_type = JsonParser.find_path_safe(i, ["resource", "resourceType"])
+            if node_type is None:
                 continue
-            nodeId = JsonParser.findPath(i, ["resource", "id"])
-            if nodeId is None:
+            node_id = JsonParser.find_path(i, ["resource", "id"])
+            if node_id is None:
                 continue
-            if nodeType == "Immunization":
-                self._result.immunizations[nodeId] = node
+            if node_type == "Immunization":
+                self.__result.immunizations[node_id] = node
                 continue
-            if nodeType == "Patient":
-                self._result.patients[nodeId] = node
+            if node_type == "Patient":
+                self.__result.patients[node_id] = node
                 continue
-            if nodeType == "Location":
-                self._result.locations[nodeId] = node
+            if node_type == "Location":
+                self.__result.locations[node_id] = node
                 continue
-            if nodeType == "Organization":
-                self._result.organisations[nodeId] = node
+            if node_type == "Organization":
+                self.__result.organisations[node_id] = node
                 continue
             # TODO any practitioners in root?
 
-        # resolve references, map immunizations to patient
-        for i in self._result.immunizations.values():
-            self._resolvePatients(i)
-            self._resolvePerformers(i)
-            #TODO was patientId = JsonParser.findPathSafe(i, ["patient", "id"])
-            patientId = JsonParser.findPathSafe(i, ["patient", "reference"])
-            if patientId is None:
+        # map immunizations to patient
+        for i in self.__result.immunizations.values():
+            # TODO was patient_id = JsonParser.findPathSafe(i, ["patient", "id"])
+            patient_id = JsonParser.find_path_safe(i, ["patient", "reference"])
+            if patient_id is None:
                 continue
 
-            patientId=patientId[8:]
+            patient_id = patient_id[8:]
 
-            if patientId not in self._result.immunizedPatients:
-                self._result.immunizedPatients[patientId] = ImmunizedPatient()
+            if patient_id not in self.__result.immunized_patients:
+                self.__result.immunized_patients[patient_id] = ImmunizedPatient()
 
-            self._result.immunizedPatients[patientId].immunizations.append(JsonParser.findPath(i, ["id"]))
+            self.__result.immunized_patients[patient_id].immunizations.append(JsonParser.find_path(i, ["id"]))
 
-        return self._result
-
-    def _resolvePatients(self, immunization):
-        patientId = JsonParser.findPathSafe(immunization, ["patient", "patientId"])
-        if not patientId is None and not patientId in self._result.patients.keys():
-            self._result.patients[patientId] = self.__resolveReference("Patient/" + patientId)
-
-    def _resolvePerformers(self, immunization):
-        actors = JsonParser.findPathSafe(immunization, ["performer"])
-        if actors is None:
-            return
-
-        for i in actors:
-            ref = JsonParser.findPathSafe(i, ["reference"])
-            if ref is None:
-                continue
-            if ref.startswith("Organization/") and not ref in self._result.organisations:
-                found = self.__resolveReference(ref)
-                self._result.organisations[ref] = found
-            if ref.startswith("Practitioner/") and not ref in self._result.practitioners:
-                found = self.__resolveReference(ref)
-                self._result.practitioners[ref] = found
-
-    def __resolveReference(self, item):
-        #     try:
-        #         resp = requests.get(
-        #             f'{FhirQuery.SERVICE_ROOT_URL}{item}',
-        #             headers=FhirQuery.ACCEPT_HEADER,
-        #             params={"_summary": "data"},
-        #         )
-        #         resp.raise_for_status()
-        #         return resp.json()
-        #     except requests.exceptions.HTTPError as http_err:
-        #         print(f"HTTP error: {http_err}")
-        #     except Exception as err:
-        #         print(f"Other(requests) error: {err}")
-        return None
+        return self.__result
