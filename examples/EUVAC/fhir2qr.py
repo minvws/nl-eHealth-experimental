@@ -119,7 +119,8 @@ def fhir2json():
     # pre-cond: /query_fhir_server called prior in order to set: _page_state["qry_res"]
     min_data_set: MinDataSet = MinDataSetFactory.create(DisclosureLevel.PrivateVenue)
     qry_res = _page_state["qry_res"]
-    min_data_set.parse(qry_res)
+    cert = readCertificate()
+    min_data_set.parse(qry_res, cert)
     _page_state["min_data_set"] = min_data_set.as_json()
     _page_state["focus_btn"] = "btn_fhir_2_jsonld"
     return render_template("index.html", page_state=_page_state)
@@ -129,7 +130,9 @@ def fhir2json():
 def fhir2jsonld():
     # pre-cond: /query_fhir_server called prior in order to set: _page_state["qry_res"]
     min_data_set: MinDataSet = MinDataSetFactory.create(DisclosureLevel.PrivateVenue)
-    min_data_set.parse(qry_res=_page_state["qry_res"])
+    qry_res = _page_state["qry_res"]
+    cert = readCertificate()
+    min_data_set.parse(qry_res, cert)
     _page_state["min_data_set_jsonld"] = min_data_set.as_jsonld()
     _page_state["focus_btn"] = "btn_fhir_2_jsonld_cborld"
     return render_template("index.html", page_state=_page_state)
@@ -180,8 +183,10 @@ def fhir2jsoncborcosezlibb45qr():
 @app.route("/fhir2size", methods=["POST", "GET"])
 def fhir2size():
     fhir_query_response: dict = FhirQuery().find()
-    min_data_set: MinDataSet = MinDataSetFactory.create(DisclosureLevel.PV)
-    min_data_set.parse(qry_res=fhir_query_response)
+    min_data_set: MinDataSet = MinDataSetFactory.create(DisclosureLevel.PrivateVenue)
+    qry_res = _page_state["qry_res"]
+    cert = readCertificate()
+    min_data_set.parse(qry_res, cert)
     json_std = min_data_set.as_json()
     json_ld: dict = min_data_set.as_jsonld()
     cb = cbor2.dumps(json_ld)

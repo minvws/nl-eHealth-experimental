@@ -43,6 +43,7 @@ class DisclosureCertificateFriendlyDictMapper:
             result["identifier"] = cert.id
         return result
 
+
 class DisclosureCertificateBuilder:
     @staticmethod
     def build(cert : x509.Certificate, disclosureLevel : DisclosureLevel):

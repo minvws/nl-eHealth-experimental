@@ -36,7 +36,7 @@ class MinDataSet(ABC):
         pass
 
     @abstractmethod
-    def parse(self, qry_res: dict) -> None:
+    def parse(self, qry_res: dict, cert: Certificate) -> None:
         """
         Parse the FHIR response into the fields appropriate for the particular
         sub-class of MinDataSet.
@@ -71,8 +71,9 @@ class MinDataSet(ABC):
         resource = self.as_dict_array()[0]
         json_doc = {
             "https://schema.org/nam": resource["nam"],
-            "https://schema.org/dat": resource["dat"],
-            "https://schema.org/gen": resource["gen"]
+            # TODO "https://schema.org/dat": resource["dat"],
+            # TODO "https://schema.org/dat": resource["dat"],
+            # "https://schema.org/gen": resource["sex"]
         }
         with open(MinDataSet.__JSONLD_CONTEXT_FILE, "r") as ctx:
             json_ctx: dict = ujson.load(ctx)
@@ -100,9 +101,9 @@ class MinDataSetPV(MinDataSet):
         self.__certificate = Certificate()
         self.__entries: List[dict] = list()
 
-    def parse(self, qry_res: dict) -> None:
+    def parse(self, qry_res: dict, cert: Certificate) -> None:
         if MinDataSet._has_entries(qry_res=qry_res):
-            entry_parser: VaccEntryParser = VaccEntryParser(qry_res=qry_res)
+            entry_parser: VaccEntryParser = VaccEntryParser(qry_res, cert)
             for entry in qry_res["entry"]:
                 pv: dict = entry_parser.resolve_entry(
                     entry=entry, disclosure_level=DisclosureLevel.PrivateVenue
@@ -130,9 +131,9 @@ class MinDataSetBC(MinDataSet):
         super().__init__()
         self.__entries: List[dict] = list()
 
-    def parse(self, qry_res: dict) -> None:
+    def parse(self, qry_res: dict, cert: Certificate) -> None:
         if MinDataSet._has_entries(qry_res=qry_res):
-            entry_parser: VaccEntryParser = VaccEntryParser(qry_res=qry_res)
+            entry_parser: VaccEntryParser = VaccEntryParser(qry_res, cert)
             for entry in qry_res["entry"]:
                 bc: dict = entry_parser.resolve_entry(
                     entry=entry, disclosure_level=DisclosureLevel.BC
@@ -153,9 +154,9 @@ class MinDataSetMD(MinDataSet):
         super().__init__()
         self.__entries: List[dict] = list()
 
-    def parse(self, qry_res: dict) -> None:
+    def parse(self, qry_res: dict, cert: Certificate) -> None:
         if MinDataSet._has_entries(qry_res=qry_res):
-            entry_parser: VaccEntryParser = VaccEntryParser(qry_res=qry_res)
+            entry_parser: VaccEntryParser = VaccEntryParser(qry_res, cert)
             for entry in qry_res["entry"]:
                 md: dict = entry_parser.resolve_entry(
                     entry=entry, disclosure_level=DisclosureLevel.MD

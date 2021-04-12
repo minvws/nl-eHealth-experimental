@@ -1,11 +1,11 @@
-from BorderControlDisclosureBuilder import BorderControlDisclosureBuilder
+from BorderControlDisclosureDirectDictMapper import BorderControlDisclosureDirectDictMapper
 from DisclosureLevel import DisclosureLevel
 from FhirInfoCollector import FhirInfo
-from MedicalDisclosureBuilder import MedicalDisclosureBuilder
-from PrivateVenueDisclosureBuilder import PrivateVenueDisclosureBuilder
+from MedicalDisclosureDirectDictMapper import MedicalDisclosureDirectDictMapper
+from PrivateVenueDisclosureDirectDictMapper import PrivateVenueDisclosureDirectDictMapper
 
 
-class PatientImmunizationBuilder:
+class PatientImmunizationDirectBuilder:
     @staticmethod
     def build(fhirInfo : FhirInfo, patientId: str, disclosure_level: DisclosureLevel, cert):
 
@@ -18,19 +18,18 @@ class PatientImmunizationBuilder:
         # try:
 
         if disclosure_level == DisclosureLevel.PrivateVenue:
-            b = PrivateVenueDisclosureBuilder()
+            b = PrivateVenueDisclosureDirectDictMapper()
             return b.build(patientId, fhirInfo, cert)
 
         if disclosure_level == DisclosureLevel.BorderControl:
-            b = BorderControlDisclosureBuilder()
+            b = BorderControlDisclosureDirectDictMapper()
             return b.build(patientId, fhirInfo, cert)
 
         if disclosure_level == DisclosureLevel.Medical:
-            b = MedicalDisclosureBuilder()
+            b = MedicalDisclosureDirectDictMapper()
             return b.build(patientId, fhirInfo, cert)
 
         # except:
         #     return None
 
         raise ValueError("Disclosure level unknown.")
-

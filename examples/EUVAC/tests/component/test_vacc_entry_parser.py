@@ -1,5 +1,7 @@
 import json
 
+from cryptography import x509
+
 from DisclosureLevel import DisclosureLevel
 from pathlib import Path
 from vacc_entry_parser import VaccEntryParser
@@ -12,6 +14,13 @@ class TestVaccEntryParser:
         Path(__file__).parent.resolve(), "test_immu_parser.json"
     )
 
+    @staticmethod
+    def readCertificate():
+        with open("dsc-worker.pem", "rb") as file:
+            pem = file.read()
+        cert = x509.load_pem_x509_certificate(pem)
+        return cert
+
     def test_load_json_pv(self):
         with open(TestVaccEntryParser.JSON_TEST_DATA, "r") as f:
             json_data: dict = json.load(f)
@@ -22,7 +31,8 @@ class TestVaccEntryParser:
             qry_entry: dict = json_data["entry"][0]
             assert qry_entry
             assert isinstance(qry_entry, dict)
-            entry_parser: VaccEntryParser = VaccEntryParser(qry_res=json_data)
+            cert = TestVaccEntryParser.readCertificate()
+            entry_parser: VaccEntryParser = VaccEntryParser(json_data, cert)
             pv: dict = entry_parser.resolve_entry(
                 entry=qry_entry, disclosure_level=DisclosureLevel.PrivateVenue
             )

@@ -1,4 +1,9 @@
+from cryptography.x509 import Certificate
+
 from DisclosureLevel import DisclosureLevel
+from FhirInfoCollector import FhirInfoCollector
+from JsonParser import JsonParser
+from PatientImmunizationDirectBuilder import PatientImmunizationDirectBuilder
 
 
 class VaccEntryParser:
@@ -33,7 +38,7 @@ class VaccEntryParser:
     (You can influence the paging but that's going O.T. here - look up paging support in FHIR if interested)
     """
 
-    def __init__(self, qry_res: dict):
+    def __init__(self, qry_res: dict, certificate: Certificate):
         """
         :param qry_res: the result of a FHIR query contained as a dict (result of e.g.json.loads()) -
         note that this has to be whole response document as we will need to resolve references from
@@ -42,6 +47,9 @@ class VaccEntryParser:
         :type qry_res: dict
         """
         self.__qry_res: dict = qry_res
+        collector = FhirInfoCollector()
+        self.__fhirInfo = collector.execute(qry_res["entry"])
+        self.__Certificate = certificate
 
     def resolve_entry(
         self, entry: dict, disclosure_level: DisclosureLevel
@@ -80,38 +88,12 @@ class VaccEntryParser:
     ) -> dict:
         ret = {}
         dat: str = VaccEntryParser.__get_dat(entry=entry)
-        patient: dict = self.__resolve_patient(entry=entry)
+        # patient: dict = self.__resolve_patient(entry=entry)
+        patientId = JsonParser.findPath(entry, ["resource", "patient", "reference"])[8:]
+        dictResult = PatientImmunizationDirectBuilder.build(self.__fhirInfo, patientId,
+                                                       disclosure_level, self.__Certificate)
 
-        if (
-            disclosure_level == DisclosureLevel.PrivateVenue
-            or disclosure_level == DisclosureLevel.BorderControl
-            or disclosure_level == DisclosureLevel.Medical
-        ):
-            # no validation checking for the following lines accessing "patient", allow exceptions to propagate
-            # e.g. it is _expected_ that "name" is present in patient, if not it is an error
-            # it is also expected that the name parts "given" and "family" are at least 1 character, etc
-            # We take first entry for "name" as this is the "default" name if multiple present
-            patient_name: dict = patient["nam"][0]
-            ret.update(
-                {
-                    "nam": f'{patient_name["given"][0][0]}.{patient_name["family"][0]}.',
-                    "dat": dat,
-                    "gen": patient["gen"],
-                }
-            )
-
-        if (
-            disclosure_level == DisclosureLevel.BorderControl
-            or disclosure_level == DisclosureLevel.Medical
-        ):
-            pass
-
-        if disclosure_level == DisclosureLevel.Medical:
-            pass
-
-        # vaccine cert
-        # # TODO: this is the more difficult one: no standardized IIS interface for the information
-        return ret
+        return dictResult
 
     def __resolve_patient(self, entry: dict) -> dict:
         # patient as per https://build.fhir.org/ig/hl7-eu/dgc/StructureDefinition-Patient-dgc.html

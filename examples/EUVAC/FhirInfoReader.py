@@ -1,4 +1,4 @@
-from CodeableConcept import CodeableConcept
+from CodeableConceptDirectDictMapper import CodeableConceptDirectDictMapper
 from JsonParser import JsonParser
 
 '''
@@ -77,7 +77,7 @@ class FhirInfoReader:
             system = i["system"]
             code = i["code"]
             if not (system is None or code is None):
-                item = CodeableConcept(system, code)
+                item = CodeableConceptDirectDictMapper.build(system, code)
                 result.append(item)
         return result
 
@@ -171,3 +171,12 @@ class FhirInfoReader:
 
     def getImmunizationNextOccurrence(self, immunizationId):
         return "TODO yyyy-mm-dd"
+
+    def getImmunizationLotNumber(self, immunizationId):
+        result = JsonParser.findPathSafe(self._Info.immunizations[immunizationId],
+                                         ["lotNumber"])
+        # TODO action if missing?
+        if result is None:
+            return "TODO Lot Number not present."
+
+        return result
