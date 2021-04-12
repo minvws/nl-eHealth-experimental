@@ -7,7 +7,7 @@ from PrivateVenueDisclosureBuilder import PrivateVenueDisclosureBuilder
 
 class PatientImmunizationBuilder:
     @staticmethod
-    def build(fhirInfo : FhirInfo, patientId: str, disclosure_level: DisclosureLevel):
+    def build(fhirInfo : FhirInfo, patientId: str, disclosure_level: DisclosureLevel, cert):
 
         patient = fhirInfo.immunizedPatients[patientId]
         if patient is None:
@@ -19,15 +19,15 @@ class PatientImmunizationBuilder:
 
         if disclosure_level == DisclosureLevel.PrivateVenue:
             b = PrivateVenueDisclosureBuilder()
-            return b.build(patientId, fhirInfo)
+            return b.build(patientId, fhirInfo, cert)
 
         if disclosure_level == DisclosureLevel.BorderControl:
             b = BorderControlDisclosureBuilder()
-            return b.build(patientId, fhirInfo)
+            return b.build(patientId, fhirInfo, cert)
 
         if disclosure_level == DisclosureLevel.Medical:
             b = MedicalDisclosureBuilder()
-            return b.build(patientId, fhirInfo)
+            return b.build(patientId, fhirInfo, cert)
 
         # except:
         #     return None

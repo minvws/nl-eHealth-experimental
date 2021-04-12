@@ -1,21 +1,21 @@
-from DisclosureCertificate import DisclosureCertificate
+from DisclosureCertificate import DisclosureCertificateBuilder
+from DisclosureLevel import DisclosureLevel
 from Disclosures import DisclosurePrivateVenue, ImmunizationPrivateVenue
 from FhirInfoReader import FhirInfoReader
 
 
 class PrivateVenueDisclosureBuilder:
     def __init__(self):
-        self._result = DisclosurePrivateVenue()
-        self._reader = None
+        self.__result = DisclosurePrivateVenue()
+        self.__reader = None
 
-    def build(self, patientId, info):
-        self._reader = FhirInfoReader(info)
-        self._result.nam = self._reader.getPatientName(patientId)
-        self._result.sex = self._reader.getPatientSex(patientId)
-        self._result.v = self.__buildImmunizations(self._reader.getImmunizationIdsForPatient(patientId))
-        self._result.c = DisclosureCertificate()
-        return self._result
-
+    def build(self, patientId, info, cert):
+        self.__reader = FhirInfoReader(info)
+        self.__result.nam = self.__reader.getPatientName(patientId)
+        self.__result.sex = self.__reader.getPatientSex(patientId)
+        self.__result.v = self.__buildImmunizations(self.__reader.getImmunizationIdsForPatient(patientId))
+        self.__result.c = DisclosureCertificateBuilder.build(cert, DisclosureLevel.PrivateVenue)
+        return self.__result
 
     def __buildImmunizations(self, items):
         result = []
@@ -24,8 +24,7 @@ class PrivateVenueDisclosureBuilder:
             result.append(self.__buildImmunization(i))
         return result
 
-
     def __buildImmunization(self, immunizationId):
         result = ImmunizationPrivateVenue()
-        result.tg = self._reader.getImmunizationTargetDiseases(immunizationId)
+        result.tg = self.__reader.getImmunizationTargetDiseases(immunizationId)
         return result

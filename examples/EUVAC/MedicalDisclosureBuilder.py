@@ -1,4 +1,5 @@
-from DisclosureCertificate import DisclosureCertificate
+from DisclosureCertificate import DisclosureCertificateBuilder
+from DisclosureLevel import DisclosureLevel
 from Disclosures import DisclosureMedical, ImmunizationMedical
 from FhirInfoReader import FhirInfoReader
 
@@ -8,7 +9,7 @@ class MedicalDisclosureBuilder:
         self.__result = DisclosureMedical()
         self.__reader = None
 
-    def build(self, patientId, info):
+    def build(self, patientId, info, cert):
         if self.__reader is not None:
             raise ValueError("Cannot reuse object.")
 
@@ -18,7 +19,7 @@ class MedicalDisclosureBuilder:
         self.__result.sex = self.__reader.getPatientSex(patientId)
         self.__result.dob = self.__reader.getPatientDateOfBirth(patientId)
         self.__result.v = self.__buildImmunizations(self.__reader.getImmunizationIdsForPatient(patientId))
-        self.__result.c = DisclosureCertificate()
+        self.__result.c = DisclosureCertificateBuilder.build(cert, DisclosureLevel.Medical)
         return self.__result
 
     def __buildImmunizations(self, items):

@@ -1,4 +1,6 @@
+from DisclosureLevel import DisclosureLevel
 from CodeableConcept import CodeableConceptFriendlyDictMapper
+from DisclosureCertificate import DisclosureCertificateFriendlyDictMapper
 
 
 class MedicalDisclosureFriendlyDictMapper():
@@ -9,7 +11,7 @@ class MedicalDisclosureFriendlyDictMapper():
         result["sex"] = value.sex
         result["dateOfBirth"] = value.dob
         result["immunizations"] = self.__buildImmunizations(value.v)
-        result["certificate"] = self.__buildCertificate(value.c)
+        result["certificate"] = DisclosureCertificateFriendlyDictMapper.build(value.c, DisclosureLevel.Medical)
         return result
 
     def __buildImmunizations(self, items):
@@ -31,14 +33,4 @@ class MedicalDisclosureFriendlyDictMapper():
         result["actorPractitioner"] = value.ap
         result["location"] = value.lo
         result["nextOccurrence"] = value.nx
-        return result
-
-    def __buildCertificate(self, value):
-        result = {}
-        result["issuer"] = value.Is
-        result["identifier"] = value.id
-        result["validFrom"] = value.st
-        result["validTo"] = value.en
-        result["schemaVersion"] = value.vr
-        result["issuingAuthorityCountry"] = value.ia
         return result

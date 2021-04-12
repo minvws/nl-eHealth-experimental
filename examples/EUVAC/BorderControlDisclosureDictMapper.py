@@ -1,4 +1,6 @@
 from CodeableConcept import CodeableConceptDictMapper
+from DisclosureCertificate import DisclosureCertificateDictMapper
+from DisclosureLevel import DisclosureLevel
 
 
 class BorderControlDisclosureDictMapper:
@@ -9,7 +11,7 @@ class BorderControlDisclosureDictMapper:
         result["sex"] = value.sex
         result["dob"] = value.dob
         result["v"] = self.__buildImmunizations(value.v)
-        result["c"] = self.__buildCertificate(value.c)
+        result["c"] = DisclosureCertificateDictMapper.build(value.c, DisclosureLevel.BorderControl)
         return result
 
     def __buildImmunizations(self, items):
@@ -27,15 +29,4 @@ class BorderControlDisclosureDictMapper:
         result["sn"] = value.sn
         result["oc"] = value.oc
         result["lo"] = value.lo
-        return result
-
-
-    def __buildCertificate(self, value):
-        result = {}
-        result["tg"] = value.Is
-        result["id"] = value.id
-        result["st"] = value.st
-        result["en"] = value.en
-        result["vr"] = value.vr
-        result["ia"] = value.ia
         return result

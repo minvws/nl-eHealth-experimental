@@ -1,4 +1,6 @@
+from DisclosureLevel import DisclosureLevel
 from CodeableConcept import CodeableConceptFriendlyDictMapper
+from DisclosureCertificate import DisclosureCertificateFriendlyDictMapper
 from Disclosures import DisclosureBorderControl
 
 class BorderControlDisclosureFriendlyDictMapper:
@@ -9,7 +11,7 @@ class BorderControlDisclosureFriendlyDictMapper:
         result["sex"] = value.sex
         result["dateOfBirth"] = value.dob
         result["immunizations"] = self.__buildImmunizations(value.v)
-        result["certificate"] = self.__buildCertificate(value.c)
+        result["certificate"] = DisclosureCertificateFriendlyDictMapper.build(value.c, DisclosureLevel.BorderControl)
         return result
 
     def __buildImmunizations(self, items):
@@ -27,14 +29,4 @@ class BorderControlDisclosureFriendlyDictMapper:
         result["seriesNumber"] = value.sn
         result["occurrence"] = value.oc
         result["location"] = value.lo
-        return result
-
-    def __buildCertificate(self, value):
-        result = {}
-        result["issuer"] = value.Is
-        result["UVCI"] = value.id
-        result["validFrom"] = value.st
-        result["validUntil"] = value.en
-        result["schemaVersion"] = value.vr
-        result["issuingAuthorityCountry"] = value.ia
         return result

@@ -68,12 +68,17 @@ def query_fhir_server():
     _page_state["qry_res"] = qry_res
     return render_template("index.html", page_state=_page_state)
 
+def readCertificate():
+    with open("dsc-worker.pem", "rb") as file:
+        pem = file.read()
+    cert = x509.load_pem_x509_certificate(pem)
+    return cert
 
 @app.route("/fhir2json", methods=["POST", "GET"])
 def fhir2json():
     # pre-cond: /query_fhir_server called prior in order to set: _page_state["qry_res"]
     data = _page_state["qry_res"]
-    display = MinDataSetDisplayFormatter.build(data)
+    display = MinDataSetDisplayFormatter.build(data, readCertificate())
     _page_state["min_data_set"] = display
     return ujson.dumps(display)
 
@@ -91,6 +96,7 @@ def fhir2jsoncborcose():
         pem = file.read()
     cert = x509.load_pem_x509_certificate(pem)
     fingerprint = cert.fingerprint(hashes.SHA256())
+
     keyid = fingerprint[-8:]
 
     with open("dsc-worker.key", "rb") as file:

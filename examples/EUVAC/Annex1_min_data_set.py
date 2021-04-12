@@ -7,7 +7,7 @@ class Annex1_min_data_set:
 
     @staticmethod
     def annex1_min_data_set(
-            qry_res: dict, disclosure_level: DisclosureLevel
+            qry_res: dict, disclosure_level: DisclosureLevel, cert
     ) -> dict:
         """
         :param qry_res: the result of a FHIR query contained as a dict (result of e.g.json.loads())
@@ -19,7 +19,7 @@ class Annex1_min_data_set:
         if qry_res is None:
             return {}
 
-        ret_data: dict = Annex1_min_data_set.__process_entries(qry_res, disclosure_level)
+        ret_data: dict = Annex1_min_data_set.__process_entries(qry_res, disclosure_level, cert)
 
         if "resourceType" in qry_res:
             if qry_res["resourceType"] == "Bundle":
@@ -30,7 +30,7 @@ class Annex1_min_data_set:
 
     @staticmethod
     def __process_entries(
-            qry_res: dict, disclosure_level: DisclosureLevel
+            qry_res: dict, disclosure_level: DisclosureLevel, cert
     ) -> dict:
         result = {}
 
@@ -43,7 +43,7 @@ class Annex1_min_data_set:
         fhirInfo = collector.execute(root)
 
         for patientId in fhirInfo.immunizedPatients.keys():
-            disclosure = PatientImmunizationBuilder.build(fhirInfo, patientId, disclosure_level)
+            disclosure = PatientImmunizationBuilder.build(fhirInfo, patientId, disclosure_level, cert)
             # TODO check the shape of the data matches
             if disclosure is not None:
                 disclosures.append(disclosure)

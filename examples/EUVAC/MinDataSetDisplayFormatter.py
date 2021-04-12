@@ -4,20 +4,20 @@ from Annex1_min_data_set import Annex1_min_data_set as a1
 
 class MinDataSetDisplayFormatter:
     @staticmethod
-    def build(data):
+    def build(data, cert):
         entries = []
-        entries.append(MinDataSetDisplayFormatter.__buildAndFormatSet(data, DisclosureLevel.PrivateVenue))
-        entries.append(MinDataSetDisplayFormatter.__buildAndFormatSet(data, DisclosureLevel.BorderControl))
-        entries.append(MinDataSetDisplayFormatter.__buildAndFormatSet(data, DisclosureLevel.Medical))
+        entries.append(MinDataSetDisplayFormatter.__buildAndFormatSet(data, DisclosureLevel.PrivateVenue, cert))
+        entries.append(MinDataSetDisplayFormatter.__buildAndFormatSet(data, DisclosureLevel.BorderControl, cert))
+        entries.append(MinDataSetDisplayFormatter.__buildAndFormatSet(data, DisclosureLevel.Medical, cert))
         result = {}
         result["entries"] = entries
         return result
 
     @staticmethod
-    def __buildAndFormatSet(data, dl):
+    def __buildAndFormatSet(data, dl, cert):
         result = {}
         result["disclosureLevel"] = MinDataSetDisplayFormatter.__Format(dl)
-        disclosures = a1.annex1_min_data_set(data, dl)
+        disclosures = a1.annex1_min_data_set(data, dl, cert)
         # result["Total Matches"] = disclosures["Total Matches"]
         entries = []
         for i in disclosures["entries"]:

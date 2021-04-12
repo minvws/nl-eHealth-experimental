@@ -1,4 +1,6 @@
+from DisclosureLevel import DisclosureLevel
 from CodeableConcept import CodeableConceptDictMapper
+from DisclosureCertificate import DisclosureCertificateDictMapper
 
 
 class PrivateVenueDisclosureDictMapper:
@@ -7,7 +9,7 @@ class PrivateVenueDisclosureDictMapper:
         result["nam"] = value.nam
         result["sex"] = value.sex
         result["v"] = self.__buildImmunizations(value.v)
-        result["c"] = self.__buildCertificate(value.c)
+        result["c"] = DisclosureCertificateDictMapper.build(value.c, DisclosureLevel.PrivateVenue)
         return result
 
     def __buildImmunizations(self, items):
@@ -19,13 +21,4 @@ class PrivateVenueDisclosureDictMapper:
     def __buildImmunization(self, value):
         result = {}
         result["tg"] = CodeableConceptDictMapper.buildList(value.tg)
-        return result
-
-    def __buildCertificate(self, value):
-        result = {}
-        result["tg"] = value.Is
-        result["st"] = value.st
-        result["en"] = value.en
-        result["vr"] = value.vr
-        result["ia"] = value.ia
         return result

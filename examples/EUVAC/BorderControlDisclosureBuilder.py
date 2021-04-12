@@ -1,4 +1,5 @@
-from DisclosureCertificate import DisclosureCertificate
+from DisclosureLevel import DisclosureLevel
+from DisclosureCertificate import DisclosureCertificateBuilder
 from Disclosures import ImmunizationBorderControl, DisclosureBorderControl
 from FhirInfoReader import FhirInfoReader
 
@@ -7,14 +8,14 @@ class BorderControlDisclosureBuilder:
         self.__result = DisclosureBorderControl()
         self.__reader = None
 
-    def build(self, patientId, info):
+    def build(self, patientId, info, cert):
         self.__reader = FhirInfoReader(info)
         self.__result.nam = self.__reader.getPatientName(patientId)
         self.__result.pid = self.__reader.getPatientPersonId(patientId)
         self.__result.sex = self.__reader.getPatientSex(patientId)
         self.__result.dob = self.__reader.getPatientDateOfBirth(patientId)
         self.__result.v = self.__buildImmunizations(self.__reader.getImmunizationIdsForPatient(patientId))
-        self.__result.c = DisclosureCertificate()
+        self.__result.c = DisclosureCertificateBuilder.build(cert, DisclosureLevel.BorderControl)
         return self.__result
 
     def __buildImmunizations(self, items):

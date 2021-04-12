@@ -25,11 +25,11 @@
             }
           ],
           "certificate": {
-            "issuer": "",
-            "validFrom": "",
-            "validUntil": "",
-            "schemaVersion": "",
-            "issuingAuthorityCountry": ""
+            "issuingAuthority": "CN=nl.samensterk.en.rsa,OU=IT,O=Ministerie van VWS,L=Den Haag,ST=Zuid-Holland,C=NL",
+            "issuer": "CN=nl.samensterk.en.rsa,OU=IT,O=Ministerie van VWS,L=Den Haag,ST=Zuid-Holland,C=NL",
+            "validStart": "2020-06-18T09:44:19",
+            "validEnd": "2021-06-18T09:44:19",
+            "version": "v3"
           }
         },
         {
@@ -49,11 +49,11 @@
             }
           ],
           "certificate": {
-            "issuer": "",
-            "validFrom": "",
-            "validUntil": "",
-            "schemaVersion": "",
-            "issuingAuthorityCountry": ""
+            "issuingAuthority": "CN=nl.samensterk.en.rsa,OU=IT,O=Ministerie van VWS,L=Den Haag,ST=Zuid-Holland,C=NL",
+            "issuer": "CN=nl.samensterk.en.rsa,OU=IT,O=Ministerie van VWS,L=Den Haag,ST=Zuid-Holland,C=NL",
+            "validStart": "2020-06-18T09:44:19",
+            "validEnd": "2021-06-18T09:44:19",
+            "version": "v3"
           }
         },
         {
@@ -70,11 +70,11 @@
             }
           ],
           "certificate": {
-            "issuer": "",
-            "validFrom": "",
-            "validUntil": "",
-            "schemaVersion": "",
-            "issuingAuthorityCountry": ""
+            "issuingAuthority": "CN=nl.samensterk.en.rsa,OU=IT,O=Ministerie van VWS,L=Den Haag,ST=Zuid-Holland,C=NL",
+            "issuer": "CN=nl.samensterk.en.rsa,OU=IT,O=Ministerie van VWS,L=Den Haag,ST=Zuid-Holland,C=NL",
+            "validStart": "2020-06-18T09:44:19",
+            "validEnd": "2021-06-18T09:44:19",
+            "version": "v3"
           }
         }
       ]
@@ -152,12 +152,12 @@
             }
           ],
           "certificate": {
-            "issuer": "",
-            "UVCI": "",
-            "validFrom": "",
-            "validUntil": "",
-            "schemaVersion": "",
-            "issuingAuthorityCountry": ""
+            "issuingAuthority": "NL",
+            "issuer": "CN=nl.samensterk.en.rsa,OU=IT,O=Ministerie van VWS,L=Den Haag,ST=Zuid-Holland,C=NL",
+            "validStart": "2020-06-18T09:44:19",
+            "validEnd": "2021-06-18T09:44:19",
+            "version": "v3",
+            "identifier": "7cc37e17fa0a1f678fb5b2b98930c39204ee22bfa926680bd920ddff9025d6e4"
           }
         },
         {
@@ -205,12 +205,12 @@
             }
           ],
           "certificate": {
-            "issuer": "",
-            "UVCI": "",
-            "validFrom": "",
-            "validUntil": "",
-            "schemaVersion": "",
-            "issuingAuthorityCountry": ""
+            "issuingAuthority": "NL",
+            "issuer": "CN=nl.samensterk.en.rsa,OU=IT,O=Ministerie van VWS,L=Den Haag,ST=Zuid-Holland,C=NL",
+            "validStart": "2020-06-18T09:44:19",
+            "validEnd": "2021-06-18T09:44:19",
+            "version": "v3",
+            "identifier": "7cc37e17fa0a1f678fb5b2b98930c39204ee22bfa926680bd920ddff9025d6e4"
           }
         },
         {
@@ -244,12 +244,12 @@
             }
           ],
           "certificate": {
-            "issuer": "",
-            "UVCI": "",
-            "validFrom": "",
-            "validUntil": "",
-            "schemaVersion": "",
-            "issuingAuthorityCountry": ""
+            "issuingAuthority": "NL",
+            "issuer": "CN=nl.samensterk.en.rsa,OU=IT,O=Ministerie van VWS,L=Den Haag,ST=Zuid-Holland,C=NL",
+            "validStart": "2020-06-18T09:44:19",
+            "validEnd": "2021-06-18T09:44:19",
+            "version": "v3",
+            "identifier": "7cc37e17fa0a1f678fb5b2b98930c39204ee22bfa926680bd920ddff9025d6e4"
           }
         }
       ]
@@ -339,12 +339,12 @@
             }
           ],
           "certificate": {
-            "issuer": "",
-            "identifier": "",
-            "validFrom": "",
-            "validTo": "",
-            "schemaVersion": "",
-            "issuingAuthorityCountry": ""
+            "issuingAuthority": "NL",
+            "issuer": "CN=nl.samensterk.en.rsa,OU=IT,O=Ministerie van VWS,L=Den Haag,ST=Zuid-Holland,C=NL",
+            "validStart": "2020-06-18T09:44:19",
+            "validEnd": "2021-06-18T09:44:19",
+            "version": "v3",
+            "identifier": "7cc37e17fa0a1f678fb5b2b98930c39204ee22bfa926680bd920ddff9025d6e4"
           }
         },
         {
@@ -408,12 +408,12 @@
             }
           ],
           "certificate": {
-            "issuer": "",
-            "identifier": "",
-            "validFrom": "",
-            "validTo": "",
-            "schemaVersion": "",
-            "issuingAuthorityCountry": ""
+            "issuingAuthority": "NL",
+            "issuer": "CN=nl.samensterk.en.rsa,OU=IT,O=Ministerie van VWS,L=Den Haag,ST=Zuid-Holland,C=NL",
+            "validStart": "2020-06-18T09:44:19",
+            "validEnd": "2021-06-18T09:44:19",
+            "version": "v3",
+            "identifier": "7cc37e17fa0a1f678fb5b2b98930c39204ee22bfa926680bd920ddff9025d6e4"
           }
         },
         {
@@ -455,12 +455,12 @@
             }
           ],
           "certificate": {
-            "issuer": "",
-            "identifier": "",
-            "validFrom": "",
-            "validTo": "",
-            "schemaVersion": "",
-            "issuingAuthorityCountry": ""
+            "issuingAuthority": "NL",
+            "issuer": "CN=nl.samensterk.en.rsa,OU=IT,O=Ministerie van VWS,L=Den Haag,ST=Zuid-Holland,C=NL",
+            "validStart": "2020-06-18T09:44:19",
+            "validEnd": "2021-06-18T09:44:19",
+            "version": "v3",
+            "identifier": "7cc37e17fa0a1f678fb5b2b98930c39204ee22bfa926680bd920ddff9025d6e4"
           }
         }
       ]
