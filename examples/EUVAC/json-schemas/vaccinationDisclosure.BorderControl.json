@@ -1,11 +1,12 @@
 ﻿{
   "$schema" : "http://json-schema.org/schema#",
-  "$id" : "https://github.com/nl-eHealth-experimental/examples/EUVAC/vaccinationDisclosure.Medical.schema.json",
+  "$id" : "https://github.com/nl-eHealth-experimental/examples/EUVAC/vaccinationDisclosure.BorderControl.schema.json",
   "type" : "object",
   "properties" : {
-    "nam": { "type": "string", "$comment": "Initial. FamilyName" },
+    "nam": { "type": "string", "$comment": "patient name as 'Initial. FamilyName'." },
     "pid": { "type": "string", "$comment": "patient identifier e.g. NL BSN, UK NH ID." },
-    "sex": { "type": "string", "$comment": "patient Gender." },
+    "sex": { "type": "string", "$comment": "patient sex." },
+    "gen": { "type": "string", "$comment": "patient gender." },
     "dob": { "type": "string", "format":"date", "$comment" : "Date of birth, ISO8601." },
     "v": { "type": "array", "items": "#/definitions/vaccinationEvent", "minItems": 1 },
     "t": { "type": "#/definitions/test" },
@@ -35,20 +36,20 @@
       "vaccinationEvent" : {
           "type" : "object",
           "properties" : {
-              "tg" : {"type":"string", "$comment" : "Disease or Agent Targeted as codableConcept." },
-              "cd" : {"type":"string", "$comment" : "Vaccine Code as codableConcept." },
-              "mp" : {"type":"string", "$comment" : "Medicinal Product as set of codableConcepts." },
-              "ah" : {"type":"string", "$comment" : "Marketing Authorization Holder aka Manufacturer as codableConcept." },
-              "sn" : {"type":"string", "$comment" : "Series number e.g. 1 from First jab of 2." },
+              "tg" : {"type":"string", "$comment" : "Disease or Agent Targeted as codeableConcept." },
+              "cd" : {"type":"string", "$comment" : "Vaccine Code as codeableConcept." },
+              "mp" : {"type":"string", "$comment" : "Medicinal Product as set of codeableConcepts." },
+              "ah" : {"type":"string", "$comment" : "Marketing Authorization Holder aka Manufacturer as codeableConcept." },
+              "sn" : {"type":"int", "$comment" : "dose number e.g. which jab in the series." },
               "oc" : {"type":"string", "format":"date", "$comment" : "Occurrence." },
-              "lo" : {"type":"string", "$comment" : "Location - TBA." }
+              "lo" : {"type":"string", "$comment" : "Location - For EU: address; For worldwide: one or the other or both of [address, WGS84]." }
           },
           "required": ["tg","cd","mp","ah","sn","oc","lo"]
       },
       "recovery": {
         "type": "object",
         "properties": {
-            "tg" : {"type":"string", "$comment" : "Disease or Agent Targeted as codableConcept." },
+            "tg" : {"type":"string", "$comment" : "Disease or Agent Targeted as codeableConcept." },
             "fr" : {"type":"string", "format":"date", "$comment" : "Valid From." },
             "co" : {"type":"string", "$comment" : "Country." }
         },

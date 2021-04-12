@@ -1,10 +1,11 @@
 ﻿{
   "$schema" : "http://json-schema.org/schema#",
-  "$id" : "https://github.com/nl-eHealth-experimental/examples/EUVAC/vaccinationDisclosure.Medical.schema.json",
+  "$id" : "https://github.com/nl-eHealth-experimental/examples/EUVAC/vaccinationDisclosure.PrivateVenue.schema.json",
   "type" : "object",
   "properties" : {
-    "nam": { "type": "string", "$comment": "Initial. FamilyName" },
-    "sex": { "type": "string", "$comment": "patient Gender." },
+    "nam": { "type": "string", "$comment": "patient name as 'Initial. FamilyName'." },
+    "sex": { "type": "string", "$comment": "patient sex." },
+    "gen": { "type": "string", "$comment": "patient gender." },
     "v": { "type": "array", "items": "#/definitions/vaccinationEvent", "minItems": 1 },
     "t": { "type": "#/definitions/test" },
     "r": { "type": "#/definitions/recovery" },
@@ -25,17 +26,17 @@
       "vaccinationEvent" : {
           "type" : "object",
           "properties" : {
-              "tg" : {"type":"string", "$comment" : "Disease or Agent Targeted as codableConcept." }
+              "tg" : {"type":"string", "$comment" : "Disease or Agent Targeted as codeableConcept." }
           },
           "required": ["tg"]
       },
       "recovery": {
         "type": "object",
         "properties": {
-            "tg" : {"type":"string", "$comment" : "Disease or Agent Targeted as codableConcept." },
+            "tg" : {"type":"string", "$comment" : "Disease or Agent Targeted as codeableConcept." },
             "fr" : {"type":"string", "format":"date", "$comment" : "Valid From." }
         },
-        "required": ["tg", "fr", "co"]
+        "required": ["tg", "fr"]
       },
       "certificate": {
           "type": "object",

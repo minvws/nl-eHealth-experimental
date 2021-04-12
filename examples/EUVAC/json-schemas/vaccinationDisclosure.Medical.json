@@ -3,15 +3,16 @@
     "$id" : "https://github.com/nl-eHealth-experimental/examples/EUVAC/vaccinationDisclosure.Medical.schema.json",
     "type" : "object",
     "properties" : {
-      "nam": { "type": "string", "$comment": "Initial. FamilyName" },
-      "pid": { "type": "string", "$comment": "patient identifier e.g. NL BSN, UK NH ID." },
-      "sex": { "type": "string", "$comment": "patient Gender." },
-      "dob": { "type": "string", "format":"date", "$comment" : "Date of birth, ISO8601." },
-      "v": { "type": "array", "items": "#/definitions/vaccinationEvent", "minItems": 1 },
-      "t": { "type": "#/definitions/test" },
-      "r": { "type": "#/definitions/recovery" },
-      "c": { "type": "#/definitions/certificate" },
-      "dsc": { "type": "string", "minLength": 12, "maxLength": 12, "$comment": "8 bytes of SHA256 of DSC certificate in base45." }
+    "nam": { "type": "string", "$comment": "patient name as 'Initial. FamilyName'." },
+        "pid": { "type": "string", "$comment": "patient identifier e.g. NL BSN, UK NH ID." },
+        "sex": { "type": "string", "$comment": "patient sex." },
+        "gen": { "type": "string", "$comment": "patient gender." },
+        "dob": { "type": "string", "format":"date", "$comment" : "Date of birth, ISO8601." },
+        "v": { "type": "array", "items": "#/definitions/vaccinationEvent", "minItems": 1 },
+        "t": { "type": "#/definitions/test" },
+        "r": { "type": "#/definitions/recovery" },
+        "c": { "type": "#/definitions/certificate" },
+        "dsc": { "type": "string", "minLength": 12, "maxLength": 12, "$comment": "8 bytes of SHA256 of DSC certificate in base45." }
     },
     "required": [ "nam", "pid", "dob", "sex", "v", "c", "dsc" ],
     "definitions" : {
@@ -28,19 +29,19 @@
                 "st" : {"type":"string", "$comment" : "Status." },
                 "tc" : {"type":"string", "$comment" : "Testing centre." },
                 "pi" : {"type":"string", "$comment" : "Practitioner identifier." },
-                "co" : {"type":"string", "$comment" : "Country." }
+                "lo" : {"type":"string", "$comment" : "Location - For EU: address; For worldwide: one or the other or both of [address, WGS84]." }
             },
             "required": ["tg", "tt", "bn", "mp", "or", "so", "ro", "st", "tc", "pi", "co"]
         },
         "vaccinationEvent" : {
             "type" : "object",
             "properties" : {
-                "tg" : {"type":"string", "$comment" : "Disease or Agent Targeted as codableConcept." },
-                "cd" : {"type":"string", "$comment" : "Vaccine Code as codableConcept." },
-                "mp" : {"type":"string", "$comment" : "Medicinal Product as set of codableConcepts." },
-                "ah" : {"type":"string", "$comment" : "Marketing Authorization Holder aka Manufacturer as codableConcept." },
-                "sn" : {"type":"string", "$comment" : "Series number e.g. 1 from First jab of 2." },
-                "sc" : {"type":"string", "$comment" : "Series count e.g. 2 from First jab of 2." },
+                "tg" : {"type":"string", "$comment" : "Disease or Agent Targeted as codeableConcept." },
+                "cd" : {"type":"string", "$comment" : "Vaccine Code as codeableConcept." },
+                "mp" : {"type":"string", "$comment" : "Medicinal Product as set of codeableConcepts." },
+                "ah" : {"type":"string", "$comment" : "Marketing Authorization Holder aka Manufacturer as codeableConcept." },
+                "sn" : {"type":"int", "$comment" : "dose number e.g. which jab in the series." },
+                "sc" : {"type":"int", "$comment" : "series doses e.g. number of jabs in protocol." },
                 "lt" : {"type":"string", "$comment" : "Lot aka Batch." },
                 "oc" : {"type":"string", "format":"date", "$comment" : "Occurrence." },
                 "ap" : {"type":"string", "$comment" : "performer.actor{function == ???" },
@@ -53,7 +54,7 @@
         "recovery": {
           "type": "object",
           "properties": {
-              "tg" : {"type":"string", "$comment" : "Disease or Agent Targeted as codableConcept." },
+              "tg" : {"type":"string", "$comment" : "Disease or Agent Targeted as codeableConcept." },
               "fr" : {"type":"string", "format":"date", "$comment" : "Valid From." },
               "co" : {"type":"string", "$comment" : "Country." }
           },
