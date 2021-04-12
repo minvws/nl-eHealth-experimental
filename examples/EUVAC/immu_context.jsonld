@@ -1,67 +1,14 @@
 {
-  "@context" : {
-    "drug": "https://schema.org/Drug",
-    "certificate": {
-      "issuer": {
-        "@type": "xsd:string"
-      },
-      "identifier": {
-        "@type": "xsd:string"
-      },
-      "validFrom": {
-        "@type": "xsd:dateTime"
-      },
-      "validUntil": {
-        "@type": "xsd:dateTime"
-      },
-      "schemaVersion": {
-        "@type": "xsd:dateTime"
-      },
-      "issuingAuthorityCountry": {
-        "@type": "xsd:string"
-      }
+    "nam": {
+      "@id": "https://schema.org/nam",
+      "@type": "@id"
+    },
+    "gen": {
+      "@id": "https://schema.org/gen",
+      "@type": "@id"
+    },
+    "dat": {
+      "@id": "https://schema.org/dat",
+      "@type": "@id"
     }
-    "legalName": {
-      "@type": "xsd:string"
-    },
-    "personId": {
-      "@type": "xsd:string"
-    },
-    "gender": {
-      "@type": "xsd:string"
-    },
-    "diseaseOrAgentTargeted": {
-      "@type": "xsd:string"
-    },
-    "marketingAuthorizationHolder": {
-      "@type": "xsd:string"
-    },
-    "vaccineCode": "https://schema.org/MedicalCode",
-    "vaccineMedicinalProduct": {
-      "@type": "xsd:string"
-    },
-    "numberInSeries": "https://schema.org/RecommendedDoseSchedule",
-    "batchLotNumber": {
-      "@type": "xsd:string"
-    },
-    "dateOfVaccination": {
-      "@type": "xsd:dateTime"
-    },
-    "startDateOfValidity": {
-      "@type": "xsd:dateTime"
-    },
-    "administeringCentre": {
-      "@type": "xsd:string"
-    },
-    "healthProfessionalId": {
-      "@type": "xsd:string"
-    },
-    "countryOfVaccination": {
-      "@type": "xsd:string"
-    },
-    "nextVaccinationDate": {
-      "@type": "xsd:string"
-    },
-    "xsd": "http://www.w3.org/2001/XMLSchema#"
-  }
 }

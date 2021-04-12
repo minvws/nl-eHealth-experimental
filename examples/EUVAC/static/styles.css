@@ -2,3 +2,13 @@ body
 {
   background-color: thistle;
 }
+
+th.val, td.val
+{
+  text-align: left
+}
+
+th.param, td.param
+{
+  text-align: right
+}

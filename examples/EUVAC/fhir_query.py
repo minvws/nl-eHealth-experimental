@@ -1,5 +1,4 @@
 import requests
-from typing import Optional
 
 
 class FhirQuery:
@@ -9,55 +8,34 @@ class FhirQuery:
     SERVICE_ROOT_URL = "https://hl7eu.onfhir.io/r4/"  # HL7 EU FHIR Server
     ACCEPT_HEADER = {"Accept": "application/fhir+json"}
 
-    @staticmethod
-    def find(fhir_server: Optional[str] = None):
+    def __init__(self, fhir_server: str = None):
         """
         :param fhir_server: Service Root URL for FHIR server,
         can be None in which case SERVICE_ROOT_URL will be used
-        :return: FHIR query result as dict, HTTP request as str
+        """
+        # use "falsy" boolean eval for arg fhir_server here -> empty string also false etc
+        self.__fhir_server = fhir_server if fhir_server else FhirQuery.SERVICE_ROOT_URL
+        # self.__fhir_server shall end in '/' -> so we don't have to check anywhere else
+        if not self.__fhir_server.endswith("/"):
+            self.__fhir_server = self.__fhir_server + "/"
+
+    def find(self, query_params: dict = None) -> dict:
+        """
+        :param query_params:
+        :return: FHIR query result as dict
         """
         try:
-            if fhir_server is None:
-                fhir_server = FhirQuery.SERVICE_ROOT_URL
             resp = requests.get(
-                f"{fhir_server}Immunization",
+                f"{self.__fhir_server}Immunization",
                 headers=FhirQuery.ACCEPT_HEADER,
-                params={"_include": "*", "date": "ge2021-01-01"},
+                params={"_include": "*", "date": "ge2021-01-01"}
+                if query_params is None
+                else query_params,
             )
             resp.raise_for_status()
             dict_resp = resp.json()
-            FhirQuery.__resolve_patients(entries=dict_resp["entry"])
-            return dict_resp, str(resp.request)
+            return dict_resp
         except requests.exceptions.HTTPError as http_err:
             print(f"HTTP error: {http_err}")
         except Exception as err:
             print(f"Other(requests) error: {err}")
-
-    @staticmethod
-    def __resolve_patients(entries: list):
-        for entry in entries:
-            if FhirQuery.__entry_has_immu_patient_ref(entry=entry):
-                patient: dict = entry["resource"]["patient"]
-                try:
-                    resp = requests.get(
-                        # TODO: fix so we use obj instance with fhir_server set at ctor time
-                        f'{FhirQuery.SERVICE_ROOT_URL}{patient["reference"]}',
-                        headers=FhirQuery.ACCEPT_HEADER,
-                        params={"_summary": "data"},
-                    )
-                    resp.raise_for_status()
-                    entry["resource"]["patient"] = resp.json()
-                except requests.exceptions.HTTPError as http_err:
-                    print(f"HTTP error: {http_err}")
-                except Exception as err:
-                    print(f"Other(requests) error: {err}")
-
-    @staticmethod
-    def __entry_has_immu_patient_ref(entry: dict) -> bool:
-        return (
-                "resource" in entry
-                and "resourceType" in entry["resource"]
-                and "patient" in entry["resource"]
-                and "Immunization" == entry["resource"]["resourceType"]
-                and "reference" in entry["resource"]["patient"]
-        )
