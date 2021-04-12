@@ -13,21 +13,24 @@ class PatientImmunizationBuilder:
         if patient is None:
             raise ValueError("qry_entry does not contain an immunized patient.")
 
-        try:
-            if disclosure_level == DisclosureLevel.PrivateVenue:
-                b = PrivateVenueDisclosureBuilder()
-                return b.build(patientId, fhirInfo)
+        # Add the try/except block when mandatory data items throws exceptions when missing
+        # e.g. replace use of Safe data finders and None checks.
+        # try:
 
-            if disclosure_level == DisclosureLevel.BorderControl:
-                b = BorderControlDisclosureBuilder()
-                return b.build(patientId, fhirInfo)
+        if disclosure_level == DisclosureLevel.PrivateVenue:
+            b = PrivateVenueDisclosureBuilder()
+            return b.build(patientId, fhirInfo)
 
-            if disclosure_level == DisclosureLevel.Medical:
-                b = MedicalDisclosureBuilder()
-                return b.build(patientId, fhirInfo)
+        if disclosure_level == DisclosureLevel.BorderControl:
+            b = BorderControlDisclosureBuilder()
+            return b.build(patientId, fhirInfo)
 
-        except:
-            return None
+        if disclosure_level == DisclosureLevel.Medical:
+            b = MedicalDisclosureBuilder()
+            return b.build(patientId, fhirInfo)
+
+        # except:
+        #     return None
 
         raise ValueError("Disclosure level unknown.")
 

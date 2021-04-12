@@ -114,10 +114,10 @@
                 }
               ],
               "medicalProduct": [],
-              "manufacturer": null,
-              "seriesNumber": null,
-              "occurance": "2021-02-04",
-              "location": null
+              "manufacturer": "TODO AuthorisationHolder not present.",
+              "seriesNumber": "TODO Series Number not present.",
+              "occurrence": "2021-02-04",
+              "location": "TODO Immunization Location not present."
             },
             {
               "targetDesease": [
@@ -145,10 +145,102 @@
                 }
               ],
               "medicalProduct": [],
-              "manufacturer": null,
-              "seriesNumber": null,
-              "occurance": "2021-02-25",
-              "location": null
+              "manufacturer": "TODO AuthorisationHolder not present.",
+              "seriesNumber": "TODO Series Number not present.",
+              "occurrence": "2021-02-25",
+              "location": "TODO Immunization Location not present."
+            }
+          ],
+          "certificate": {
+            "issuer": "",
+            "UVCI": "",
+            "validFrom": "",
+            "validUntil": "",
+            "schemaVersion": "",
+            "issuingAuthorityCountry": ""
+          }
+        },
+        {
+          "name": "M.Rossi",
+          "personId": "a person Id TBA",
+          "sex": "female",
+          "dateOfBirth": "1997-07-28",
+          "immunizations": [
+            {
+              "targetDesease": [
+                {
+                  "system": "http:\/\/hl7.org\/fhir\/sid\/icd-10",
+                  "code": "J12.82"
+                }
+              ],
+              "vaccineCode": [
+                {
+                  "system": "http:\/\/snomed.info\/sct",
+                  "code": "1119349007"
+                },
+                {
+                  "system": "https:\/\/www.aifa.gov.it\/aic",
+                  "code": "049283"
+                }
+              ],
+              "medicalProduct": [],
+              "manufacturer": "MODERNA BIOTECH SPAIN, S.L.",
+              "seriesNumber": "TODO Series Number not present.",
+              "occurrence": "2021-01-10",
+              "location": "IT"
+            },
+            {
+              "targetDesease": [],
+              "vaccineCode": [
+                {
+                  "system": "http:\/\/snomed.info\/sct",
+                  "code": "1119349007"
+                }
+              ],
+              "medicalProduct": [],
+              "manufacturer": "TODO AuthorisationHolder not present.",
+              "seriesNumber": "TODO Series Number not present.",
+              "occurrence": "2021-02-07",
+              "location": "TODO Immunization Location not present."
+            }
+          ],
+          "certificate": {
+            "issuer": "",
+            "UVCI": "",
+            "validFrom": "",
+            "validUntil": "",
+            "schemaVersion": "",
+            "issuingAuthorityCountry": ""
+          }
+        },
+        {
+          "name": "M.Rossi",
+          "personId": "a person Id TBA",
+          "sex": "female",
+          "dateOfBirth": "1997-07-28",
+          "immunizations": [
+            {
+              "targetDesease": [
+                {
+                  "system": "http:\/\/hl7.org\/fhir\/sid\/icd-10",
+                  "code": "J12.82"
+                }
+              ],
+              "vaccineCode": [
+                {
+                  "system": "http:\/\/snomed.info\/sct",
+                  "code": "1119349007"
+                },
+                {
+                  "system": "https:\/\/www.aifa.gov.it\/aic",
+                  "code": "049283"
+                }
+              ],
+              "medicalProduct": [],
+              "manufacturer": "MODERNA BIOTECH SPAIN, S.L.",
+              "seriesNumber": "TODO Series Number not present.",
+              "occurrence": "2021-01-10",
+              "location": "IT"
             }
           ],
           "certificate": {
@@ -197,14 +289,16 @@
                 }
               ],
               "medicalProduct": [],
-              "manufacturer": null,
-              "seriesNumber": null,
-              "sc": null,
-              "occurance": "2021-02-04",
-              "ao": null,
-              "ap": null,
-              "location": null,
-              "nextOccurance": "TODO yyyy-mm-dd"
+              "manufacturer": "TODO AuthorisationHolder not present.",
+              "seriesNumber": "TODO Series Number not present.",
+              "seriesCount": "TODO Series Count not present.",
+              "occurrence": "2021-02-04",
+              "actorOrganisation": [
+                "Organization\/af7e98a2-9fc0-44f5-85b0-1002d15c215e"
+              ],
+              "actorPractitioner": [],
+              "location": "TODO Immunization Location not present.",
+              "nextOccurrence": "TODO yyyy-mm-dd"
             },
             {
               "targetDisease": [
@@ -232,14 +326,132 @@
                 }
               ],
               "medicalProduct": [],
-              "manufacturer": null,
-              "seriesNumber": null,
-              "sc": null,
-              "occurance": "2021-02-25",
-              "ao": null,
-              "ap": null,
-              "location": null,
-              "nextOccurance": "TODO yyyy-mm-dd"
+              "manufacturer": "TODO AuthorisationHolder not present.",
+              "seriesNumber": "TODO Series Number not present.",
+              "seriesCount": "TODO Series Count not present.",
+              "occurrence": "2021-02-25",
+              "actorOrganisation": [
+                "Organization\/af7e98a2-9fc0-44f5-85b0-1002d15c215e"
+              ],
+              "actorPractitioner": [],
+              "location": "TODO Immunization Location not present.",
+              "nextOccurrence": "TODO yyyy-mm-dd"
+            }
+          ],
+          "certificate": {
+            "issuer": "",
+            "identifier": "",
+            "validFrom": "",
+            "validTo": "",
+            "schemaVersion": "",
+            "issuingAuthorityCountry": ""
+          }
+        },
+        {
+          "name": "M.Rossi",
+          "personId": "a person Id TBA",
+          "sex": "female",
+          "dateOfBirth": "1997-07-28",
+          "immunizations": [
+            {
+              "targetDisease": [
+                {
+                  "system": "http:\/\/hl7.org\/fhir\/sid\/icd-10",
+                  "code": "J12.82"
+                }
+              ],
+              "vaccineCode": [
+                {
+                  "system": "http:\/\/snomed.info\/sct",
+                  "code": "1119349007"
+                },
+                {
+                  "system": "https:\/\/www.aifa.gov.it\/aic",
+                  "code": "049283"
+                }
+              ],
+              "medicalProduct": [],
+              "manufacturer": "MODERNA BIOTECH SPAIN, S.L.",
+              "seriesNumber": "TODO Series Number not present.",
+              "seriesCount": "TODO Series Count not present.",
+              "occurrence": "2021-01-10",
+              "actorOrganisation": [
+                "Organization\/d65f4c46-4382-4cb4-94ea-4728f492405e"
+              ],
+              "actorPractitioner": [
+                "Practitioner\/0734d175-6dbd-4749-bfa2-e373430c1e8c"
+              ],
+              "location": "IT",
+              "nextOccurrence": "TODO yyyy-mm-dd"
+            },
+            {
+              "targetDisease": [],
+              "vaccineCode": [
+                {
+                  "system": "http:\/\/snomed.info\/sct",
+                  "code": "1119349007"
+                }
+              ],
+              "medicalProduct": [],
+              "manufacturer": "TODO AuthorisationHolder not present.",
+              "seriesNumber": "TODO Series Number not present.",
+              "seriesCount": "TODO Series Count not present.",
+              "occurrence": "2021-02-07",
+              "actorOrganisation": [
+                "Organization\/d65f4c46-4382-4cb4-94ea-4728f492405e"
+              ],
+              "actorPractitioner": [
+                "Practitioner\/0734d175-6dbd-4749-bfa2-e373430c1e8c"
+              ],
+              "location": "TODO Immunization Location not present.",
+              "nextOccurrence": "TODO yyyy-mm-dd"
+            }
+          ],
+          "certificate": {
+            "issuer": "",
+            "identifier": "",
+            "validFrom": "",
+            "validTo": "",
+            "schemaVersion": "",
+            "issuingAuthorityCountry": ""
+          }
+        },
+        {
+          "name": "M.Rossi",
+          "personId": "a person Id TBA",
+          "sex": "female",
+          "dateOfBirth": "1997-07-28",
+          "immunizations": [
+            {
+              "targetDisease": [
+                {
+                  "system": "http:\/\/hl7.org\/fhir\/sid\/icd-10",
+                  "code": "J12.82"
+                }
+              ],
+              "vaccineCode": [
+                {
+                  "system": "http:\/\/snomed.info\/sct",
+                  "code": "1119349007"
+                },
+                {
+                  "system": "https:\/\/www.aifa.gov.it\/aic",
+                  "code": "049283"
+                }
+              ],
+              "medicalProduct": [],
+              "manufacturer": "MODERNA BIOTECH SPAIN, S.L.",
+              "seriesNumber": "TODO Series Number not present.",
+              "seriesCount": "TODO Series Count not present.",
+              "occurrence": "2021-01-10",
+              "actorOrganisation": [
+                "Organization\/9550e16f-9764-43f0-8cb0-0a17d90a3649"
+              ],
+              "actorPractitioner": [
+                "Practitioner\/50b8f022-d480-4d51-9777-1848163a7cc9"
+              ],
+              "location": "IT",
+              "nextOccurrence": "TODO yyyy-mm-dd"
             }
           ],
           "certificate": {

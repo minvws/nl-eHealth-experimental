@@ -25,12 +25,12 @@ class MedicalDisclosureFriendlyDictMapper():
         result["medicalProduct"] = CodeableConceptFriendlyDictMapper.buildList(value.mp)
         result["manufacturer"] = value.ah
         result["seriesNumber"] = value.sn
-        result["sc"] = value.sc
-        result["occurance"] = value.oc
-        result["ao"] = value.ao
-        result["ap"] = value.ap
+        result["seriesCount"] = value.sc
+        result["occurrence"] = value.oc
+        result["actorOrganisation"] = value.ao
+        result["actorPractitioner"] = value.ap
         result["location"] = value.lo
-        result["nextOccurance"] = value.nx
+        result["nextOccurrence"] = value.nx
         return result
 
     def __buildCertificate(self, value):

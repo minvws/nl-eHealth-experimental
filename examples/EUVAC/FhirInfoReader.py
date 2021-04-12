@@ -47,21 +47,20 @@ class FhirInfoReader:
             # TODO if mandatory?
             return []
 
-        # TODO handle more than one targetDisease
         candidates = self.getCodeableConcepts(targetDisease[0])
         # TODO filter
         # TODO format
         return candidates
 
     def getReferenceDefault(self, node):
-        reference = JsonParser.findPathSafe(node, "reference")
-        typeUri = JsonParser.findPathSafe(node, "type")
+        reference = JsonParser.findPathSafe(node, ["reference"])
+        typeUri = JsonParser.findPathSafe(node, ["type"])
         if not reference is None and not typeUri is None:
             return f'{typeUri}/{reference}'
 
         # TODO fallback to ?
         # identifierNode = JsonParser.findPathSafe("identifier")
-        displayText = JsonParser.findPathSafe(node, "display")
+        displayText = JsonParser.findPathSafe(node, ["display"])
         return displayText  # cos we have a few with just this...
 
     def getCodeableConcepts(self, node):
@@ -112,36 +111,63 @@ class FhirInfoReader:
         manufacturer = JsonParser.findPathSafe(self._Info.immunizations[immunizationId], ["manufacturer"])
         if manufacturer is None:
             # TODO mandatory?
-            return None
+            return "TODO AuthorisationHolder not present."
 
         return self.getReferenceDefault(manufacturer)
 
     def getImmunizationSeriesNumber(self, immunizationId):
-        return JsonParser.findPathSafe(self._Info.immunizations[immunizationId], ["protocolApplied", "doseNumberPositiveInt"])
+        result = JsonParser.findPathSafe(self._Info.immunizations[immunizationId], ["protocolApplied", "doseNumberPositiveInt"])
+        # TODO action if missing?
+        if result is None:
+            return "TODO Series Number not present."
+
+        return result
 
     def getImmunizationSeriesCount(self, immunizationId):
-        return JsonParser.findPathSafe(self._Info.immunizations[immunizationId], ["protocolApplied", "seriesDosesPositiveInt"])
+        result = JsonParser.findPathSafe(self._Info.immunizations[immunizationId], ["protocolApplied", "seriesDosesPositiveInt"])
+        # TODO action if missing?
+        if result is None:
+            return "TODO Series Count not present."
+
+        return result
 
     def getImmunizationLocation(self, immunizationId):
-        reference = JsonParser.findPathSafe(self._Info.immunizations[immunizationId], ["location"])
+        reference = JsonParser.findPathSafe(self._Info.immunizations[immunizationId], ["location", "reference"])
         # TODO fallbacks?
         if reference is None:
-            return None
+            return "TODO Immunization Location not present."
 
-        loc = self._Info.locations[reference]
+        lookup = reference[9:]  # chop Location/ off the start of the reference
+        loc = self._Info.locations[lookup]
         if loc is None:
-            return None
+            return "TODO Immunization Location not in search results."
 
-        return JsonParser.findPathSafe(loc, ["address", "country"])
+        result = JsonParser.findPathSafe(loc, ["address", "country"])
+        if result is None:
+            return "TODO country not in location."
+
+        return result
 
     def getImmunizationOccurrence(self, immunizationId):
         return JsonParser.findPathSafe(self._Info.immunizations[immunizationId], ["occurrenceDateTime"])
 
     def getImmunizationActorOrganization(self, immunizationId):
-        pass
+        performerList = JsonParser.findPathSafe(self._Info.immunizations[immunizationId], ["performer"])
+        result = []
+        for i in performerList:
+            value = JsonParser.findPathSafe(i, ["actor", "reference"])
+            if value is not None and value.startswith("Organization"):
+                result.append(value)
+        return result
 
     def getImmunizationActorPractitioner(self, immunizationId):
-        pass
+        performerList = JsonParser.findPathSafe(self._Info.immunizations[immunizationId], ["performer"])
+        result = []
+        for i in performerList:
+            value = JsonParser.findPathSafe(i, ["actor", "reference"])
+            if value is not None and value.startswith("Practitioner"):
+                result.append(value)
+        return result
 
     def getImmunizationNextOccurrence(self, immunizationId):
         return "TODO yyyy-mm-dd"

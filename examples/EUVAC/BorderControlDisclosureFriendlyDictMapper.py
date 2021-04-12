@@ -25,7 +25,7 @@ class BorderControlDisclosureFriendlyDictMapper:
         result["medicalProduct"] = CodeableConceptFriendlyDictMapper.buildList(value.mp)
         result["manufacturer"] = value.ah
         result["seriesNumber"] = value.sn
-        result["occurance"] = value.oc
+        result["occurrence"] = value.oc
         result["location"] = value.lo
         return result
 

@@ -5,13 +5,13 @@ from Annex1_min_data_set import Annex1_min_data_set as a1
 class MinDataSetDisplayFormatter:
     @staticmethod
     def build(data):
-        display = {}
-        display["entries"] = [
-        MinDataSetDisplayFormatter.__buildAndFormatSet(data, DisclosureLevel.PrivateVenue),
-        MinDataSetDisplayFormatter.__buildAndFormatSet(data, DisclosureLevel.BorderControl),
-        MinDataSetDisplayFormatter.__buildAndFormatSet(data, DisclosureLevel.Medical)
-        ]
-        return display
+        entries = []
+        entries.append(MinDataSetDisplayFormatter.__buildAndFormatSet(data, DisclosureLevel.PrivateVenue))
+        entries.append(MinDataSetDisplayFormatter.__buildAndFormatSet(data, DisclosureLevel.BorderControl))
+        entries.append(MinDataSetDisplayFormatter.__buildAndFormatSet(data, DisclosureLevel.Medical))
+        result = {}
+        result["entries"] = entries
+        return result
 
     @staticmethod
     def __buildAndFormatSet(data, dl):
