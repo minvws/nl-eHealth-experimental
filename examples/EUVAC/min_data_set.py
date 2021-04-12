@@ -1,7 +1,11 @@
+import ujson
+
 from abc import ABC, abstractmethod
-from enum import auto, Enum
+from disclosure_level import DisclosureLevel
+from pathlib import Path
 from pyld import jsonld
-from typing import Any, Optional
+from typing import List, Optional
+from vacc_entry_parser import VaccEntryParser
 
 
 class Certificate:
@@ -24,42 +28,66 @@ class MinDataSet(ABC):
     by MinDataSetFactory, depending on the required disclosure level
     """
 
-    _CONTEXT_FILE = "immu_context.jsonld"  # used for JSON-LD generation
+    __JSONLD_CONTEXT_FILE: Path = Path(
+        Path(__file__).parent.resolve(), "immu_context.jsonld"
+    )
 
     def __init__(self):
         pass
 
-    @property
     @abstractmethod
-    def certificate(self) -> Certificate:
-        pass
-
-    @property
-    @abstractmethod
-    def pv(self) -> dict:
-        pass
-
-    # I don't find this particularly clean: will think of a better way
-    # Property needs to be available at ABC level (for polymorphism, which 99% fits)
-    # but this property should only available for a specific derived class (MinDataSetMD)
-    # Maybe we just need to handle the concrete class instances rather than via polymorphism ->
-    # also ugly as polymorphism really fits for 99% of the usage
-    @property
-    def md(self) -> dict:
-        raise RuntimeError(f"property md not supported for concrete type {type(self)}")
-
-    @abstractmethod
-    def as_json_ld(self) -> Any:
-        pass
-
-    @abstractmethod
-    def serialize(self, json_ld: str) -> Any:
+    def parse(self, qry_res: dict) -> None:
         """
-        serializes the JSON-LD to CBOR-LD binary
-        :param json_ld: JSON-LD doc as string
-        :return: JSON-LD serialized as CBOR-LD binary
+        Parse the FHIR response into the fields appropriate for the particular
+        sub-class of MinDataSet.
+        :param qry_res: JSON FHIR query response as dict (e.g. as return from json.loads())
+        :return: None: the data is parsed into the concrete object
         """
+
+    @abstractmethod
+    def as_dict_array(self) -> List[dict]:
         pass
+
+    def as_json(self) -> str:
+        return ujson.dumps(self.as_dict_array())
+
+    def as_jsonld(self) -> dict:
+        # example from: https://pypi.org/project/PyLD/
+        #
+        # doc_ex = {
+        #     "http://schema.org/name": "Manu Sporny",
+        #     "http://schema.org/url": {"@id": "http://manu.sporny.org/"},
+        #     "http://schema.org/image": {"@id": "http://manu.sporny.org/images/manu.png"}
+        # }
+        #
+        # context_ex = {
+        #     "name": "http://schema.org/name",
+        #     "homepage": {"@id": "http://schema.org/url", "@type": "@id"},
+        #     "image": {"@id": "http://schema.org/image", "@type": "@id"}
+        # }
+        # compacted = jsonld.compact(doc_ex, context_ex)
+        #
+        # throw together a small JSON-LD version of the doc, somewhat convoluted but that's JSON-LD for you...
+        resource = self.as_dict_array()[0]
+        json_doc = {
+            "https://schema.org/nam": resource["nam"],
+            "https://schema.org/dat": resource["dat"],
+            "https://schema.org/gen": resource["gen"]
+        }
+        with open(MinDataSet.__JSONLD_CONTEXT_FILE, "r") as ctx:
+            json_ctx: dict = ujson.load(ctx)
+            compacted: dict = jsonld.compact(json_doc, json_ctx)
+            return compacted
+
+    @staticmethod
+    def _has_entries(qry_res: dict) -> bool:
+        return (
+            qry_res  # falsy in boolean context
+            and "resourceType" in qry_res
+            and qry_res["resourceType"] == "Bundle"
+            and "total" in qry_res
+            and qry_res["total"] > 0
+        )
 
 
 class MinDataSetPV(MinDataSet):
@@ -69,69 +97,74 @@ class MinDataSetPV(MinDataSet):
 
     def __init__(self):
         super().__init__()
-        self.__pv = dict(
-            legalName="", diseaseOrAgentTargeted="", startDateOfValidity=""
-        )
         self.__certificate = Certificate()
+        self.__entries: List[dict] = list()
+
+    def parse(self, qry_res: dict) -> None:
+        if MinDataSet._has_entries(qry_res=qry_res):
+            entry_parser: VaccEntryParser = VaccEntryParser(qry_res=qry_res)
+            for entry in qry_res["entry"]:
+                pv: dict = entry_parser.resolve_entry(
+                    entry=entry, disclosure_level=DisclosureLevel.PV
+                )
+                if pv:
+                    self.__entries.append(pv)
 
     @property
     def certificate(self) -> Certificate:
         return self.__certificate
 
-    @property
-    def pv(self) -> dict:
-        return self.__pv
+    def as_dict_array(self) -> List[dict]:
+        return self.__entries
 
-    def as_json_ld(self) -> Any:
-        # doc is json.dumps of this class's data
-        # context is the string rep of context file
-        doc = ""
-        with open(MinDataSet._CONTEXT_FILE, "r") as context:
-            compacted = jsonld.compact(doc, context.readlines())
-        return compacted
-
-    def serialize(self, json_ld: str) -> Any:
-        pass
+    def as_json(self) -> str:
+        return ujson.dumps(self.as_dict_array())
 
 
-class MinDataSetBC(MinDataSetPV):
+class MinDataSetBC(MinDataSet):
     """
     MinimumDataSet for Border Control
-    Includes all [PV] fields
-    Only difference to PV is that BC completes Certificate.UVCI field
     """
 
     def __init__(self):
         super().__init__()
+        self.__entries: List[dict] = list()
+
+    def parse(self, qry_res: dict) -> None:
+        if MinDataSet._has_entries(qry_res=qry_res):
+            entry_parser: VaccEntryParser = VaccEntryParser(qry_res=qry_res)
+            for entry in qry_res["entry"]:
+                bc: dict = entry_parser.resolve_entry(
+                    entry=entry, disclosure_level=DisclosureLevel.BC
+                )
+                if bc:
+                    self.__entries.append(bc)
+
+    def as_dict_array(self) -> List[dict]:
+        return self.__entries
 
 
-class MinDataSetMD(MinDataSetBC):
+class MinDataSetMD(MinDataSet):
     """
     MinimumDataSet for Medical
-    Includes all [BC] fields
     """
 
     def __init__(self):
         super().__init__()
-        self.__md = dict(
-            personId="",
-            dateOfBirth="",
-            gender="O",
-            marketingAuthorizationHolder="",
-            vaccineCode="",
-            vaccineMedicinalProduct="",
-            batchLotNumber="",
-            dateOfVaccination="",
-            administeringCentre="",
-            healthProfessionalId="",
-            countryOfVaccination="",
-            numberInSeries="",
-            nextVaccinationDate="",
-        )
+        self.__entries: List[dict] = list()
 
-    @property
-    def md(self) -> dict:
-        return self.__md
+    def parse(self, qry_res: dict) -> None:
+        if MinDataSet._has_entries(qry_res=qry_res):
+            entry_parser: VaccEntryParser = VaccEntryParser(qry_res=qry_res)
+            for entry in qry_res["entry"]:
+                md: dict = entry_parser.resolve_entry(
+                    entry=entry, disclosure_level=DisclosureLevel.MD
+                )
+                if md:
+                    self.__entries.append(md)
+
+    def as_dict_array(self) -> List[dict]:
+        return self.__entries
 
 
 class MinDataSetFactory:
@@ -140,17 +173,6 @@ class MinDataSetFactory:
     and provides a single point of reference for the levels of disclosure
     """
 
-    class DisclosureLevel(Enum):
-        """Enum for disclosure level. The disclosure level is representative
-        of the intended use of the vaccination certificate and governs in accordance
-        with the EU eHealthNetwork Annex 1 Minimum Dataset Specification for
-        Vaccination Certificates
-        """
-
-        PV = auto()  # private venue, level 0
-        BC = auto()  # border control, level 1
-        MD = auto()  # medical, level 2
-
     @staticmethod
     def create(disclosure_level: DisclosureLevel) -> MinDataSet:
         """
@@ -158,13 +180,13 @@ class MinDataSetFactory:
         :param disclosure_level: determines which type of sub-class is returned
         :return: an object instance of a class derived from MinDataSet
         """
-        if disclosure_level == MinDataSetFactory.DisclosureLevel.PV:
+        if disclosure_level == DisclosureLevel.PV:
             return MinDataSetPV()
-        elif disclosure_level == MinDataSetFactory.DisclosureLevel.BC:
+        elif disclosure_level == DisclosureLevel.BC:
             return MinDataSetBC()
-        elif disclosure_level == MinDataSetFactory.DisclosureLevel.MD:
+        elif disclosure_level == DisclosureLevel.MD:
             return MinDataSetMD()
         else:
             raise ValueError(
-                f"Unknown MinDataSetFactory.DisclosureLevel enumeration value: {disclosure_level}"
+                f"Unknown DisclosureLevel enumeration value: {disclosure_level}"
             )

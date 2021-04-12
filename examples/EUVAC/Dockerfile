@@ -6,14 +6,11 @@ WORKDIR /home/euvac
 RUN apk add bash build-base cargo curl libffi-dev iptables libxml2-dev libxslt-dev \
             openssl openssl-dev python3 py3-pip python3-dev rust
 
-# dotnet dependencies:
-RUN apk add icu-libs krb5-libs libgcc libintl libssl1.1 libstdc++ zlib
-
 RUN pip3 install wheel
 COPY requirements.txt /tmp/
 RUN pip3 install -r /tmp/requirements.txt
 # rust only required for building crypto libs, can be removed from image once crypto built (requirements.txt)
-RUN apk del rust
+RUN apk del rust cargo
 RUN rm /tmp/requirements.txt
 
 RUN addgroup -S euvac && \
@@ -22,22 +19,21 @@ RUN addgroup -S euvac && \
 
 USER euvac
 
-RUN curl -sSL https://dot.net/v1/dotnet-install.sh | /bin/bash /dev/stdin -c 5.0
-
 COPY --chown=euvac:euvac gen-csca-dsc.sh /home/euvac/
 RUN /home/euvac/gen-csca-dsc.sh
 
 COPY --chown=euvac:euvac static /home/euvac/static/
-COPY --chown=euvac:euvac templates /home/euvac/templates/
 RUN cp csca.pem dsc-worker.pem masterlist-dsc.pem dsc-worker.key /home/euvac/static/
+COPY --chown=euvac:euvac templates /home/euvac/templates/
 
 COPY --chown=euvac:euvac \
      cose_sign.py \
      cose_verify.py \
+     disclosure_level.py \
      entrypoint.sh \
      fhir2qr.py \
      fhir_query.py \
      immu_context.jsonld \
-     immu_parser.py \
      min_data_set.py \
+     vacc_entry_parser.py \
      /home/euvac/

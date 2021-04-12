@@ -4,7 +4,7 @@ import zlib
 import argparse
 import json
 import cbor2
-from base64 import b64decode
+from base64 import b64encode
 
 
 from base45 import b45encode
@@ -99,7 +99,7 @@ if not args.skip_zlib:
 # And base45 encode the result
 #
 if args.base64:
-    out = b64encode(out).encode('ascii')
+    out = b64encode(out)
 else:
    if not args.skip_base45:
       out = b45encode(out).encode('ascii')
