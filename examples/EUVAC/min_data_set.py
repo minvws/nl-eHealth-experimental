@@ -1,7 +1,7 @@
 import ujson
 
 from abc import ABC, abstractmethod
-from disclosure_level import DisclosureLevel
+from DisclosureLevel import DisclosureLevel
 from pathlib import Path
 from pyld import jsonld
 from typing import List, Optional
@@ -105,7 +105,7 @@ class MinDataSetPV(MinDataSet):
             entry_parser: VaccEntryParser = VaccEntryParser(qry_res=qry_res)
             for entry in qry_res["entry"]:
                 pv: dict = entry_parser.resolve_entry(
-                    entry=entry, disclosure_level=DisclosureLevel.PV
+                    entry=entry, disclosure_level=DisclosureLevel.PrivateVenue
                 )
                 if pv:
                     self.__entries.append(pv)
@@ -180,11 +180,11 @@ class MinDataSetFactory:
         :param disclosure_level: determines which type of sub-class is returned
         :return: an object instance of a class derived from MinDataSet
         """
-        if disclosure_level == DisclosureLevel.PV:
+        if disclosure_level == DisclosureLevel.PrivateVenue:
             return MinDataSetPV()
-        elif disclosure_level == DisclosureLevel.BC:
+        elif disclosure_level == DisclosureLevel.BorderControl:
             return MinDataSetBC()
-        elif disclosure_level == DisclosureLevel.MD:
+        elif disclosure_level == DisclosureLevel.Medical:
             return MinDataSetMD()
         else:
             raise ValueError(

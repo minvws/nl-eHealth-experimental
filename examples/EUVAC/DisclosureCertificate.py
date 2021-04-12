@@ -1,5 +1,5 @@
 from binascii import hexlify
-from typing import Optional
+# TODO reinstate - from typing import Optional
 from cryptography import x509
 from cryptography.hazmat.primitives.hashes import SHA256
 from cryptography.x509 import NameOID

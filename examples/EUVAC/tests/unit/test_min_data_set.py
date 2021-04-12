@@ -1,8 +1,8 @@
 import json
 import pytest
 
-from disclosure_level import DisclosureLevel
-from min_data_set import Certificate, MinDataSet, MinDataSetFactory
+from DisclosureLevel import DisclosureLevel
+from min_data_set import MinDataSet, MinDataSetFactory
 from pathlib import Path
 from typing import List
 

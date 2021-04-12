@@ -1,6 +1,6 @@
 import json
 
-from disclosure_level import DisclosureLevel
+from DisclosureLevel import DisclosureLevel
 from pathlib import Path
 from vacc_entry_parser import VaccEntryParser
 
@@ -8,7 +8,8 @@ from vacc_entry_parser import VaccEntryParser
 class TestVaccEntryParser:
     # we expect JSON test data to be in same dir as test script
     JSON_TEST_DATA: Path = Path(
-        Path(__file__).parent.resolve(), "test_vacc_entry_parser.json"
+        #TODO handle unicode in - Path(__file__).parent.resolve(), "test_vacc_entry_parser.json"
+        Path(__file__).parent.resolve(), "test_immu_parser.json"
     )
 
     def test_load_json_pv(self):
@@ -23,7 +24,7 @@ class TestVaccEntryParser:
             assert isinstance(qry_entry, dict)
             entry_parser: VaccEntryParser = VaccEntryParser(qry_res=json_data)
             pv: dict = entry_parser.resolve_entry(
-                entry=qry_entry, disclosure_level=DisclosureLevel.PV
+                entry=qry_entry, disclosure_level=DisclosureLevel.PrivateVenue
             )
             # TODO: check data values are as expected wrt the source data
 

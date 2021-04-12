@@ -7,12 +7,11 @@ import zlib
 from base64 import b64decode
 
 import cbor2
-from binascii import unhexlify, hexlify
+from binascii import hexlify
 
 from base45 import b45decode
-from cose.algorithms import Es256
 from cose.curves import P256
-from cose.algorithms import Es256, EdDSA
+from cose.algorithms import Es256
 from cose.headers import KID
 from cose.keys import CoseKey
 from cose.keys.keyparam import KpAlg, EC2KpX, EC2KpY, EC2KpCurve

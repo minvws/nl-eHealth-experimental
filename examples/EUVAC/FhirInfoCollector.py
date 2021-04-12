@@ -55,9 +55,12 @@ class FhirInfoCollector:
         for i in self._result.immunizations.values():
             self._resolvePatients(i)
             self._resolvePerformers(i)
-            patientId = JsonParser.findPathSafe(i, ["patient", "id"])
+            #TODO was patientId = JsonParser.findPathSafe(i, ["patient", "id"])
+            patientId = JsonParser.findPathSafe(i, ["patient", "reference"])
             if patientId is None:
                 continue
+
+            patientId=patientId[8:]
 
             if patientId not in self._result.immunizedPatients:
                 self._result.immunizedPatients[patientId] = ImmunizedPatient()

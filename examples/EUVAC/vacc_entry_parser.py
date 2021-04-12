@@ -1,4 +1,4 @@
-from disclosure_level import DisclosureLevel
+from DisclosureLevel import DisclosureLevel
 
 
 class VaccEntryParser:
@@ -83,9 +83,9 @@ class VaccEntryParser:
         patient: dict = self.__resolve_patient(entry=entry)
 
         if (
-            disclosure_level == DisclosureLevel.PV
-            or disclosure_level == DisclosureLevel.BC
-            or disclosure_level == DisclosureLevel.MD
+            disclosure_level == DisclosureLevel.PrivateVenue
+            or disclosure_level == DisclosureLevel.BorderControl
+            or disclosure_level == DisclosureLevel.Medical
         ):
             # no validation checking for the following lines accessing "patient", allow exceptions to propagate
             # e.g. it is _expected_ that "name" is present in patient, if not it is an error
@@ -101,12 +101,12 @@ class VaccEntryParser:
             )
 
         if (
-            disclosure_level == DisclosureLevel.BC
-            or disclosure_level == DisclosureLevel.MD
+            disclosure_level == DisclosureLevel.BorderControl
+            or disclosure_level == DisclosureLevel.Medical
         ):
             pass
 
-        if disclosure_level == DisclosureLevel.MD:
+        if disclosure_level == DisclosureLevel.Medical:
             pass
 
         # vaccine cert

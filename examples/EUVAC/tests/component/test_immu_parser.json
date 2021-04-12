@@ -1,0 +1,848 @@
+{
+  "resourceType": "Bundle",
+  "id": "c5b5871f-8bb9-4900-a9f1-e0543356951c",
+  "type": "searchset",
+  "total": 5,
+  "link": [
+    {
+      "relation": "self",
+      "url": "https://hl7eu.onfhir.io/r4/Immunization?_include=%28Immunization%2Creaction%29%3A%28Immunization%2Creason-reference%29%3A%28Immunization%2Cperformer%29%3A%28Immunization%2Cmanufacturer%29%3A%28Immunization%2Clocation%29%3A%28Immunization%2Cpatient%29&date=ge2021-01-01&_page=1"
+    }
+  ],
+  "entry": [
+    {
+      "fullUrl": "https://hl7eu.onfhir.io/r4/Immunization/e00ea394-76cc-4082-a4a1-f27419c1a15c",
+      "resource": {
+        "resourceType": "Immunization",
+        "id": "e00ea394-76cc-4082-a4a1-f27419c1a15c",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2021-03-28T17:54:25.209Z"
+        },
+        "status": "completed",
+        "vaccineCode": {
+          "coding": [
+            {
+              "code": "049269018",
+              "system": "https://www.aifa.gov.it/aic",
+              "display": "0,45 ML- CONCENTRATO PER DISPERSIONE INIETTABILE- VIA INTRAMUSCOLARE- FLACONCINO (VETRO) 0,45 ML (6 DOSI)- 195 FLACONCINI MULTIDOSE (1170 DOSI)"
+            },
+            {
+              "code": "1119349007",
+              "system": "http://snomed.info/sct",
+              "display": "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 messenger ribonucleic acid"
+            },
+            {
+              "code": "J07BX03",
+              "system": "http://www.whocc.no/atc",
+              "display": "covid-19 vaccines"
+            },
+            {
+              "code": "XM6AT1",
+              "system": "http://id.who.int/icd11/mms",
+              "display": "COVID-19 vaccine, DNA based"
+            }
+          ],
+          "text": "COMIRNATY Vaccino a mRNA contro COVID-19  (modificato a livello dei nucleosidi)"
+        },
+        "patient": {
+          "reference": "Patient/265c8d2f-e701-4a1b-8873-7784266e0e0c"
+        },
+        "occurrenceDateTime": "2021-02-04",
+        "lotNumber": "EL0725",
+        "site": {
+          "text": "deltoide"
+        },
+        "route": {
+          "text": "intramuscolare"
+        },
+        "performer": [
+          {
+            "actor": {
+              "display": "Az. USL Toscana centro"
+            }
+          },
+          {
+            "actor": {
+              "reference": "Organization/af7e98a2-9fc0-44f5-85b0-1002d15c215e"
+            }
+          }
+        ],
+        "protocolApplied": [
+          {
+            "targetDisease": [
+              {
+                "coding": [
+                  {
+                    "code": "J12.82",
+                    "system": "http://hl7.org/fhir/sid/icd-10",
+                    "display": "Pneumonia due to coronavirus disease 2019"
+                  }
+                ]
+              },
+              {
+                "coding": [
+                  {
+                    "code": "XN109",
+                    "system": "http://id.who.int/icd11/mms",
+                    "display": "SARS-CoV-2"
+                  }
+                ]
+              },
+              {
+                "coding": [
+                  {
+                    "code": "840533007",
+                    "system": "http://snomed.info/sct",
+                    "display": "2019 novel coronavirus (organism)"
+                  }
+                ]
+              }
+            ],
+            "doseNumberPositiveInt": 1
+          }
+        ]
+      },
+      "search": {
+        "mode": "match"
+      }
+    },
+    {
+      "fullUrl": "https://hl7eu.onfhir.io/r4/Immunization/d7d9756a-3602-44e3-9c3a-fb93232984c3",
+      "resource": {
+        "resourceType": "Immunization",
+        "id": "d7d9756a-3602-44e3-9c3a-fb93232984c3",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2021-03-28T17:54:25.210Z"
+        },
+        "status": "completed",
+        "vaccineCode": {
+          "coding": [
+            {
+              "code": "049269018",
+              "system": "https://www.aifa.gov.it/aic",
+              "display": "0,45 ML- CONCENTRATO PER DISPERSIONE INIETTABILE- VIA INTRAMUSCOLARE- FLACONCINO (VETRO) 0,45 ML (6 DOSI)- 195 FLACONCINI MULTIDOSE (1170 DOSI)"
+            },
+            {
+              "code": "1119349007",
+              "system": "http://snomed.info/sct",
+              "display": "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 messenger ribonucleic acid"
+            },
+            {
+              "code": "J07BX03",
+              "system": "http://www.whocc.no/atc",
+              "display": "covid-19 vaccines"
+            },
+            {
+              "code": "XM6AT1",
+              "system": "http://id.who.int/icd11/mms",
+              "display": "COVID-19 vaccine, DNA based"
+            }
+          ],
+          "text": "COMIRNATY Vaccino a mRNA contro COVID-19  (modificato a livello dei nucleosidi)"
+        },
+        "patient": {
+          "reference": "Patient/265c8d2f-e701-4a1b-8873-7784266e0e0c"
+        },
+        "occurrenceDateTime": "2021-02-25",
+        "lotNumber": "EL0727",
+        "site": {
+          "text": "deltoide"
+        },
+        "route": {
+          "text": "intramuscolare"
+        },
+        "performer": [
+          {
+            "actor": {
+              "display": "Az. USL Toscana centro"
+            }
+          },
+          {
+            "actor": {
+              "reference": "Organization/af7e98a2-9fc0-44f5-85b0-1002d15c215e"
+            }
+          }
+        ],
+        "protocolApplied": [
+          {
+            "targetDisease": [
+              {
+                "coding": [
+                  {
+                    "code": "J12.82",
+                    "system": "http://hl7.org/fhir/sid/icd-10",
+                    "display": "Pneumonia due to coronavirus disease 2019"
+                  }
+                ]
+              },
+              {
+                "coding": [
+                  {
+                    "code": "XN109",
+                    "system": "http://id.who.int/icd11/mms",
+                    "display": "SARS-CoV-2"
+                  }
+                ]
+              },
+              {
+                "coding": [
+                  {
+                    "code": "840533007",
+                    "system": "http://snomed.info/sct",
+                    "display": "2019 novel coronavirus (organism)"
+                  }
+                ]
+              }
+            ],
+            "doseNumberPositiveInt": 2
+          }
+        ]
+      },
+      "search": {
+        "mode": "match"
+      }
+    },
+    {
+      "fullUrl": "https://hl7eu.onfhir.io/r4/Immunization/a3409bf4-122b-4054-b418-1922e5d4d7b1",
+      "resource": {
+        "resourceType": "Immunization",
+        "id": "a3409bf4-122b-4054-b418-1922e5d4d7b1",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2021-03-28T18:45:35.320Z"
+        },
+        "status": "completed",
+        "vaccineCode": {
+          "coding": [
+            {
+              "code": "1119349007",
+              "system": "http://snomed.info/sct",
+              "display": "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 messenger ribonucleic acid"
+            },
+            {
+              "code": "049283",
+              "system": "https://www.aifa.gov.it/aic",
+              "display": "COVID-19 Vaccine Moderna"
+            }
+          ],
+          "text": "COVID-19 Vaccine Moderna"
+        },
+        "patient": {
+          "reference": "Patient/51aec72d-320f-4a81-b0d4-6ae35d0b1ed2"
+        },
+        "occurrenceDateTime": "2021-01-10",
+        "location": {
+          "reference": "Location/b4b6c44c-5a7f-4212-8369-f178cb71efd1"
+        },
+        "manufacturer": {
+          "display": "MODERNA BIOTECH SPAIN, S.L."
+        },
+        "lotNumber": "B1235742",
+        "performer": [
+          {
+            "actor": {
+              "reference": "Organization/d65f4c46-4382-4cb4-94ea-4728f492405e",
+              "display": "Ospedale Careggi - Firenze"
+            }
+          },
+          {
+            "actor": {
+              "reference": "Practitioner/0734d175-6dbd-4749-bfa2-e373430c1e8c"
+            }
+          }
+        ],
+        "protocolApplied": [
+          {
+            "targetDisease": [
+              {
+                "coding": [
+                  {
+                    "code": "J12.82",
+                    "system": "http://hl7.org/fhir/sid/icd-10",
+                    "display": "Pneumonia due to coronavirus disease 2019"
+                  }
+                ]
+              }
+            ],
+            "doseNumberPositiveInt": 1,
+            "seriesDosesPositiveInt": 2
+          }
+        ]
+      },
+      "search": {
+        "mode": "match"
+      }
+    },
+    {
+      "fullUrl": "https://hl7eu.onfhir.io/r4/Immunization/9c50e8b3-f9dd-4572-8b9e-62ca5328ba9e",
+      "resource": {
+        "resourceType": "Immunization",
+        "id": "9c50e8b3-f9dd-4572-8b9e-62ca5328ba9e",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2021-03-28T18:45:35.321Z"
+        },
+        "status": "not-done",
+        "statusReason": {
+          "coding": [
+            {
+              "code": "MEDPREC",
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+              "display": "medical precaution"
+            }
+          ]
+        },
+        "vaccineCode": {
+          "coding": [
+            {
+              "code": "1119349007",
+              "system": "http://snomed.info/sct",
+              "display": "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 messenger ribonucleic acid"
+            }
+          ]
+        },
+        "patient": {
+          "reference": "Patient/51aec72d-320f-4a81-b0d4-6ae35d0b1ed2"
+        },
+        "occurrenceDateTime": "2021-02-07",
+        "performer": [
+          {
+            "actor": {
+              "reference": "Organization/d65f4c46-4382-4cb4-94ea-4728f492405e",
+              "display": "Ospedale Careggi - Firenze"
+            }
+          },
+          {
+            "actor": {
+              "reference": "Practitioner/0734d175-6dbd-4749-bfa2-e373430c1e8c"
+            }
+          }
+        ],
+        "recorded": "2021-02-07",
+        "protocolApplied": [
+          {
+            "doseNumberPositiveInt": 2,
+            "seriesDosesPositiveInt": 2
+          }
+        ]
+      },
+      "search": {
+        "mode": "match"
+      }
+    },
+    {
+      "fullUrl": "https://hl7eu.onfhir.io/r4/Immunization/84872e59-2b61-40d8-a2d0-6c7c877e86ec",
+      "resource": {
+        "resourceType": "Immunization",
+        "id": "84872e59-2b61-40d8-a2d0-6c7c877e86ec",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2021-03-28T18:47:00.162Z"
+        },
+        "status": "completed",
+        "vaccineCode": {
+          "coding": [
+            {
+              "code": "1119349007",
+              "system": "http://snomed.info/sct",
+              "display": "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 messenger ribonucleic acid"
+            },
+            {
+              "code": "049283",
+              "system": "https://www.aifa.gov.it/aic",
+              "display": "COVID-19 Vaccine Moderna"
+            }
+          ],
+          "text": "COVID-19 Vaccine Moderna"
+        },
+        "patient": {
+          "reference": "Patient/38a42b14-2bb0-463d-8312-ae6a313d4efd"
+        },
+        "occurrenceDateTime": "2021-01-10",
+        "location": {
+          "reference": "Location/1e5d3c9a-819f-4339-b55c-369af14fa2ef"
+        },
+        "manufacturer": {
+          "display": "MODERNA BIOTECH SPAIN, S.L."
+        },
+        "lotNumber": "B1235742",
+        "performer": [
+          {
+            "actor": {
+              "reference": "Organization/9550e16f-9764-43f0-8cb0-0a17d90a3649",
+              "display": "Ospedale Careggi - Firenze"
+            }
+          },
+          {
+            "actor": {
+              "reference": "Practitioner/50b8f022-d480-4d51-9777-1848163a7cc9"
+            }
+          }
+        ],
+        "protocolApplied": [
+          {
+            "targetDisease": [
+              {
+                "coding": [
+                  {
+                    "code": "J12.82",
+                    "system": "http://hl7.org/fhir/sid/icd-10",
+                    "display": "Pneumonia due to coronavirus disease 2019"
+                  }
+                ]
+              }
+            ],
+            "doseNumberPositiveInt": 1,
+            "seriesDosesPositiveInt": 2
+          }
+        ]
+      },
+      "search": {
+        "mode": "match"
+      }
+    },
+    {
+      "fullUrl": "https://hl7eu.onfhir.io/r4/Patient/265c8d2f-e701-4a1b-8873-7784266e0e0c",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "265c8d2f-e701-4a1b-8873-7784266e0e0c",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2021-03-28T17:54:25.208Z"
+        },
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/patient-birthPlace",
+            "valueAddress": {
+              "country": "Italia",
+              "_country": {
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/iso21090-SC-coding",
+                    "valueCoding": {
+                      "code": "F979",
+                      "system": "http://terminology.hl7.it/CodeSystem/mef-ae-comuni",
+                      "display": "NUORO"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "identifier": [
+          {
+            "extension": [
+              {
+                "url": "http://hl7.it/fhir/StructureDefinition/recordCertification",
+                "extension": [
+                  {
+                    "url": "when",
+                    "valueDateTime": "2020-04-06"
+                  },
+                  {
+                    "url": "who",
+                    "valueCodeableConcept": {
+                      "coding": [
+                        {
+                          "code": "mef",
+                          "system": "http://terminology.hl7.it/CodeSystem/it-tipoEntita",
+                          "display": "Ministero Economia e Finanze"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            ],
+            "system": "http://hl7.it/sid/codiceFiscale",
+            "value": "LGHDNT71E01D612Q"
+          }
+        ],
+        "active": true,
+        "name": [
+          {
+            "use": "official",
+            "family": "ALIGHIERI",
+            "given": [
+              "DANTE"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1971-05-01",
+        "address": [
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/address-official",
+                "valueBoolean": true
+              }
+            ],
+            "use": "home",
+            "type": "postal",
+            "text": "Viale della Repubblica 12, PANTIGLIATE - 20090 - Italia",
+            "line": [
+              "Viale della Repubblica 12, scala 2"
+            ],
+            "_line": [
+              {
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-streetName",
+                    "valueString": "Viale della Repubblica"
+                  },
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-streetNameType",
+                    "valueString": "VIALE"
+                  },
+                  {
+                    "url": "http://hl7.it/fhir/StructureDefinition/address-dug",
+                    "valueCodeableConcept": {
+                      "coding": [
+                        {
+                          "code": "76",
+                          "system": "http://registry.geodati.gov.it/dug",
+                          "display": "viale"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-streetNameBase",
+                    "valueString": "DELLA REPUBBLICA"
+                  },
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-houseNumber",
+                    "valueString": "12"
+                  },
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-additionalLocator",
+                    "valueString": "scala 2"
+                  }
+                ]
+              }
+            ],
+            "city": "PANTIGLIATE",
+            "postalCode": "20090",
+            "country": "Italia"
+          },
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/address-official",
+                "valueBoolean": false
+              }
+            ],
+            "use": "home",
+            "type": "postal",
+            "text": "Via Capitolina 27 - interno 5b - 34131 - TRIESTE",
+            "line": [
+              "Via Capitolina 27 - interno 5b"
+            ],
+            "city": "TRIESTE",
+            "postalCode": "34131",
+            "country": "Italia",
+            "period": {
+              "start": "2009-06-09T00:00:00+02:00"
+            }
+          }
+        ],
+        "contact": [
+          {
+            "telecom": [
+              {
+                "system": "phone",
+                "value": "33312345678"
+              }
+            ]
+          }
+        ]
+      },
+      "search": {
+        "mode": "include"
+      }
+    },
+    {
+      "fullUrl": "https://hl7eu.onfhir.io/r4/Patient/38a42b14-2bb0-463d-8312-ae6a313d4efd",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "38a42b14-2bb0-463d-8312-ae6a313d4efd",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2021-03-28T18:47:00.153Z"
+        },
+        "identifier": [
+          {
+            "system": "http://hl7.it/sid/codiceFiscale",
+            "value": "RSSMRA97L67Z602C"
+          }
+        ],
+        "name": [
+          {
+            "family": "Rossi",
+            "given": [
+              "Maria"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1997-07-28"
+      },
+      "search": {
+        "mode": "include"
+      }
+    },
+    {
+      "fullUrl": "https://hl7eu.onfhir.io/r4/Patient/51aec72d-320f-4a81-b0d4-6ae35d0b1ed2",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "51aec72d-320f-4a81-b0d4-6ae35d0b1ed2",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2021-03-28T18:45:35.318Z"
+        },
+        "identifier": [
+          {
+            "system": "http://hl7.it/sid/codiceFiscale",
+            "value": "RSSMRA97L67Z602C"
+          }
+        ],
+        "name": [
+          {
+            "family": "Rossi",
+            "given": [
+              "Maria"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1997-07-28"
+      },
+      "search": {
+        "mode": "include"
+      }
+    },
+    {
+      "fullUrl": "https://hl7eu.onfhir.io/r4/Organization/9550e16f-9764-43f0-8cb0-0a17d90a3649",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "9550e16f-9764-43f0-8cb0-0a17d90a3649",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2021-03-28T18:47:00.159Z"
+        },
+        "identifier": [
+          {
+            "system": "http://terminology.hl7.it/CodeSystem/minsan-hsp",
+            "value": "090903"
+          }
+        ],
+        "name": "AZ. OSPEDALIERO - UNIVERSITARIA CAREGGI"
+      },
+      "search": {
+        "mode": "include"
+      }
+    },
+    {
+      "fullUrl": "https://hl7eu.onfhir.io/r4/Organization/af7e98a2-9fc0-44f5-85b0-1002d15c215e",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "af7e98a2-9fc0-44f5-85b0-1002d15c215e",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2021-03-28T17:54:25.212Z"
+        },
+        "identifier": [
+          {
+            "system": "http://hl7.it/sid/fls",
+            "value": "090201"
+          },
+          {
+            "system": "http://hl7.it/sid/vda/asl",
+            "value": "201"
+          },
+          {
+            "system": "http://hl7.it/sid/partitaIva",
+            "value": "06593810481 "
+          },
+          {
+            "system": "http://hl7.it/sid/codiceFiscale",
+            "value": "06593810481 "
+          }
+        ],
+        "active": true,
+        "type": [
+          {
+            "coding": [
+              {
+                "code": "asl",
+                "system": "http://terminology.hl7.it/CodeSystem/it-tipoEntita",
+                "display": "Azienda Sanitaria Locale"
+              }
+            ]
+          }
+        ],
+        "name": "AZIENDA USL TOSCANA CENTRO",
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "(055) 6939222"
+          },
+          {
+            "system": "fax",
+            "value": "(055) 6939223"
+          },
+          {
+            "system": "email",
+            "value": "direttore.generale@uslcentro.toscana.it"
+          },
+          {
+            "system": "url",
+            "value": "www.uslcentro.toscana.it"
+          }
+        ],
+        "address": [
+          {
+            "line": [
+              "PIAZZA SANTA MARIA NUOVA 1"
+            ],
+            "city": "FIRENZE",
+            "_city": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/iso21090-SC-coding",
+                  "valueCoding": {
+                    "code": "007003",
+                    "system": "http://terminology.hl7.it/CodeSystem/istat-unitaAmministrativeTerritoriali",
+                    "display": "AOSTA"
+                  }
+                }
+              ]
+            },
+            "district": "FI",
+            "state": "TOSCANA",
+            "_state": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/iso21090-SC-coding",
+                  "valueCoding": {
+                    "code": "090",
+                    "system": "http://terminology.hl7.it/CodeSystem/minsan-regione",
+                    "display": "TOSCANA"
+                  }
+                }
+              ]
+            },
+            "postalCode": "50122",
+            "country": "IT"
+          }
+        ]
+      },
+      "search": {
+        "mode": "include"
+      }
+    },
+    {
+      "fullUrl": "https://hl7eu.onfhir.io/r4/Organization/d65f4c46-4382-4cb4-94ea-4728f492405e",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "d65f4c46-4382-4cb4-94ea-4728f492405e",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2021-03-28T18:45:35.322Z"
+        },
+        "identifier": [
+          {
+            "system": "http://terminology.hl7.it/CodeSystem/minsan-hsp",
+            "value": "090903"
+          }
+        ],
+        "name": "AZ. OSPEDALIERO - UNIVERSITARIA CAREGGI"
+      },
+      "search": {
+        "mode": "include"
+      }
+    },
+    {
+      "fullUrl": "https://hl7eu.onfhir.io/r4/Location/1e5d3c9a-819f-4339-b55c-369af14fa2ef",
+      "resource": {
+        "resourceType": "Location",
+        "id": "1e5d3c9a-819f-4339-b55c-369af14fa2ef",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2021-03-28T18:47:00.167Z"
+        },
+        "name": "AZ. OSPEDALIERO - UNIVERSITARIA CAREGGI",
+        "address": {
+          "city": "Firenze",
+          "country": "IT"
+        }
+      },
+      "search": {
+        "mode": "include"
+      }
+    },
+    {
+      "fullUrl": "https://hl7eu.onfhir.io/r4/Location/b4b6c44c-5a7f-4212-8369-f178cb71efd1",
+      "resource": {
+        "resourceType": "Location",
+        "id": "b4b6c44c-5a7f-4212-8369-f178cb71efd1",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2021-03-28T18:45:35.323Z"
+        },
+        "name": "AZ. OSPEDALIERO - UNIVERSITARIA CAREGGI",
+        "address": {
+          "city": "Firenze",
+          "country": "IT"
+        }
+      },
+      "search": {
+        "mode": "include"
+      }
+    },
+    {
+      "fullUrl": "https://hl7eu.onfhir.io/r4/Practitioner/0734d175-6dbd-4749-bfa2-e373430c1e8c",
+      "resource": {
+        "resourceType": "Practitioner",
+        "id": "0734d175-6dbd-4749-bfa2-e373430c1e8c",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2021-03-28T18:45:35.327Z"
+        },
+        "identifier": [
+          {
+            "system": "http://hl7.it/sid/codiceFiscale",
+            "value": "VRDRCR70H08H703B"
+          }
+        ]
+      },
+      "search": {
+        "mode": "include"
+      }
+    },
+    {
+      "fullUrl": "https://hl7eu.onfhir.io/r4/Practitioner/50b8f022-d480-4d51-9777-1848163a7cc9",
+      "resource": {
+        "resourceType": "Practitioner",
+        "id": "50b8f022-d480-4d51-9777-1848163a7cc9",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2021-03-28T18:47:00.161Z"
+        },
+        "identifier": [
+          {
+            "system": "http://hl7.it/sid/codiceFiscale",
+            "value": "VRDRCR70H08H703B"
+          }
+        ]
+      },
+      "search": {
+        "mode": "include"
+      }
+    }
+  ]
+}

@@ -1,7 +1,8 @@
 import io
+from sys import getsizeof
+
 import cbor2
 import segno as qr
-import ujson
 import zlib
 
 from base45 import b45encode
@@ -20,15 +21,14 @@ from flask import (
     Flask,
     request,
     send_from_directory,
-    Response,
     render_template,
     send_file,
 )
-from typing import Tuple
-from werkzeug.routing import BaseConverter
 
+from werkzeug.routing import BaseConverter
+from DisclosureLevel import DisclosureLevel
 from fhir_query import FhirQuery
-from min_data_set import MinDataSetFactory
+from min_data_set import MinDataSetFactory, MinDataSet
 
 app = Flask(__name__)
 
@@ -117,8 +117,9 @@ def readCertificate():
 @app.route("/fhir2json", methods=["POST", "GET"])
 def fhir2json():
     # pre-cond: /query_fhir_server called prior in order to set: _page_state["qry_res"]
-    min_data_set: MinDataSet = MinDataSetFactory.create(DisclosureLevel.PV)
-    min_data_set.parse(qry_res=_page_state["qry_res"])
+    min_data_set: MinDataSet = MinDataSetFactory.create(DisclosureLevel.PrivateVenue)
+    qry_res = _page_state["qry_res"]
+    min_data_set.parse(qry_res)
     _page_state["min_data_set"] = min_data_set.as_json()
     _page_state["focus_btn"] = "btn_fhir_2_jsonld"
     return render_template("index.html", page_state=_page_state)
@@ -127,7 +128,7 @@ def fhir2json():
 @app.route("/fhir2jsonld", methods=["POST", "GET"])
 def fhir2jsonld():
     # pre-cond: /query_fhir_server called prior in order to set: _page_state["qry_res"]
-    min_data_set: MinDataSet = MinDataSetFactory.create(DisclosureLevel.PV)
+    min_data_set: MinDataSet = MinDataSetFactory.create(DisclosureLevel.PrivateVenue)
     min_data_set.parse(qry_res=_page_state["qry_res"])
     _page_state["min_data_set_jsonld"] = min_data_set.as_jsonld()
     _page_state["focus_btn"] = "btn_fhir_2_jsonld_cborld"

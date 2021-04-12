@@ -7,10 +7,8 @@ import cbor2
 from base64 import b64encode
 
 from base45 import b45encode
-from cose.algorithms import Es256
 from cose.curves import P256
-from cose.algorithms import Es256, EdDSA
-from cose.keys.keyparam import KpKty, KpAlg, EC2KpD, EC2KpX, EC2KpY, EC2KpCurve
+from cose.algorithms import Es256
 from cose.headers import Algorithm, KID
 from cose.keys import CoseKey
 from cose.keys.keyparam import KpAlg, EC2KpD, EC2KpCurve
