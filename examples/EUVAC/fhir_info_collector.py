@@ -1,4 +1,4 @@
-from JsonParser import JsonParser
+from json_parser import JsonParser
 
 
 class ImmunizedPatient:

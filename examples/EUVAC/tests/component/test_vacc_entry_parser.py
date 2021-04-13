@@ -2,8 +2,10 @@ import json
 
 from cryptography import x509
 
-from DisclosureLevel import DisclosureLevel
+from disclosure_level import DisclosureLevel
 from pathlib import Path
+
+from uvci_info import UvciInfo
 from vacc_entry_parser import VaccEntryParser
 
 
@@ -31,8 +33,8 @@ class TestVaccEntryParser:
             qry_entry: dict = json_data["entry"][0]
             assert qry_entry
             assert isinstance(qry_entry, dict)
-            cert = TestVaccEntryParser.readCertificate()
-            entry_parser: VaccEntryParser = VaccEntryParser(json_data, cert)
+            uvci = UvciInfo()  # need one of these per immunization or for the LAST immunization of patient
+            entry_parser: VaccEntryParser = VaccEntryParser(json_data, uvci)
             pv: dict = entry_parser.resolve_entry(
                 entry=qry_entry, disclosure_level=DisclosureLevel.PrivateVenue
             )

@@ -1,9 +1,8 @@
-from cryptography.x509 import Certificate
-
-from DisclosureLevel import DisclosureLevel
-from FhirInfoCollector import FhirInfoCollector
-from JsonParser import JsonParser
-from PatientImmunizationDirectBuilder import PatientImmunizationDirectBuilder
+from disclosure_level import DisclosureLevel
+from fhir_info_collector import FhirInfoCollector
+from json_parser import JsonParser
+from patient_immunization_direct_builder import PatientImmunizationDirectBuilder
+from uvci_info import UvciInfo
 
 
 class VaccEntryParser:
@@ -37,7 +36,7 @@ class VaccEntryParser:
     (You can influence the paging but that's going O.T. here - look up paging support in FHIR if interested)
     """
 
-    def __init__(self, qry_res: dict, certificate: Certificate):
+    def __init__(self, qry_res: dict, uvci: UvciInfo):
         """
         :param qry_res: the result of a FHIR query contained as a dict (result of e.g.json.loads()) -
         note that this has to be whole response document as we will need to resolve references from
@@ -48,7 +47,7 @@ class VaccEntryParser:
         self.__qry_res: dict = qry_res
         collector = FhirInfoCollector()
         self.__fhir_info = collector.execute(qry_res["entry"])
-        self.__certificate = certificate
+        self.__uvci = uvci
 
     def resolve_entry(
             self, entry: dict, disclosure_level: DisclosureLevel
@@ -88,7 +87,7 @@ class VaccEntryParser:
         # patient: dict = self.__resolve_patient(entry=entry)
         patient_id = JsonParser.find_path(entry, ["resource", "patient", "reference"])[8:]
         return PatientImmunizationDirectBuilder.build(self.__fhir_info, patient_id,
-                                                      disclosure_level, self.__certificate)
+                                                      disclosure_level, self.__uvci)
 
     def __resolve_patient(self, entry: dict) -> dict:
         # patient as per https://build.fhir.org/ig/hl7-eu/dgc/StructureDefinition-Patient-dgc.html

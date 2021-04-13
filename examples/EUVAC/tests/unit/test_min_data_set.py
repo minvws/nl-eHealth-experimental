@@ -2,10 +2,12 @@ import json
 import pytest
 from cryptography import x509
 
-from DisclosureLevel import DisclosureLevel
+from disclosure_level import DisclosureLevel
 from min_data_set import MinDataSet, MinDataSetFactory
 from pathlib import Path
 from typing import List
+
+from uvci_info import UvciInfo
 
 
 class TestMinDataSetPV:
@@ -14,8 +16,8 @@ class TestMinDataSetPV:
         with open(Path(Path(__file__).parent.resolve(), "test_min_data_set.json"), "r") as f:
             qry_res: dict = json.load(f)
             min_data_set: MinDataSet = MinDataSetFactory.create(DisclosureLevel.PrivateVenue)
-            cert = TestMinDataSetPV.readCertificate()
-            min_data_set.parse(qry_res, cert)
+            uvci = UvciInfo()
+            min_data_set.parse(qry_res, uvci)
             min_data: List[dict] = min_data_set.as_dict_array()
             assert min_data is not None
             # TODO: validate fields in min_data
@@ -28,7 +30,8 @@ class TestMinDataSetPV:
             qry_res: dict = json.load(f)
             min_data_set: MinDataSet = MinDataSetFactory.create(DisclosureLevel.PrivateVenue)
             cert = TestMinDataSetPV.readCertificate()
-            min_data_set.parse(qry_res, cert)
+            uvci = UvciInfo()
+            min_data_set.parse(qry_res, uvci)
             min_data: dict = min_data_set.as_jsonld()
             assert min_data is not None
 

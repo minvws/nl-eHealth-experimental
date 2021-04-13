@@ -1,16 +1,14 @@
-from cryptography.x509 import Certificate
-
-from DisclosureCertificateDirectDictMapper import DisclosureCertificateDirectDictMapper
-from DisclosureLevel import DisclosureLevel
-from FhirInfoCollector import FhirInfo
-from FhirInfoReader import FhirInfoReader
+from disclosure_level import DisclosureLevel
+from fhir_info_collector import FhirInfo
+from fhir_info_reader import FhirInfoReader
+from uvci_info import UvciInfo
 
 
 class BorderControlDisclosureDirectDictMapper:
     def __init__(self):
         self.__reader = None
 
-    def build(self, patient_id: str, info: FhirInfo, cert: Certificate):
+    def build(self, patient_id: str, info: FhirInfo, uvci: UvciInfo):
         if self.__reader is not None:
             raise ValueError("Cannot reuse object.")
         self.__reader = FhirInfoReader(info)
@@ -19,8 +17,8 @@ class BorderControlDisclosureDirectDictMapper:
             "pid": self.__reader.get_patient_person_id(patient_id),
             "dob": self.__reader.get_patient_date_of_birth(patient_id),
             "v": self.__build_immunizations(self.__reader.get_immunization_ids_for_patient(patient_id)),
-            "c": DisclosureCertificateDirectDictMapper.build(cert, DisclosureLevel.BorderControl)
-        }
+            "c": None  # TODO UVCI
+            }
 
     def __build_immunizations(self, items):
         result = []

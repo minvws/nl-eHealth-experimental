@@ -1,16 +1,14 @@
-from cryptography.x509 import Certificate
-
-from DisclosureCertificateDirectDictMapper import DisclosureCertificateDirectDictMapper
-from DisclosureLevel import DisclosureLevel
-from FhirInfoCollector import FhirInfo
-from FhirInfoReader import FhirInfoReader
+from disclosure_level import DisclosureLevel
+from fhir_info_collector import FhirInfo
+from fhir_info_reader import FhirInfoReader
+from uvci_info import UvciInfo
 
 
 class MedicalDisclosureDirectDictMapper:
     def __init__(self):
         self.__reader = None
 
-    def build(self, patientId, info: FhirInfo, cert: Certificate) -> dict:
+    def build(self, patientId, info: FhirInfo, uvci: UvciInfo) -> dict:
         if self.__reader is not None:
             raise ValueError("Cannot reuse object.")
 
@@ -20,7 +18,8 @@ class MedicalDisclosureDirectDictMapper:
                   "sex": self.__reader.get_patient_sex(patientId),
                   "dob": self.__reader.get_patient_date_of_birth(patientId),
                   "v": self.__build_immunizations(self.__reader.get_immunization_ids_for_patient(patientId)),
-                  "c": DisclosureCertificateDirectDictMapper.build(cert, DisclosureLevel.Medical)}
+                  "c": None  # TODO UVCI
+                }
 
     def __build_immunizations(self, items):
         result = []
@@ -41,4 +40,3 @@ class MedicalDisclosureDirectDictMapper:
                   "ap": self.__reader.get_immunization_actor_practitioner(immunization_id),
                   "lo": self.__reader.get_immunization_location(immunization_id),
                   "nx": self.__reader.get_immunization_next_occurrence(immunization_id)}
-

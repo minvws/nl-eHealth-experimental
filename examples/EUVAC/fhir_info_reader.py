@@ -1,5 +1,5 @@
-from CodeableConceptDirectDictMapper import CodeableConceptDirectDictMapper
-from JsonParser import JsonParser
+from codeable_concept_direct_dict_mapper import CodeableConceptDirectDictMapper
+from json_parser import JsonParser
 
 '''
 Used by disclosure builders to extract information fhir data structures

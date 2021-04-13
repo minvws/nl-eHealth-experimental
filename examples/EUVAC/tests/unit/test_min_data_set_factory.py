@@ -1,4 +1,4 @@
-from DisclosureLevel import DisclosureLevel
+from disclosure_level import DisclosureLevel
 from min_data_set import MinDataSet, MinDataSetPV, MinDataSetBC, MinDataSetMD, MinDataSetFactory
 
 

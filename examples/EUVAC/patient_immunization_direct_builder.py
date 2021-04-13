@@ -1,15 +1,14 @@
-from cryptography.x509 import Certificate
-
-from BorderControlDisclosureDirectDictMapper import BorderControlDisclosureDirectDictMapper
-from DisclosureLevel import DisclosureLevel
-from FhirInfoCollector import FhirInfo
-from MedicalDisclosureDirectDictMapper import MedicalDisclosureDirectDictMapper
-from PrivateVenueDisclosureDirectDictMapper import PrivateVenueDisclosureDirectDictMapper
+from border_control_disclosure_direct_dict_mapper import BorderControlDisclosureDirectDictMapper
+from disclosure_level import DisclosureLevel
+from fhir_info_collector import FhirInfo
+from medical_disclosure_direct_dict_mapper import MedicalDisclosureDirectDictMapper
+from private_venue_disclosure_direct_dict_mapper import PrivateVenueDisclosureDirectDictMapper
+from uvci_info import UvciInfo
 
 
 class PatientImmunizationDirectBuilder:
     @staticmethod
-    def build(fhirInfo : FhirInfo, patient_id: str, disclosure_level: DisclosureLevel, cert: Certificate) -> dict:
+    def build(fhirInfo : FhirInfo, patient_id: str, disclosure_level: DisclosureLevel, uvci: UvciInfo) -> dict:
 
         patient = fhirInfo.immunized_patients[patient_id]
         if patient is None:
@@ -21,15 +20,15 @@ class PatientImmunizationDirectBuilder:
 
         if disclosure_level == DisclosureLevel.PrivateVenue:
             b = PrivateVenueDisclosureDirectDictMapper()
-            return b.build(patient_id, fhirInfo, cert)
+            return b.build(patient_id, fhirInfo, uvci)
 
         if disclosure_level == DisclosureLevel.BorderControl:
             b = BorderControlDisclosureDirectDictMapper()
-            return b.build(patient_id, fhirInfo, cert)
+            return b.build(patient_id, fhirInfo, uvci)
 
         if disclosure_level == DisclosureLevel.Medical:
             b = MedicalDisclosureDirectDictMapper()
-            return b.build(patient_id, fhirInfo, cert)
+            return b.build(patient_id, fhirInfo, uvci)
 
         # except:
         #     return None
