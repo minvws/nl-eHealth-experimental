@@ -30,7 +30,6 @@ from werkzeug.routing import BaseConverter
 from disclosure_level import DisclosureLevel
 from fhir_query import FhirQuery
 from min_data_set import MinDataSetFactory, MinDataSet
-from uvci_info import UvciInfo
 
 CERTIFICATE_FILE = "dsc-worker.pem"
 
@@ -98,7 +97,9 @@ def query_fhir_server():
     fhir_server = request.form["fhir_server"] if "fhir_server" in request.form else None
     _page_state["qry_res"] = FhirQuery(fhir_server=fhir_server).find()
     _page_state["focus_btn"] = "btn_fhir_2_json"
+
     return render_template("index.html", page_state=_page_state)
+
 
 # Was
 # @app.route("/fhir2json", methods=["POST", "GET"])
@@ -112,14 +113,12 @@ def query_fhir_server():
 #     return ujson.dumps(min_data_set)
 
 
-
 @app.route("/fhir2json", methods=["POST", "GET"])
 def fhir2json():
     # pre-cond: /query_fhir_server called prior in order to set: _page_state["qry_res"]
     min_data_set: MinDataSet = MinDataSetFactory.create(DisclosureLevel.PrivateVenue)
     qry_res = _page_state["qry_res"]
-    uvci = UvciInfo() # make a random example
-    min_data_set.parse(qry_res, uvci)
+    min_data_set.parse(qry_res)
     _page_state["min_data_set"] = min_data_set.as_json()
     _page_state["focus_btn"] = "btn_fhir_2_jsonld"
     return render_template("index.html", page_state=_page_state)
@@ -130,8 +129,7 @@ def fhir2jsonld():
     # pre-cond: /query_fhir_server called prior in order to set: _page_state["qry_res"]
     min_data_set: MinDataSet = MinDataSetFactory.create(DisclosureLevel.PrivateVenue)
     qry_res = _page_state["qry_res"]
-    uvci = UvciInfo() # make a random example
-    min_data_set.parse(qry_res, uvci)
+    min_data_set.parse(qry_res)
     _page_state["min_data_set_jsonld"] = min_data_set.as_jsonld()
     _page_state["focus_btn"] = "btn_fhir_2_jsonld_cborld"
     return render_template("index.html", page_state=_page_state)
@@ -184,8 +182,7 @@ def fhir2size():
     fhir_query_response: dict = FhirQuery().find()
     min_data_set: MinDataSet = MinDataSetFactory.create(DisclosureLevel.PrivateVenue)
     qry_res = _page_state["qry_res"]
-    uvci = UvciInfo() # make a random example
-    min_data_set.parse(qry_res, uvci)
+    min_data_set.parse(qry_res)
     json_std = min_data_set.as_json()
     json_ld: dict = min_data_set.as_jsonld()
     cb = cbor2.dumps(json_ld)
@@ -212,12 +209,12 @@ def fhir2size():
         "JSON-LD: ": len_json_ld,
         "CBOR: ": len_cbor,
         "COSE: ": len_cose,
-        "LZMA:" : len_zlib,
+        "LZMA:": len_zlib,
         "Base45: ": len_b45,
         "QR mode: ": f"{qr_img.mode} (Should be 2/alphanumeric/b45)",
         "QR code: ": f"{qr_img.version} (1..40)",
         "QR matrix: ": f"{qr_img_s}x{qr_img_s} (raw pixels without border, number of cells)",
-        "Win: ": f"{winp}%; {win} bytes saved with {len_zlib} (LZMA) bytes cf. {len_json} (JSON) bytes (FHIR was {len_fhir} bytes)"
+        "Win: ": f"{winp}%; {win} bytes saved with {len_zlib} (LZMA) bytes cf. {len_json} (JSON) bytes (FHIR was {len_fhir} bytes)",
     }
     _page_state["focus_btn"] = "btn_fhir2size"
     return render_template("index.html", page_state=_page_state)

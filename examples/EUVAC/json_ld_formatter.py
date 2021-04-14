@@ -1,6 +1,7 @@
 from pyld import jsonld
 from typing import Any
 
+
 class JsonLdFormatter:
 
     __CONTEXT_FILE = "immu_context.jsonld"  # used for JSON-LD generation

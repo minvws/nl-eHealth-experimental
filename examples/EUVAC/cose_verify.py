@@ -73,31 +73,31 @@ if not args.ignore_signature:
         x, y = [bytes.fromhex(val) for val in args.xy.split(",")]
         keyid = None
     else:
-       cert = x509.load_pem_x509_certificate(pem)
-       pub = cert.public_key().public_numbers()
+        cert = x509.load_pem_x509_certificate(pem)
+        pub = cert.public_key().public_numbers()
 
-       fingerprint = cert.fingerprint(hashes.SHA256())
-       # keyid = fingerprint[-8:]
-       keyid = fingerprint[0:8]
+        fingerprint = cert.fingerprint(hashes.SHA256())
+        # keyid = fingerprint[-8:]
+        keyid = fingerprint[0:8]
 
-       x = pub.x.to_bytes(32, byteorder="big")
-       y = pub.y.to_bytes(32, byteorder="big")
+        x = pub.x.to_bytes(32, byteorder="big")
+        y = pub.y.to_bytes(32, byteorder="big")
 
     if args.kid:
-       keyid = bytes.fromhex(args.kid)
+        keyid = bytes.fromhex(args.kid)
 
     if not args.ignore_kid:
-       given_kid = None
-       if KID in decoded.phdr.keys():
-         given_kid = decoded.phdr[KID]
-       else:
-         given_kid = decoded.uhdr[KID]
-  
-       if given_kid != keyid:
-          raise Exception(
-              "KeyID is unknown (expected %s, got %s) -- cannot verify."
-              % (hexlify(keyid), hexlify(given_kid))
-          )
+        given_kid = None
+        if KID in decoded.phdr.keys():
+            given_kid = decoded.phdr[KID]
+        else:
+            given_kid = decoded.uhdr[KID]
+
+        if given_kid != keyid:
+            raise Exception(
+                "KeyID is unknown (expected %s, got %s) -- cannot verify."
+                % (hexlify(keyid), hexlify(given_kid))
+            )
 
     decoded.key = CoseKey.from_dict(
         {

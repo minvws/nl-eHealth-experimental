@@ -5,7 +5,6 @@ from cryptography import x509
 from disclosure_level import DisclosureLevel
 from pathlib import Path
 
-from uvci_info import UvciInfo
 from vacc_entry_parser import VaccEntryParser
 
 
@@ -13,7 +12,8 @@ class TestVaccEntryParser:
     # we expect JSON test data to be in same dir as test script
     JSON_TEST_DATA: Path = Path(
         # TODO handle unicode in - Path(__file__).parent.resolve(), "test_vacc_entry_parser.json"
-        Path(__file__).parent.resolve(), "test_immu_parser.json"
+        Path(__file__).parent.resolve(),
+        "test_immu_parser.json",
     )
 
     @staticmethod
@@ -33,8 +33,10 @@ class TestVaccEntryParser:
             qry_entry: dict = json_data["entry"][0]
             assert qry_entry
             assert isinstance(qry_entry, dict)
-            uvci = UvciInfo()  # need one of these per immunization or for the LAST immunization of patient
-            entry_parser: VaccEntryParser = VaccEntryParser(json_data, uvci)
+            # uvci = (
+            #     UvciInfo()
+            # )  # need one of these per immunization or for the LAST immunization of patient
+            entry_parser: VaccEntryParser = VaccEntryParser(json_data)
             pv: dict = entry_parser.resolve_entry(
                 entry=qry_entry, disclosure_level=DisclosureLevel.PrivateVenue
             )

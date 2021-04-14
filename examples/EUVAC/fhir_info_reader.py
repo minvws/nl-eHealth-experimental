@@ -1,37 +1,45 @@
+from datetime import datetime
+
 from codeable_concept_direct_dict_mapper import CodeableConceptDirectDictMapper
+from fhir_info_collector import FhirInfo
 from json_parser import JsonParser
 
-'''
+"""
 Used by disclosure builders to extract information fhir data structures
-'''
+"""
 
 
 class FhirInfoReader:
-    def __init__(self, info):
-        self.__Info = info
+    def __init__(self, info: FhirInfo):
+        self.__info = info
+
+    def get_info(self):
+        return self.__info
 
     def get_immunization_ids_for_patient(self, patient_id):
-        return self.__Info.immunizedPatients[patient_id].immunizations
+        return self.__info.immunized_patients[patient_id].immunizations
 
     def get_patient_name(self, patient_id):
-        patient = self.__Info.patients[patient_id]
+        patient = self.__info.patients[patient_id]
         name = JsonParser.find_path(patient, ["name"])[0]
         given = JsonParser.find_path(name, ["given"])[0]
         family = JsonParser.find_path(name, ["family"])
-        return f'{given[0]}.{family}'
+        return f"{given[0]}.{family}"
 
     # noinspection PyMethodMayBeStatic
     def get_patient_person_id(self, patient_id):
         return "a person Id TBA"
 
     def get_patient_sex(self, patient_id):
-        return JsonParser.find_path(self.__Info.patients[patient_id], ["gender"])
+        return JsonParser.find_path(self.__info.patients[patient_id], ["gender"])
 
     def get_patient_date_of_birth(self, patient_id):
-        return JsonParser.find_path(self.__Info.patients[patient_id], ["birthDate"])
+        return JsonParser.find_path(self.__info.patients[patient_id], ["birthDate"])
 
     def get_immunization_target_diseases(self, immunization_id: str):
-        protocolApplied = JsonParser.find_path_safe(self.__Info.immunizations[immunization_id], ["protocolApplied"])
+        protocolApplied = JsonParser.find_path_safe(
+            self.__info.immunizations[immunization_id], ["protocolApplied"]
+        )
         if protocolApplied is None:
             # TODO if mandatory?
             return []
@@ -59,7 +67,7 @@ class FhirInfoReader:
         reference = JsonParser.find_path_safe(node, ["reference"])
         typeUri = JsonParser.find_path_safe(node, ["type"])
         if reference is not None and typeUri is not None:
-            return f'{typeUri}/{reference}'
+            return f"{typeUri}/{reference}"
 
         # TODO fallback to ?
         # identifierNode = JsonParser.findPathSafe("identifier")
@@ -85,14 +93,16 @@ class FhirInfoReader:
         return result
 
     def get_immunization_vaccine_codes(self, immunization_id: str):
-        i = self.__Info.immunizations[immunization_id]
+        i = self.__info.immunizations[immunization_id]
         items = self.__get_codeable_concepts(JsonParser.find_path(i, ["vaccineCode"]))
         # TODO filter
         # TODO format
         return items
 
     def get_immunization_medical_products(self, immunization_id: str):
-        protocolApplied = JsonParser.find_path_safe(self.__Info.immunizations[immunization_id], ["protocolApplied"])
+        protocolApplied = JsonParser.find_path_safe(
+            self.__info.immunizations[immunization_id], ["protocolApplied"]
+        )
         if protocolApplied is None:
             # TODO if mandatory?
             return []
@@ -111,7 +121,9 @@ class FhirInfoReader:
         return items
 
     def get_immunization_authorization_holders(self, immunization_id: str):
-        manufacturer = JsonParser.find_path_safe(self.__Info.immunizations[immunization_id], ["manufacturer"])
+        manufacturer = JsonParser.find_path_safe(
+            self.__info.immunizations[immunization_id], ["manufacturer"]
+        )
         if manufacturer is None:
             # TODO mandatory?
             return "TODO AuthorisationHolder not present."
@@ -119,8 +131,10 @@ class FhirInfoReader:
         return self.__get_reference_default(manufacturer)
 
     def get_immunization_series_number(self, immunization_id: str):
-        result = JsonParser.find_path_safe(self.__Info.immunizations[immunization_id],
-                                           ["protocolApplied", "doseNumberPositiveInt"])
+        result = JsonParser.find_path_safe(
+            self.__info.immunizations[immunization_id],
+            ["protocolApplied", "doseNumberPositiveInt"],
+        )
         # TODO action if missing?
         if result is None:
             return "TODO Series Number not present."
@@ -128,8 +142,10 @@ class FhirInfoReader:
         return result
 
     def get_immunization_series_count(self, immunization_id: str):
-        result = JsonParser.find_path_safe(self.__Info.immunizations[immunization_id],
-                                           ["protocolApplied", "seriesDosesPositiveInt"])
+        result = JsonParser.find_path_safe(
+            self.__info.immunizations[immunization_id],
+            ["protocolApplied", "seriesDosesPositiveInt"],
+        )
         # TODO action if missing?
         if result is None:
             return "TODO Series Count not present."
@@ -137,13 +153,15 @@ class FhirInfoReader:
         return result
 
     def get_immunization_location(self, immunization_id: str):
-        reference = JsonParser.find_path_safe(self.__Info.immunizations[immunization_id], ["location", "reference"])
+        reference = JsonParser.find_path_safe(
+            self.__info.immunizations[immunization_id], ["location", "reference"]
+        )
         # TODO fallbacks?
         if reference is None:
             return "TODO Immunization Location not present."
 
         lookup = reference[9:]  # chop Location/ off the start of the reference
-        loc = self.__Info.locations[lookup]
+        loc = self.__info.locations[lookup]
         if loc is None:
             return "TODO Immunization Location not in search results."
 
@@ -154,10 +172,14 @@ class FhirInfoReader:
         return result
 
     def get_immunization_occurrence(self, immunization_id: str):
-        return JsonParser.find_path_safe(self.__Info.immunizations[immunization_id], ["occurrenceDateTime"])
+        return JsonParser.find_path_safe(
+            self.__info.immunizations[immunization_id], ["occurrenceDateTime"]
+        )
 
     def get_immunization_actor_organization(self, immunization_id: str):
-        performerList = JsonParser.find_path_safe(self.__Info.immunizations[immunization_id], ["performer"])
+        performerList = JsonParser.find_path_safe(
+            self.__info.immunizations[immunization_id], ["performer"]
+        )
         result = []
         for i in performerList:
             value = JsonParser.find_path_safe(i, ["actor", "reference"])
@@ -166,7 +188,9 @@ class FhirInfoReader:
         return result
 
     def get_immunization_actor_practitioner(self, immunization_id: str):
-        performerList = JsonParser.find_path_safe(self.__Info.immunizations[immunization_id], ["performer"])
+        performerList = JsonParser.find_path_safe(
+            self.__info.immunizations[immunization_id], ["performer"]
+        )
         result = []
         for i in performerList:
             value = JsonParser.find_path_safe(i, ["actor", "reference"])
@@ -178,10 +202,33 @@ class FhirInfoReader:
         return "TODO yyyy-mm-dd"
 
     def get_immunization_lot_number(self, immunization_id: str):
-        result = JsonParser.find_path_safe(self.__Info.immunizations[immunization_id],
-                                           ["lotNumber"])
+        result = JsonParser.find_path_safe(
+            self.__info.immunizations[immunization_id], ["lotNumber"]
+        )
         # TODO action if missing?
         if result is None:
             return "TODO Lot Number not present."
 
         return result
+
+    def get_last_immunization_id(self, patient_id):
+        result_immunization_id = None
+        try:
+            result_immunization_id = self.get_immunization_ids_for_patient(patient_id)[
+                0
+            ]
+            last_date = datetime.fromisoformat(
+                self.get_immunization_occurrence(result_immunization_id)
+            )
+            for i in self.get_immunization_ids_for_patient(patient_id):
+                candidate_date = datetime.fromisoformat(
+                    self.get_immunization_occurrence(result_immunization_id)
+                )
+                if candidate_date > last_date:
+                    last_date = candidate_date
+                    result_immunization_id = i
+            return result_immunization_id
+        except TypeError:
+            return result_immunization_id
+        except ValueError:
+            return result_immunization_id

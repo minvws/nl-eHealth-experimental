@@ -7,6 +7,7 @@ class DisclosureLevel(Enum):
     with the EU eHealthNetwork Annex 1 Minimum Dataset Specification for
     Vaccination Certificates
     """
+
     PrivateVenue = auto()
     BorderControl = auto()
     Medical = auto()

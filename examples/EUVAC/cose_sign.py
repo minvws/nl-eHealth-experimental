@@ -97,9 +97,9 @@ if not args.skip_zlib:
 #
 if args.base64:
     # TODO fix warning encode not a member of bytes
-    out = b64encode(out).encode('ascii')
+    out = b64encode(out).encode("ascii")
 else:
     if not args.skip_base45:
-        out = b45encode(out).encode('ascii')
+        out = b45encode(out).encode("ascii")
 
 sys.stdout.buffer.write(out)

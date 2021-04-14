@@ -2,7 +2,6 @@ from disclosure_level import DisclosureLevel
 from fhir_info_collector import FhirInfoCollector
 from json_parser import JsonParser
 from patient_immunization_direct_builder import PatientImmunizationDirectBuilder
-from uvci_info import UvciInfo
 
 
 class VaccEntryParser:
@@ -36,7 +35,7 @@ class VaccEntryParser:
     (You can influence the paging but that's going O.T. here - look up paging support in FHIR if interested)
     """
 
-    def __init__(self, qry_res: dict, uvci: UvciInfo):
+    def __init__(self, qry_res: dict):
         """
         :param qry_res: the result of a FHIR query contained as a dict (result of e.g.json.loads()) -
         note that this has to be whole response document as we will need to resolve references from
@@ -47,11 +46,8 @@ class VaccEntryParser:
         self.__qry_res: dict = qry_res
         collector = FhirInfoCollector()
         self.__fhir_info = collector.execute(qry_res["entry"])
-        self.__uvci = uvci
 
-    def resolve_entry(
-            self, entry: dict, disclosure_level: DisclosureLevel
-    ) -> dict:
+    def resolve_entry(self, entry: dict, disclosure_level: DisclosureLevel) -> dict:
         """
         :param entry: one specific entry in the FHIR results to be resolved
         for entry:
@@ -74,20 +70,21 @@ class VaccEntryParser:
     @staticmethod
     def __is_immunization_entry(entry: dict) -> bool:
         is_immu_entry: bool = (
-                entry is not None
-                and "resource" in entry
-                and "resourceType" in entry["resource"]
-                and "Immunization" == entry["resource"]["resourceType"]
+            entry is not None
+            and "resource" in entry
+            and "resourceType" in entry["resource"]
+            and "Immunization" == entry["resource"]["resourceType"]
         )
         return is_immu_entry
 
-    def __extract_entry(
-            self, entry: dict, disclosure_level: DisclosureLevel
-    ) -> dict:
+    def __extract_entry(self, entry: dict, disclosure_level: DisclosureLevel) -> dict:
         # patient: dict = self.__resolve_patient(entry=entry)
-        patient_id = JsonParser.find_path(entry, ["resource", "patient", "reference"])[8:]
-        return PatientImmunizationDirectBuilder.build(self.__fhir_info, patient_id,
-                                                      disclosure_level, self.__uvci)
+        patient_id = JsonParser.find_path(entry, ["resource", "patient", "reference"])[
+            8:
+        ]
+        return PatientImmunizationDirectBuilder.build(
+            self.__fhir_info, patient_id, disclosure_level
+        )
 
     def __resolve_patient(self, entry: dict) -> dict:
         # patient as per https://build.fhir.org/ig/hl7-eu/dgc/StructureDefinition-Patient-dgc.html
@@ -109,8 +106,8 @@ class VaccEntryParser:
     def __get_dat(entry: dict) -> str:
         resource: dict = entry["resource"]  # allow InvalidKey exception to propagate
         if (
-                "protocolApplied" in resource
-                and "targetDisease" in resource["protocolApplied"]
+            "protocolApplied" in resource
+            and "targetDisease" in resource["protocolApplied"]
         ):
             dat = resource["protocolApplied"]["targetDisease"]
         else:
@@ -120,11 +117,11 @@ class VaccEntryParser:
     @staticmethod
     def __entry_has_immu_patient_ref(entry: dict) -> bool:
         return (
-                "resource" in entry
-                and "resourceType" in entry["resource"]
-                and "patient" in entry["resource"]
-                and "Immunization" == entry["resource"]["resourceType"]
-                and "reference" in entry["resource"]["patient"]
+            "resource" in entry
+            and "resourceType" in entry["resource"]
+            and "patient" in entry["resource"]
+            and "Immunization" == entry["resource"]["resourceType"]
+            and "reference" in entry["resource"]["patient"]
         )
 
     @staticmethod
@@ -136,4 +133,6 @@ class VaccEntryParser:
                 return entry["resource"]
         # data error if we cannot find the resource_relative_url *somewhere* in the
         # JSON received from FHIR with _include=*
-        raise ValueError(f"Cannot find fullUrl {resource_relative_url} in FHIR response entries")
+        raise ValueError(
+            f"Cannot find fullUrl {resource_relative_url} in FHIR response entries"
+        )

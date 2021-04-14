@@ -1,14 +1,14 @@
 from disclosure_level import DisclosureLevel
 from fhir_info_collector import FhirInfo
 from fhir_info_reader import FhirInfoReader
-from uvci_info import UvciInfo
+from ucvi_metadata_builder import UcviMetadataBuilder
 
 
 class BorderControlDisclosureDirectDictMapper:
     def __init__(self):
         self.__reader = None
 
-    def build(self, patient_id: str, info: FhirInfo, uvci: UvciInfo):
+    def build(self, patient_id: str, info: FhirInfo):
         if self.__reader is not None:
             raise ValueError("Cannot reuse object.")
         self.__reader = FhirInfoReader(info)
@@ -16,9 +16,13 @@ class BorderControlDisclosureDirectDictMapper:
             "nam": self.__reader.get_patient_name(patient_id),
             "pid": self.__reader.get_patient_person_id(patient_id),
             "dob": self.__reader.get_patient_date_of_birth(patient_id),
-            "v": self.__build_immunizations(self.__reader.get_immunization_ids_for_patient(patient_id)),
-            "c": None  # TODO UVCI
-            }
+            "v": self.__build_immunizations(
+                self.__reader.get_immunization_ids_for_patient(patient_id)
+            ),
+            "c": UcviMetadataBuilder.build(
+                self.__reader, patient_id, DisclosureLevel.BorderControl
+            ),
+        }
 
     def __build_immunizations(self, items):
         result = []
@@ -34,5 +38,5 @@ class BorderControlDisclosureDirectDictMapper:
             "ah": self.__reader.get_immunization_authorization_holders(item_id),
             "sn": self.__reader.get_immunization_series_number(item_id),
             "oc": self.__reader.get_immunization_occurrence(item_id),
-            "lo": self.__reader.get_immunization_location(item_id)
+            "lo": self.__reader.get_immunization_location(item_id),
         }

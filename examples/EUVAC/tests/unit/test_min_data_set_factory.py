@@ -1,5 +1,11 @@
 from disclosure_level import DisclosureLevel
-from min_data_set import MinDataSet, MinDataSetPV, MinDataSetBC, MinDataSetMD, MinDataSetFactory
+from min_data_set import (
+    MinDataSet,
+    MinDataSetPV,
+    MinDataSetBC,
+    MinDataSetMD,
+    MinDataSetFactory,
+)
 
 
 class TestMinDataSetFactory:
@@ -9,7 +15,9 @@ class TestMinDataSetFactory:
         assert issubclass(MinDataSetMD, MinDataSet)
 
     def test_create_pv(self):
-        min_data_set: MinDataSet = MinDataSetFactory.create(DisclosureLevel.PrivateVenue)
+        min_data_set: MinDataSet = MinDataSetFactory.create(
+            DisclosureLevel.PrivateVenue
+        )
         assert min_data_set is not None
         assert isinstance(min_data_set, MinDataSet)
         assert isinstance(min_data_set, MinDataSetPV)
@@ -17,7 +25,9 @@ class TestMinDataSetFactory:
         assert not isinstance(min_data_set, MinDataSetMD)
 
     def test_create_bc(self):
-        min_data_set: MinDataSet = MinDataSetFactory.create(DisclosureLevel.BorderControl)
+        min_data_set: MinDataSet = MinDataSetFactory.create(
+            DisclosureLevel.BorderControl
+        )
         assert min_data_set is not None
         assert isinstance(min_data_set, MinDataSet)
         assert not isinstance(min_data_set, MinDataSetPV)
@@ -31,4 +41,3 @@ class TestMinDataSetFactory:
         assert not isinstance(min_data_set, MinDataSetPV)
         assert not isinstance(min_data_set, MinDataSetBC)
         assert isinstance(min_data_set, MinDataSetMD)
-
