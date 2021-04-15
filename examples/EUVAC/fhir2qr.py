@@ -29,6 +29,7 @@ from werkzeug.routing import BaseConverter
 
 from disclosure_level import DisclosureLevel
 from fhir_query import FhirQuery
+from json_ld_formatter import JsonLdFormatter
 from min_data_set import MinDataSetFactory, MinDataSet
 
 CERTIFICATE_FILE = "dsc-worker.pem"
@@ -130,7 +131,9 @@ def fhir2jsonld():
     min_data_set: MinDataSet = MinDataSetFactory.create(DisclosureLevel.PrivateVenue)
     qry_res = _page_state["qry_res"]
     min_data_set.parse(qry_res)
-    _page_state["min_data_set_jsonld"] = min_data_set.as_jsonld()
+    _page_state["min_data_set_jsonld"] = JsonLdFormatter().map_json_to_ld(
+        min_data_set.as_dict_array()[0]
+    )  # TODO select
     _page_state["focus_btn"] = "btn_fhir_2_jsonld_cborld"
     return render_template("index.html", page_state=_page_state)
 
@@ -181,10 +184,12 @@ def fhir2jsoncborcosezlibb45qr():
 def fhir2size():
     fhir_query_response: dict = FhirQuery().find()
     min_data_set: MinDataSet = MinDataSetFactory.create(DisclosureLevel.PrivateVenue)
+
     qry_res = _page_state["qry_res"]
     min_data_set.parse(qry_res)
     json_std = min_data_set.as_json()
     json_ld: dict = min_data_set.as_jsonld()
+
     cb = cbor2.dumps(json_ld)
     cose_msg: bytes = __cose_sign(data=cb)
     cose_compressed: bytes = zlib.compress(cose_msg, 9)

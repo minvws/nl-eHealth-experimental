@@ -1,6 +1,9 @@
 from datetime import datetime
 
-from codeable_concept_direct_dict_mapper import CodeableConceptDirectDictMapper
+from codeable_concept_direct_dict_mapper import (
+    CodeableConceptDirectDictMapper,
+    SystemUri,
+)
 from fhir_info_collector import FhirInfo
 from json_parser import JsonParser
 
@@ -58,10 +61,17 @@ class FhirInfoReader:
             # TODO if mandatory?
             return []
 
-        candidates = self.__get_codeable_concepts(targetDisease[0])
-        # TODO filter
-        # TODO format
-        return candidates
+        # list of codeable concepts
+        for node in targetDisease:
+            cc = self.__get_codeable_concepts(node)
+            for i in cc:
+                if SystemUri.SNOMED in i:
+                    return i
+                if SystemUri.ICD10 in i:
+                    return i
+
+        # TODO if not one of the above systems?
+        return targetDisease[0]
 
     def __get_reference_default(self, node):
         reference = JsonParser.find_path_safe(node, ["reference"])
@@ -78,11 +88,11 @@ class FhirInfoReader:
         if isinstance(node, dict):
             coding = JsonParser.find_path_safe(node, ["coding"])
             if coding is not None:
-                return self.__get_codeable_concepts_from_list(coding)
+                return self.__get_codeable_concepts_from_coding_list(coding)
 
         raise ValueError("Cannot parse codeable concept.")
 
-    def __get_codeable_concepts_from_list(self, items):
+    def __get_codeable_concepts_from_coding_list(self, items):
         result = []
         for i in items:
             system = i["system"]
@@ -95,9 +105,16 @@ class FhirInfoReader:
     def get_immunization_vaccine_codes(self, immunization_id: str):
         i = self.__info.immunizations[immunization_id]
         items = self.__get_codeable_concepts(JsonParser.find_path(i, ["vaccineCode"]))
-        # TODO filter
-        # TODO format
-        return items
+
+        for i in items:
+            if SystemUri.SNOMED in i:
+                return i
+            if SystemUri.WHOATC in i:
+                # TODO does this need further filtering for a J07 prefix?
+                return i
+
+        # TODO or reject?
+        return items[0]
 
     def get_immunization_medical_products(self, immunization_id: str):
         protocolApplied = JsonParser.find_path_safe(
@@ -116,7 +133,7 @@ class FhirInfoReader:
             return []
 
         items = self.__get_codeable_concepts(targetDisease)
-        # TODO filter
+
         # TODO format
         return items
 
@@ -165,10 +182,12 @@ class FhirInfoReader:
         if loc is None:
             return "TODO Immunization Location not in search results."
 
-        result = JsonParser.find_path_safe(loc, ["address", "country"])
+        # EU example - whole address
+        result = JsonParser.find_path_safe(loc, ["address"])
         if result is None:
-            return "TODO country not in location."
+            return "TODO response if address not in location?"
 
+        # TODO format?
         return result
 
     def get_immunization_occurrence(self, immunization_id: str):

@@ -46,9 +46,6 @@
       "@id": "https://github.com/ehn-digital-green-development/authorizationHolder"
     },
     "sn": {
-      "@id": "https://github.com/ehn-digital-green-development/seriesDoses"
-    },
-    "sn": {
       "@id": "https://github.com/ehn-digital-green-development/seriesCount"
     },
     "lt": {
@@ -72,5 +69,18 @@
     "v": {
       "@id": "https://github.com/ehn-digital-green-development/vaccinations"
     }
-  }
+  },
+  "c": {
+    "is": "anIssuingEntity",
+    "ia": "anIssuingEntity",
+    "en": "2022-02-03",
+    "st": "2021-01-01",
+    "vr": "01"
+  },
+  "v": {
+    "tg": {
+      "http://hl7.org/fhir/sid/icd-10": "J12.82"
+    }
+  },
+  "nam": "D.ALIGHIERI"
 }
