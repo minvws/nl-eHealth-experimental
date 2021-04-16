@@ -7,12 +7,11 @@ import zlib
 from base64 import b64decode
 
 import cbor2
-from binascii import unhexlify, hexlify
+from binascii import hexlify
 
 from base45 import b45decode
-from cose.algorithms import Es256
 from cose.curves import P256
-from cose.algorithms import Es256, EdDSA
+from cose.algorithms import Es256
 from cose.headers import KID
 from cose.keys import CoseKey
 from cose.keys.keyparam import KpAlg, EC2KpX, EC2KpY, EC2KpCurve
@@ -71,34 +70,34 @@ if not args.ignore_signature:
     with open(args.cert, "rb") as file:
         pem = file.read()
     if args.xy:
-        x, y = [ bytes.fromhex(val) for val in args.xy.split(",") ]
+        x, y = [bytes.fromhex(val) for val in args.xy.split(",")]
         keyid = None
     else:
-       cert = x509.load_pem_x509_certificate(pem)
-       pub = cert.public_key().public_numbers()
+        cert = x509.load_pem_x509_certificate(pem)
+        pub = cert.public_key().public_numbers()
 
-       fingerprint = cert.fingerprint(hashes.SHA256())
-       # keyid = fingerprint[-8:]
-       keyid = fingerprint[0:8]
+        fingerprint = cert.fingerprint(hashes.SHA256())
+        # keyid = fingerprint[-8:]
+        keyid = fingerprint[0:8]
 
-       x = pub.x.to_bytes(32, byteorder="big")
-       y = pub.y.to_bytes(32, byteorder="big")
+        x = pub.x.to_bytes(32, byteorder="big")
+        y = pub.y.to_bytes(32, byteorder="big")
 
     if args.kid:
-       keyid = bytes.fromhex(args.kid)
+        keyid = bytes.fromhex(args.kid)
 
     if not args.ignore_kid:
-       given_kid = None
-       if KID in decoded.phdr.keys():
-         given_kid = decoded.phdr[KID]
-       else:
-         given_kid = decoded.uhdr[KID]
-  
-       if given_kid != keyid:
-          raise Exception(
-              "KeyID is unknown (expected %s, got %s) -- cannot verify."
-              % (hexlify(keyid), hexlify(given_kid))
-          )
+        given_kid = None
+        if KID in decoded.phdr.keys():
+            given_kid = decoded.phdr[KID]
+        else:
+            given_kid = decoded.uhdr[KID]
+
+        if given_kid != keyid:
+            raise Exception(
+                "KeyID is unknown (expected %s, got %s) -- cannot verify."
+                % (hexlify(keyid), hexlify(given_kid))
+            )
 
     decoded.key = CoseKey.from_dict(
         {

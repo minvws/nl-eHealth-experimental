@@ -3,71 +3,74 @@
     "$id" : "https://github.com/nl-eHealth-experimental/examples/EUVAC/vaccinationDisclosure.Medical.schema.json",
     "type" : "object",
     "properties" : {
-      "dsc": { "type": "string", "minLength": 12, "maxLength": 12, "$comment": "8 bytes of SHA256 of DSC certificate in base45." },
-      "nam": { "type": "string", "$comment": "legal name." },
-      "pid": { "type": "string", "$comment": "patient identifier e.g. NL BSN, UK NH ID." },
-      "sex": { "type": "string", "minLength": 1, "maxLength": 1, "enum": ["M", "F", "O"] },
-      "v": { "type": "array", "items": "#/definitions/vaccinationEvent", "minItems": 1 },
-      "c": { "type": "#/definitions/certificate" },
-      "t": { "type": "#/definitions/test" },
-      "r": { "type": "#/definitions/recovery" }
+    "nam": { "type": "string", "$comment": "patient name as 'Initial. FamilyName'." },
+        "pid": { "type": "string", "$comment": "patient identifier e.g. NL BSN, UK NH ID." },
+        "sex": { "type": "string", "$comment": "patient sex." },
+        "gen": { "type": "string", "$comment": "patient gender." },
+        "dob": { "type": "string", "format":"date", "$comment" : "Date of birth, ISO8601." },
+        "v": { "type": "array", "items": "#/definitions/vaccinationEvent", "minItems": 1 },
+        "t": { "type": "#/definitions/test" },
+        "r": { "type": "#/definitions/recovery" },
+        "c": { "type": "#/definitions/certificate" },
+        "dsc": { "type": "string", "minLength": 12, "maxLength": 12, "$comment": "8 bytes of SHA256 of DSC certificate in base45." }
     },
-    "required": [ "dsc", "nam", "pid", "sex", "v", "c" ],
+    "required": [ "nam", "pid", "dob", "sex", "v", "c", "dsc" ],
     "definitions" : {
-        "vaccinationEvent" : {
-            "type" : "object",
-            "properties" : {
-                "tg" : {"type":"string", "$comment" : "Disease or Agent Targeted" },
-                "cd" : {"type":"string", "$comment" : "Vaccine Code" },
-                "mp" : {"type":"string", "$comment" : "Medicinal Product" },
-                "ah" : {"type":"string", "$comment" : "Marketing Authorization Holder aka Manufacturer" },
-                "sq" : {"type":"string", "$comment" : "Sequence e.g. 1/2 -> First jab of 2." },
-                "lt" : {"type":"string", "$comment" : "Lot aka Batch" },
-                "oc" : {"type":"string", "format":"date", "$comment" : "Occurrence" },
-                "fr" : {"type":"string", "format":"date", "$comment" : "Valid From" },
-                "nx" : {"type":"string", "format":"date", "$comment" : "Schedule of Next event" },
-                "ap" : {"type":"string", "$comment" : "Performer Actor with function == AP ???" },
-                "pi" : {"type":"string", "$comment" : "Performer Actor - Actor Practitioner ???" },
-                "lo" : {"type":"string", "pattern" : "(-?(0|[1-9][0-9]*)(\\.[0-9]+)?([eE][+-]?[0-9]+)?),(-?(0|[1-9][0-9]*)(\\.[0-9]+)?([eE][+-]?[0-9]+)?)", "$comment" : "Location - 'latitude,longitude'." }
-            },
-            "required": ["tg","cd","mp","ah","sq","lt","oc","fr","nx","ap","pi","lo"]
-        },
-        "certificate": {
-            "type": "object",
-            "properties": {
-                "id" : {"type":"string", "$comment" : "Identifier UVCI" },
-                "is" : {"type":"string", "$comment" : "Issuer" },
-                "ia" : {"type":"string", "$comment" : "Issuing Authority" },
-                "st" : {"type":"string", "format":"date-time", "$comment" : "Valid from" },
-                "en" : {"type":"string", "format":"date-time", "$comment" : "Valid until" },
-                "vr" : {"type":"string", "$comment" : "Schema version, semver" }
-            },
-            "required": ["id", "is", "ia", "st", "en", "vr"]
-        },
         "test": {
             "type": "object",
             "properties": {
-                "tg" : {"type":"string", "$comment" : "Disease or Agent Targeted" },
-                "ip" : {"type":"string", "$comment" : "Infectious period." },
-                "st" : {"type":"string", "minLength": 1, "maxLength": 1, "enum": ["P", "N", "O"], "$comment" : "TBA. Status _ve, -ve, other?" },
-                "mp" : {"type":"string", "format":"date-time", "$comment" : "Valid from" },
-                "ah" : {"type":"string", "$comment" : "Marketing Authorization Holder aka Manufacturer" },
-                "ap" : {"type":"string", "$comment" : "Performer Actor with function == AP ???" },
-                "pi" : {"type":"string", "$comment" : "Performer Actor - Actor Practitioner ???" }
+                "tg" : {"type":"string", "$comment" : "Disease or Agent Targeted." },
+                "tt" : {"type":"string", "$comment" : "Type of test." },
+                "bn" : {"type":"string", "$comment" : "Brand name." },
+                "mp" : {"type":"string", "$comment" : "Medical Product." },
+                "or" : {"type":"string", "$comment" : "Sample origin." },
+                "so" : {"type":"string", "format":"date-time", "$comment" : "Sample occurance." },
+                "ro" : {"type":"string", "format":"date-time", "$comment" : "Result occurence." },
+                "st" : {"type":"string", "$comment" : "Status." },
+                "tc" : {"type":"string", "$comment" : "Testing centre." },
+                "pi" : {"type":"string", "$comment" : "Practitioner identifier." },
+                "lo" : {"type":"string", "$comment" : "Location - For EU: address; For worldwide: one or the other or both of [address, WGS84]." }
             },
-            "required": ["tg", "ip", "st", "mp", "ah", "ap", "pi"]
+            "required": ["tg", "tt", "bn", "mp", "or", "so", "ro", "st", "tc", "pi", "co"]
+        },
+        "vaccinationEvent" : {
+            "type" : "object",
+            "properties" : {
+                "tg" : {"type":"string", "$comment" : "Disease or Agent Targeted as codeableConcept." },
+                "cd" : {"type":"string", "$comment" : "Vaccine Code as codeableConcept." },
+                "mp" : {"type":"string", "$comment" : "Medicinal Product as set of codeableConcepts." },
+                "ah" : {"type":"string", "$comment" : "Marketing Authorization Holder aka Manufacturer as codeableConcept." },
+                "sn" : {"type":"int", "$comment" : "dose number e.g. which jab in the series." },
+                "sc" : {"type":"int", "$comment" : "series doses e.g. number of jabs in protocol." },
+                "lt" : {"type":"string", "$comment" : "Lot aka Batch." },
+                "oc" : {"type":"string", "format":"date", "$comment" : "Occurrence." },
+                "ap" : {"type":"string", "$comment" : "performer.actor{function == ???" },
+                "pi" : {"type":"string", "$comment" : "performer.actor{function == ???" },
+                "lo" : {"type":"string", "$comment" : "Location - TBA." },
+                "nx" : {"type":"string", "format":"date", "$comment" : "Schedule of Next event" }
+            },
+            "required": ["tg","cd","mp","ah","sn","sc","lt","oc","ap","pi","lo","nx"]
         },
         "recovery": {
           "type": "object",
           "properties": {
-              "tg" : {"type":"string", "$comment" : "Disease or Agent Targeted" },
-              "fr" : {"type":"string", "format":"date", "$comment" : "Valid From" },
-              "mp" : {"type":"string", "$comment" : "Medicinal Product" },
-              "ah" : {"type":"string", "format":"date-time", "$comment" : "Valid until" },
-              "ap" : {"type":"string", "$comment" : "Schema version, semver" },
-              "pi" : {"type":"string", "$comment" : "Identifier UVCI" }
+              "tg" : {"type":"string", "$comment" : "Disease or Agent Targeted as codeableConcept." },
+              "fr" : {"type":"string", "format":"date", "$comment" : "Valid From." },
+              "co" : {"type":"string", "$comment" : "Country." }
           },
-          "required": ["tg", "fr", "mp", "ah", "ap", "pi"]
+          "required": ["tg", "fr", "co"]
+        },
+        "certificate": {
+            "type": "object",
+            "properties": {
+                "is" : {"type":"string", "$comment" : "Issuer" },
+                "id" : {"type":"string", "$comment" : "Identifier UVCI" },
+                "st" : {"type":"string", "format":"date-time", "$comment" : "Valid from" },
+                "en" : {"type":"string", "format":"date-time", "$comment" : "Valid until" },
+                "vr" : {"type":"string", "$comment" : "Schema version, semver" },
+                "ia" : {"type":"string", "$comment" : "Issuing Authority" }
+            },
+            "required": ["id", "is", "ia", "st", "en", "vr"]
         }
     }
 }

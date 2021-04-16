@@ -1,0 +1,86 @@
+{
+  "@context": {
+    "nam": {
+      "@id": "https://schema.org/Name"
+    },
+    "pid": {
+      "@id": "https://github.com/ehn-digital-green-development/schemas/v1/personIdentifier"
+    },
+    "dob": {
+      "@id": "https://schema.org/birthDate"
+    },
+    "sex": {
+      "@id": "https://https://github.com/ehn-digital-green-development/schemas/v1/sex"
+    },
+    "is": {
+      "@id": "https://github.com/ehn-digital-green-development/schemas/v1/uvci/issuer"
+    },
+    "ia": {
+      "@id": "https://github.com/ehn-digital-green-development/schemas/v1/uvci/issuingAuthority"
+    },
+    "id": {
+      "@id": "https://github.com/ehn-digital-green-development/schemas/v1/uvci"
+    },
+    "c": {
+      "@id": "https://github.com/ehn-digital-green-development/schemas/v1/uvci/metadata"
+    },
+    "st": {
+      "@id": "https://schema.org/startDate"
+    },
+    "en": {
+      "@id": "https://schema.org/endDate"
+    },
+    "vr": {
+      "@id": "https://schema.org/version"
+    },
+    "tg": {
+      "@id": "https://github.com/ehn-digital-green-development/schemas/v1/targetDiseases"
+    },
+    "cd": {
+      "@id": "https://github.com/ehn-digital-green-development/schemas/v1/vaccineCode"
+    },
+    "mp": {
+      "@id": "https://github.com/ehn-digital-green-development/schemas/v1/medicalProduct"
+    },
+    "ah": {
+      "@id": "https://github.com/ehn-digital-green-development/schemas/v1/authorizationHolder"
+    },
+    "sn": {
+      "@id": "https://github.com/ehn-digital-green-development/schemas/v1/seriesCount"
+    },
+    "lt": {
+      "@id": "https://github.com/ehn-digital-green-development/schemas/v1/lotNumber"
+    },
+    "oc": {
+      "@id": "https://github.com/ehn-digital-green-development/schemas/v1/occurrence"
+    },
+    "ao": {
+      "@id": "https://github.com/ehn-digital-green-development/schemas/v1/ao"
+    },
+    "ap": {
+      "@id": "https://github.com/ehn-digital-green-development/schemas/v1/ap"
+    },
+    "lo": {
+      "@id": "https://schema.org/location"
+    },
+    "nx": {
+      "@id": "https://github.com/ehn-digital-green-development/schemas/v1/nextOccurrence"
+    },
+    "v": {
+      "@id": "https://github.com/ehn-digital-green-development/schemas/v1/vaccinations"
+    }
+  },
+  "c": {
+    "is": "anIssuingEntity",
+    "ia": "anIssuingEntity",
+    "en": "2022-02-03",
+    "st": "2021-01-01",
+    "vr": "01"
+  },
+  "v": {
+    "tg": {
+      "http://hl7.org/fhir/sid/icd-10": "J12.82"
+    }
+  },
+  "nam": "D.ALIGHIERI"
+}

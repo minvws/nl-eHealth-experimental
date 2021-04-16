@@ -6,12 +6,9 @@ import json
 import cbor2
 from base64 import b64encode
 
-
 from base45 import b45encode
-from cose.algorithms import Es256
 from cose.curves import P256
-from cose.algorithms import Es256, EdDSA
-from cose.keys.keyparam import KpKty, KpAlg, EC2KpD, EC2KpX, EC2KpY, EC2KpCurve
+from cose.algorithms import Es256
 from cose.headers import Algorithm, KID
 from cose.keys import CoseKey
 from cose.keys.keyparam import KpAlg, EC2KpD, EC2KpCurve
@@ -99,9 +96,10 @@ if not args.skip_zlib:
 # And base45 encode the result
 #
 if args.base64:
-    out = b64encode(out)
+    # TODO fix warning encode not a member of bytes
+    out = b64encode(out).encode("ascii")
 else:
-   if not args.skip_base45:
-      out = b45encode(out).encode('ascii')
+    if not args.skip_base45:
+        out = b45encode(out).encode("ascii")
 
 sys.stdout.buffer.write(out)

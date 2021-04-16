@@ -1,15 +1,27 @@
 import json
 
+from cryptography import x509
+
 from disclosure_level import DisclosureLevel
 from pathlib import Path
+
 from vacc_entry_parser import VaccEntryParser
 
 
 class TestVaccEntryParser:
     # we expect JSON test data to be in same dir as test script
     JSON_TEST_DATA: Path = Path(
-        Path(__file__).parent.resolve(), "test_vacc_entry_parser.json"
+        # TODO handle unicode in - Path(__file__).parent.resolve(), "test_vacc_entry_parser.json"
+        Path(__file__).parent.resolve(),
+        "test_immu_parser.json",
     )
+
+    @staticmethod
+    def readCertificate():
+        with open("dsc-worker.pem", "rb") as file:
+            pem = file.read()
+        cert = x509.load_pem_x509_certificate(pem)
+        return cert
 
     def test_load_json_pv(self):
         with open(TestVaccEntryParser.JSON_TEST_DATA, "r") as f:
@@ -21,9 +33,12 @@ class TestVaccEntryParser:
             qry_entry: dict = json_data["entry"][0]
             assert qry_entry
             assert isinstance(qry_entry, dict)
-            entry_parser: VaccEntryParser = VaccEntryParser(qry_res=json_data)
+            # uvci = (
+            #     UvciInfo()
+            # )  # need one of these per immunization or for the LAST immunization of patient
+            entry_parser: VaccEntryParser = VaccEntryParser(json_data)
             pv: dict = entry_parser.resolve_entry(
-                entry=qry_entry, disclosure_level=DisclosureLevel.PV
+                entry=qry_entry, disclosure_level=DisclosureLevel.PrivateVenue
             )
             # TODO: check data values are as expected wrt the source data
 

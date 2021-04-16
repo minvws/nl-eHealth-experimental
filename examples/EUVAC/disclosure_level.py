@@ -1,4 +1,4 @@
-from enum import auto, Enum
+from enum import Enum, auto
 
 
 class DisclosureLevel(Enum):
@@ -8,6 +8,17 @@ class DisclosureLevel(Enum):
     Vaccination Certificates
     """
 
-    PV = auto()  # private venue, level 0
-    BC = auto()  # border control, level 1
-    MD = auto()  # medical, level 2
+    PrivateVenue = auto()
+    BorderControl = auto()
+    Medical = auto()
+
+    @staticmethod
+    def from_string(value: str):
+        if value == "privatevenue":
+            return DisclosureLevel.PrivateVenue
+        if value == "bordercontrol":
+            return DisclosureLevel.BorderControl
+        if value == "medical":
+            return DisclosureLevel.Medical
+
+        raise ValueError("String not recognised as DisclosureLevel.")

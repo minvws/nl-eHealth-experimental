@@ -4,22 +4,10 @@ from abc import ABC, abstractmethod
 from disclosure_level import DisclosureLevel
 from pathlib import Path
 from pyld import jsonld
-from typing import List, Optional
+from typing import List
+
+from json_ld_formatter import JsonLdFormatter
 from vacc_entry_parser import VaccEntryParser
-
-
-class Certificate:
-    """
-    Simple POD data struct for certificate fields
-    """
-
-    def __init__(self):
-        self.issuer = ""
-        self.UVCI: str = Optional[None]  # NOT completed for DisclosureLevel PV
-        self.validFrom = ""
-        self.validUntil = ""
-        self.schemaVersion = ""
-        self.issuingAuthorityCountry = ""
 
 
 class MinDataSet(ABC):
@@ -68,12 +56,12 @@ class MinDataSet(ABC):
         # compacted = jsonld.compact(doc_ex, context_ex)
         #
         # throw together a small JSON-LD version of the doc, somewhat convoluted but that's JSON-LD for you...
-        resource = self.as_dict_array()[0]
-        json_doc = {
-            "https://schema.org/nam": resource["nam"],
-            "https://schema.org/dat": resource["dat"],
-            "https://schema.org/gen": resource["gen"]
-        }
+
+        # different per disclosure level - achieved by mapping all mandatory values and skipping missing optional values
+        # take schema id from schema.org if appropriate mapping available
+        # else refer tp schema_root for custom schemas
+        json_doc = JsonLdFormatter().map_json_to_ld(self.as_dict_array())
+
         with open(MinDataSet.__JSONLD_CONTEXT_FILE, "r") as ctx:
             json_ctx: dict = ujson.load(ctx)
             compacted: dict = jsonld.compact(json_doc, json_ctx)
@@ -97,22 +85,22 @@ class MinDataSetPV(MinDataSet):
 
     def __init__(self):
         super().__init__()
-        self.__certificate = Certificate()
+        # self.__certificate = Certificate()
         self.__entries: List[dict] = list()
 
     def parse(self, qry_res: dict) -> None:
         if MinDataSet._has_entries(qry_res=qry_res):
-            entry_parser: VaccEntryParser = VaccEntryParser(qry_res=qry_res)
+            entry_parser: VaccEntryParser = VaccEntryParser(qry_res)
             for entry in qry_res["entry"]:
                 pv: dict = entry_parser.resolve_entry(
-                    entry=entry, disclosure_level=DisclosureLevel.PV
+                    entry=entry, disclosure_level=DisclosureLevel.PrivateVenue
                 )
                 if pv:
                     self.__entries.append(pv)
 
-    @property
-    def certificate(self) -> Certificate:
-        return self.__certificate
+    # @property
+    # def certificate(self) -> Certificate:
+    #     return self.__certificate
 
     def as_dict_array(self) -> List[dict]:
         return self.__entries
@@ -132,7 +120,7 @@ class MinDataSetBC(MinDataSet):
 
     def parse(self, qry_res: dict) -> None:
         if MinDataSet._has_entries(qry_res=qry_res):
-            entry_parser: VaccEntryParser = VaccEntryParser(qry_res=qry_res)
+            entry_parser: VaccEntryParser = VaccEntryParser(qry_res)
             for entry in qry_res["entry"]:
                 bc: dict = entry_parser.resolve_entry(
                     entry=entry, disclosure_level=DisclosureLevel.BC
@@ -155,7 +143,7 @@ class MinDataSetMD(MinDataSet):
 
     def parse(self, qry_res: dict) -> None:
         if MinDataSet._has_entries(qry_res=qry_res):
-            entry_parser: VaccEntryParser = VaccEntryParser(qry_res=qry_res)
+            entry_parser: VaccEntryParser = VaccEntryParser(qry_res)
             for entry in qry_res["entry"]:
                 md: dict = entry_parser.resolve_entry(
                     entry=entry, disclosure_level=DisclosureLevel.MD
@@ -180,11 +168,11 @@ class MinDataSetFactory:
         :param disclosure_level: determines which type of sub-class is returned
         :return: an object instance of a class derived from MinDataSet
         """
-        if disclosure_level == DisclosureLevel.PV:
+        if disclosure_level == DisclosureLevel.PrivateVenue:
             return MinDataSetPV()
-        elif disclosure_level == DisclosureLevel.BC:
+        elif disclosure_level == DisclosureLevel.BorderControl:
             return MinDataSetBC()
-        elif disclosure_level == DisclosureLevel.MD:
+        elif disclosure_level == DisclosureLevel.Medical:
             return MinDataSetMD()
         else:
             raise ValueError(

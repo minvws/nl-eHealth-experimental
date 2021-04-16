@@ -1,8 +1,9 @@
 import json
 import pytest
+from cryptography import x509
 
 from disclosure_level import DisclosureLevel
-from min_data_set import Certificate, MinDataSet, MinDataSetFactory
+from min_data_set import MinDataSet, MinDataSetFactory
 from pathlib import Path
 from typing import List
 
@@ -10,10 +11,14 @@ from typing import List
 class TestMinDataSetPV:
     # factory tested separately, no need to re-test here
     def test_dict(self):
-        with open(Path(Path(__file__).parent.resolve(), "test_min_data_set.json"), "r") as f:
+        with open(
+            Path(Path(__file__).parent.resolve(), "test_min_data_set.json"), "r"
+        ) as f:
             qry_res: dict = json.load(f)
-            min_data_set: MinDataSet = MinDataSetFactory.create(DisclosureLevel.PV)
-            min_data_set.parse(qry_res=qry_res)
+            min_data_set: MinDataSet = MinDataSetFactory.create(
+                DisclosureLevel.PrivateVenue
+            )
+            min_data_set.parse(qry_res)
             min_data: List[dict] = min_data_set.as_dict_array()
             assert min_data is not None
             # TODO: validate fields in min_data
@@ -22,12 +27,24 @@ class TestMinDataSetPV:
         pass
 
     def test_jsonld(self):
-        with open(Path(Path(__file__).parent.resolve(), "test_min_data_set.json"), "r") as f:
+        with open(
+            Path(Path(__file__).parent.resolve(), "test_min_data_set.json"), "r"
+        ) as f:
             qry_res: dict = json.load(f)
-            min_data_set: MinDataSet = MinDataSetFactory.create(DisclosureLevel.PV)
-            min_data_set.parse(qry_res=qry_res)
+            min_data_set: MinDataSet = MinDataSetFactory.create(
+                DisclosureLevel.PrivateVenue
+            )
+            cert = TestMinDataSetPV.readCertificate()
+            min_data_set.parse(qry_res)
             min_data: dict = min_data_set.as_jsonld()
             assert min_data is not None
+
+    @staticmethod
+    def readCertificate():
+        with open("dsc-worker.pem", "rb") as file:
+            pem = file.read()
+        cert = x509.load_pem_x509_certificate(pem)
+        return cert
 
 
 @pytest.mark.skip(reason="changing data member fields")

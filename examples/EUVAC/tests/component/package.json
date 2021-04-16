@@ -1,0 +1,83 @@
+{
+  "@context": {
+    "nam": {
+      "@id": "https://schema.org/Name"
+    },
+    "pid": {
+      "@id": "https://vc.eu/personIdentifier"
+    },
+    "dob": {
+      "@id": "https://schema.org/birthDate"
+    },
+    "sex": {
+      "@id": "https://vc.eu/sex"
+    },
+    "is": {
+      "@id": "https://vc.eu/issuer"
+    },
+    "id": {
+      "@id": "https://vc.eu/uvci"
+    },
+    "c": {
+      "@id": "https://vc.eu/uvc"
+    },
+    "st": {
+      "@id": "https://schema.org/startDate"
+    },
+    "en": {
+      "@id": "https://schema.org/endDate"
+    },
+    "vr": {
+      "@id": "https://schema.org/version"
+    },
+    "tg": {
+      "@id": "https://schema.org/targetDiseases"
+    },
+    "cd": {
+      "@id": "https://schema.org/vaccineCode"
+    },
+    "mp": {
+      "@id": "https://schema.org/medicalProduct"
+    },
+    "ah": {
+      "@id": "https://schema.org/authHolder"
+    },
+    "sn": {
+      "@id": "https://schema.org/seriesDoses"
+    },
+    "lt": {
+      "@id": "https://schema.org/lotNumber"
+    },
+    "oc": {
+      "@id": "https://schema.org/date"
+    },
+    "ao": {
+      "@id": "https://schema.org/ao"
+    },
+    "ap": {
+      "@id": "https://schema.org/ap"
+    },
+    "lo": {
+      "@id": "https://schema.org/ap"
+    },
+    "v": {
+      "@id": "https://vc.eu/immunizations"
+    },
+    "s": {
+      "@id": "https://vc.eu/immunizations"
+    }
+  },
+  "https://egreenhealth.eu/schema/v1/c": {
+    "https://egreenhealth.eu/schema/v1/c/en": "2022-02-03",
+    "https://egreenhealth.eu/schema/v1/c/ia": "anIssuingEntity",
+    "https://egreenhealth.eu/schema/v1/c/is": "anIssuingEntity",
+    "https://egreenhealth.eu/schema/v1/c/st": "2021-01-01",
+    "https://egreenhealth.eu/schema/v1/c/vr": "01"
+  },
+  "https://egreenhealth.eu/schema/v1/nam": "D.ALIGHIERI",
+  "https://egreenhealth.eu/schema/v1/v": {
+    "https://egreenhealth.eu/schema/v1/tg": {
+      "http://hl7.org/fhir/sid/icd-10": "J12.82"
+    }
+  }
+}

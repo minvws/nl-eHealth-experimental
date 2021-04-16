@@ -1,0 +1,30 @@
+{
+  "entries": [
+    {
+      "legalName": "D.A.",
+      "diseaseOrAgentTargeted": "Unknown",
+      "startDateOfValidity": "YYYY-MM-DD"
+    },
+    {
+      "legalName": "D.A.",
+      "diseaseOrAgentTargeted": "Unknown",
+      "startDateOfValidity": "YYYY-MM-DD"
+    },
+    {
+      "legalName": "M.R.",
+      "diseaseOrAgentTargeted": "Unknown",
+      "startDateOfValidity": "YYYY-MM-DD"
+    },
+    {
+      "legalName": "M.R.",
+      "diseaseOrAgentTargeted": "Unknown",
+      "startDateOfValidity": "YYYY-MM-DD"
+    },
+    {
+      "legalName": "M.R.",
+      "diseaseOrAgentTargeted": "Unknown",
+      "startDateOfValidity": "YYYY-MM-DD"
+    }
+  ],
+  "Total Matches": 5
+}

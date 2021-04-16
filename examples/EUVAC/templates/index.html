@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="EN">
+<html lang="EN" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
 <head>
   <link rel="stylesheet" href="styles.css">
   <title>FHIR2QR</title>
   <script src="scripts.js" type="application/javascript"></script>
 </head>
 <body>
+<form>
 <h1>FHIR 2 QR</h1>
 <table>
   <tr>
@@ -22,49 +23,74 @@
     <td>FHIR2QR queries the given FHIR server for Immunization resources, and will:</td>
   </tr>
 </table>
+<form action="/query_fhir_server" method="post">
 <ol>
-  <li>
-    <form action="/query_fhir_server" method="post">
-      <label for="fhir_server">Fetch JSON from </label>
-      <select id="fhir_server" name="fhir_server">
-        {% if 'selected_server' in page_state %}
-          {% if page_state.selected_server == "https://hl7eu.onfhir.io/r4/" %}
-            <option value="https://hl7eu.onfhir.io/r4/" selected>https://hl7eu.onfhir.io/r4/</option>
-          {% else %}
-            <option value="https://hl7eu.onfhir.io/r4/">https://hl7eu.onfhir.io/r4/</option>
+    <li>
+            <div>
+          <label for="fhir_server">Fetch JSON from </label>
+          <select id="fhir_server" name="fhir_server">
+            {% if 'selected_server' in page_state %}
+              {% if page_state.selected_server == "https://hl7eu.onfhir.io/r4/" %}
+                <option value="https://hl7eu.onfhir.io/r4/" selected>https://hl7eu.onfhir.io/r4/</option>
+              {% else %}
+                <option value="https://hl7eu.onfhir.io/r4/">https://hl7eu.onfhir.io/r4/</option>
+              {% endif %}
+              {% if page_state.selected_server == "https://server.fire.ly/r4/" %}
+                <option value="https://server.fire.ly/r4/" selected>https://server.fire.ly/r4/</option>
+              {% else %}
+                <option value="https://server.fire.ly/r4/">https://server.fire.ly/r4/</option>
+              {% endif %}
+            {% else %}
+              <option value="https://hl7eu.onfhir.io/r4/" selected>https://hl7eu.onfhir.io/r4/</option>
+              <option value="https://server.fire.ly/r4/">https://server.fire.ly/r4/</option>
+            {% endif %}
+          </select>
+          by
+          <button type="submit" value="show">querying</button>
+          it.<br>
+          {% if 'qry_res' in page_state %}
+            {% if page_state.qry_res %}
+                <br>
+                <label for="fhir_query_res">FHIR Query results as ujson:</label><br>
+                <textarea cols=80 id="fhir_query_res" name="fhir_query_res" rows=20>{{ page_state.qry_res }}</textarea>
+                <br>
+            {% endif %}
           {% endif %}
-          {% if page_state.selected_server == "https://server.fire.ly/r4/" %}
-            <option value="https://server.fire.ly/r4/" selected>https://server.fire.ly/r4/</option>
-          {% else %}
-            <option value="https://server.fire.ly/r4/">https://server.fire.ly/r4/</option>
-          {% endif %}
-        {% else %}
-          <option value="https://hl7eu.onfhir.io/r4/" selected>https://hl7eu.onfhir.io/r4/</option>
-          <option value="https://server.fire.ly/r4/">https://server.fire.ly/r4/</option>
-        {% endif %}
-      </select>
-      by
-      <button type="submit" value="show">querying</button>
-      it.<br>
-      {% if 'qry_res' in page_state %}
-        {% if page_state.qry_res %}
-          <label for="fhir_query_res">FHIR Query results as ujson:</label><br>
-          <textarea cols=80 id="fhir_query_res" name="fhir_query_res" rows=20>{{ page_state.qry_res }}</textarea>
-        {% endif %}
-      {% endif %}
-    </form>
-  </li>
-  <div>
-    <form action="/fhir2qr" method="post">
-      <li>convert the returned JSON to an eHN Vaccination Minimum Data Set as per Annex 1
-        <input formaction="fhir2json" formmethod="post" id="btn_fhir_2_json" type="submit" value="show"/>,
-        {% if 'min_data_set' in page_state %}
-          {% if page_state.min_data_set %}
-            <label for="fhir_2_json"><br>Min Data Set / Disclosure Level "Private Venue":</label><br>
-            <textarea cols=80 id="fhir_2_json" name="fhir_2_json" rows=4>{{ page_state.min_data_set }}</textarea>
-          {% endif %}
-        {% endif %}
+            </div>
       </li>
+        <!--Why second form - routing???-->
+        <form action="/fhir2qr" method="post">
+        <li>
+            <p>Select a person from the query and a disclosure level:</p>
+            <ol type="a">
+                <li>Select a person:
+                {% if page_state %}
+                {% if page_state.patients %}
+                    {% for patient in page_state.patients %}
+                        <div><input type=radio name="patient" method="post" value="{{patient["id"]}}">{{patient["name"] }}</input></div>
+                    {% endfor %}
+                {% endif %}
+                {% endif %}
+                </li>
+                <br>
+                <li>Select a Disclosure Level:
+                <input type="radio" name="dl" value="privatevenue">Private Venue</input>
+                <input type="radio" name="dl" value="bordercontrol">Border Control</input>
+                <input type="radio" name="dl" value="medical">Medical</input>
+                </li>
+                <br>
+                <li>...then convert the JSON to an eHN Vaccination Minimum Data Set as per Annex 1
+                    <input formaction="fhir2json" formmethod="post" id="btn_fhir_2_json" type="submit" value="show"/>,
+                    {% if 'min_data_set' in page_state %}
+                      {% if page_state.min_data_set %}
+                        <label for="fhir_2_json"><br>Min Data Set:</label><br>
+                        <textarea cols=80 id="fhir_2_json" name="fhir_2_json" rows=4>{{ page_state.min_data_set }}</textarea>
+                      {% endif %}
+                    {% endif %}
+                </li>
+            </ol>
+        </li>
+            <br>
       <li>semantically compress it,
         <input formaction="fhir2jsonld" formmethod="post" id="btn_fhir_2_jsonld" type="submit" value="show"/>,
         {% if 'min_data_set_jsonld' in page_state %}
@@ -152,7 +178,6 @@ step:
   {% endif %}
 {% endif %}
 </form>
-</div>
 <div>
   {% if 'focus_btn' in page_state %}
     {% if page_state.focus_btn %}

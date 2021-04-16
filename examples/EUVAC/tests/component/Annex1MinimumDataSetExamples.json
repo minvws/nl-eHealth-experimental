@@ -1,0 +1,469 @@
+{
+  "entries": [
+    {
+      "disclosureLevel": "PrivateVenue",
+      "entries": [
+        {
+          "name": "D.ALIGHIERI",
+          "sex": "male",
+          "immunizations": [
+            {
+              "targetDisease": [
+                {
+                  "system": "http:\/\/hl7.org\/fhir\/sid\/icd-10",
+                  "code": "J12.82"
+                }
+              ]
+            },
+            {
+              "targetDisease": [
+                {
+                  "system": "http:\/\/hl7.org\/fhir\/sid\/icd-10",
+                  "code": "J12.82"
+                }
+              ]
+            }
+          ],
+          "certificate": {
+            "issuingAuthority": "CN=nl.samensterk.en.rsa,OU=IT,O=Ministerie van VWS,L=Den Haag,ST=Zuid-Holland,C=NL",
+            "issuer": "CN=nl.samensterk.en.rsa,OU=IT,O=Ministerie van VWS,L=Den Haag,ST=Zuid-Holland,C=NL",
+            "validStart": "2020-06-18T09:44:19",
+            "validEnd": "2021-06-18T09:44:19",
+            "version": "v3"
+          }
+        },
+        {
+          "name": "M.Rossi",
+          "sex": "female",
+          "immunizations": [
+            {
+              "targetDisease": [
+                {
+                  "system": "http:\/\/hl7.org\/fhir\/sid\/icd-10",
+                  "code": "J12.82"
+                }
+              ]
+            },
+            {
+              "targetDisease": []
+            }
+          ],
+          "certificate": {
+            "issuingAuthority": "CN=nl.samensterk.en.rsa,OU=IT,O=Ministerie van VWS,L=Den Haag,ST=Zuid-Holland,C=NL",
+            "issuer": "CN=nl.samensterk.en.rsa,OU=IT,O=Ministerie van VWS,L=Den Haag,ST=Zuid-Holland,C=NL",
+            "validStart": "2020-06-18T09:44:19",
+            "validEnd": "2021-06-18T09:44:19",
+            "version": "v3"
+          }
+        },
+        {
+          "name": "M.Rossi",
+          "sex": "female",
+          "immunizations": [
+            {
+              "targetDisease": [
+                {
+                  "system": "http:\/\/hl7.org\/fhir\/sid\/icd-10",
+                  "code": "J12.82"
+                }
+              ]
+            }
+          ],
+          "certificate": {
+            "issuingAuthority": "CN=nl.samensterk.en.rsa,OU=IT,O=Ministerie van VWS,L=Den Haag,ST=Zuid-Holland,C=NL",
+            "issuer": "CN=nl.samensterk.en.rsa,OU=IT,O=Ministerie van VWS,L=Den Haag,ST=Zuid-Holland,C=NL",
+            "validStart": "2020-06-18T09:44:19",
+            "validEnd": "2021-06-18T09:44:19",
+            "version": "v3"
+          }
+        }
+      ]
+    },
+    {
+      "disclosureLevel": "BorderControl",
+      "entries": [
+        {
+          "name": "D.ALIGHIERI",
+          "personId": "a person Id TBA",
+          "sex": "male",
+          "dateOfBirth": "1971-05-01",
+          "immunizations": [
+            {
+              "targetDesease": [
+                {
+                  "system": "http:\/\/hl7.org\/fhir\/sid\/icd-10",
+                  "code": "J12.82"
+                }
+              ],
+              "vaccineCode": [
+                {
+                  "system": "https:\/\/www.aifa.gov.it\/aic",
+                  "code": "049269018"
+                },
+                {
+                  "system": "http:\/\/snomed.info\/sct",
+                  "code": "1119349007"
+                },
+                {
+                  "system": "http:\/\/www.whocc.no\/atc",
+                  "code": "J07BX03"
+                },
+                {
+                  "system": "http:\/\/id.who.int\/icd11\/mms",
+                  "code": "XM6AT1"
+                }
+              ],
+              "medicalProduct": [],
+              "manufacturer": "TODO AuthorisationHolder not present.",
+              "seriesNumber": "TODO Series Number not present.",
+              "occurrence": "2021-02-04",
+              "location": "TODO Immunization Location not present."
+            },
+            {
+              "targetDesease": [
+                {
+                  "system": "http:\/\/hl7.org\/fhir\/sid\/icd-10",
+                  "code": "J12.82"
+                }
+              ],
+              "vaccineCode": [
+                {
+                  "system": "https:\/\/www.aifa.gov.it\/aic",
+                  "code": "049269018"
+                },
+                {
+                  "system": "http:\/\/snomed.info\/sct",
+                  "code": "1119349007"
+                },
+                {
+                  "system": "http:\/\/www.whocc.no\/atc",
+                  "code": "J07BX03"
+                },
+                {
+                  "system": "http:\/\/id.who.int\/icd11\/mms",
+                  "code": "XM6AT1"
+                }
+              ],
+              "medicalProduct": [],
+              "manufacturer": "TODO AuthorisationHolder not present.",
+              "seriesNumber": "TODO Series Number not present.",
+              "occurrence": "2021-02-25",
+              "location": "TODO Immunization Location not present."
+            }
+          ],
+          "certificate": {
+            "issuingAuthority": "NL",
+            "issuer": "CN=nl.samensterk.en.rsa,OU=IT,O=Ministerie van VWS,L=Den Haag,ST=Zuid-Holland,C=NL",
+            "validStart": "2020-06-18T09:44:19",
+            "validEnd": "2021-06-18T09:44:19",
+            "version": "v3",
+            "identifier": "7cc37e17fa0a1f678fb5b2b98930c39204ee22bfa926680bd920ddff9025d6e4"
+          }
+        },
+        {
+          "name": "M.Rossi",
+          "personId": "a person Id TBA",
+          "sex": "female",
+          "dateOfBirth": "1997-07-28",
+          "immunizations": [
+            {
+              "targetDesease": [
+                {
+                  "system": "http:\/\/hl7.org\/fhir\/sid\/icd-10",
+                  "code": "J12.82"
+                }
+              ],
+              "vaccineCode": [
+                {
+                  "system": "http:\/\/snomed.info\/sct",
+                  "code": "1119349007"
+                },
+                {
+                  "system": "https:\/\/www.aifa.gov.it\/aic",
+                  "code": "049283"
+                }
+              ],
+              "medicalProduct": [],
+              "manufacturer": "MODERNA BIOTECH SPAIN, S.L.",
+              "seriesNumber": "TODO Series Number not present.",
+              "occurrence": "2021-01-10",
+              "location": "IT"
+            },
+            {
+              "targetDesease": [],
+              "vaccineCode": [
+                {
+                  "system": "http:\/\/snomed.info\/sct",
+                  "code": "1119349007"
+                }
+              ],
+              "medicalProduct": [],
+              "manufacturer": "TODO AuthorisationHolder not present.",
+              "seriesNumber": "TODO Series Number not present.",
+              "occurrence": "2021-02-07",
+              "location": "TODO Immunization Location not present."
+            }
+          ],
+          "certificate": {
+            "issuingAuthority": "NL",
+            "issuer": "CN=nl.samensterk.en.rsa,OU=IT,O=Ministerie van VWS,L=Den Haag,ST=Zuid-Holland,C=NL",
+            "validStart": "2020-06-18T09:44:19",
+            "validEnd": "2021-06-18T09:44:19",
+            "version": "v3",
+            "identifier": "7cc37e17fa0a1f678fb5b2b98930c39204ee22bfa926680bd920ddff9025d6e4"
+          }
+        },
+        {
+          "name": "M.Rossi",
+          "personId": "a person Id TBA",
+          "sex": "female",
+          "dateOfBirth": "1997-07-28",
+          "immunizations": [
+            {
+              "targetDesease": [
+                {
+                  "system": "http:\/\/hl7.org\/fhir\/sid\/icd-10",
+                  "code": "J12.82"
+                }
+              ],
+              "vaccineCode": [
+                {
+                  "system": "http:\/\/snomed.info\/sct",
+                  "code": "1119349007"
+                },
+                {
+                  "system": "https:\/\/www.aifa.gov.it\/aic",
+                  "code": "049283"
+                }
+              ],
+              "medicalProduct": [],
+              "manufacturer": "MODERNA BIOTECH SPAIN, S.L.",
+              "seriesNumber": "TODO Series Number not present.",
+              "occurrence": "2021-01-10",
+              "location": "IT"
+            }
+          ],
+          "certificate": {
+            "issuingAuthority": "NL",
+            "issuer": "CN=nl.samensterk.en.rsa,OU=IT,O=Ministerie van VWS,L=Den Haag,ST=Zuid-Holland,C=NL",
+            "validStart": "2020-06-18T09:44:19",
+            "validEnd": "2021-06-18T09:44:19",
+            "version": "v3",
+            "identifier": "7cc37e17fa0a1f678fb5b2b98930c39204ee22bfa926680bd920ddff9025d6e4"
+          }
+        }
+      ]
+    },
+    {
+      "disclosureLevel": "Medical",
+      "entries": [
+        {
+          "name": "D.ALIGHIERI",
+          "personId": "a person Id TBA",
+          "sex": "male",
+          "dateOfBirth": "1971-05-01",
+          "immunizations": [
+            {
+              "targetDisease": [
+                {
+                  "system": "http:\/\/hl7.org\/fhir\/sid\/icd-10",
+                  "code": "J12.82"
+                }
+              ],
+              "vaccineCode": [
+                {
+                  "system": "https:\/\/www.aifa.gov.it\/aic",
+                  "code": "049269018"
+                },
+                {
+                  "system": "http:\/\/snomed.info\/sct",
+                  "code": "1119349007"
+                },
+                {
+                  "system": "http:\/\/www.whocc.no\/atc",
+                  "code": "J07BX03"
+                },
+                {
+                  "system": "http:\/\/id.who.int\/icd11\/mms",
+                  "code": "XM6AT1"
+                }
+              ],
+              "medicalProduct": [],
+              "manufacturer": "TODO AuthorisationHolder not present.",
+              "seriesNumber": "TODO Series Number not present.",
+              "seriesCount": "TODO Series Count not present.",
+              "occurrence": "2021-02-04",
+              "actorOrganisation": [
+                "Organization\/af7e98a2-9fc0-44f5-85b0-1002d15c215e"
+              ],
+              "actorPractitioner": [],
+              "location": "TODO Immunization Location not present.",
+              "nextOccurrence": "TODO yyyy-mm-dd"
+            },
+            {
+              "targetDisease": [
+                {
+                  "system": "http:\/\/hl7.org\/fhir\/sid\/icd-10",
+                  "code": "J12.82"
+                }
+              ],
+              "vaccineCode": [
+                {
+                  "system": "https:\/\/www.aifa.gov.it\/aic",
+                  "code": "049269018"
+                },
+                {
+                  "system": "http:\/\/snomed.info\/sct",
+                  "code": "1119349007"
+                },
+                {
+                  "system": "http:\/\/www.whocc.no\/atc",
+                  "code": "J07BX03"
+                },
+                {
+                  "system": "http:\/\/id.who.int\/icd11\/mms",
+                  "code": "XM6AT1"
+                }
+              ],
+              "medicalProduct": [],
+              "manufacturer": "TODO AuthorisationHolder not present.",
+              "seriesNumber": "TODO Series Number not present.",
+              "seriesCount": "TODO Series Count not present.",
+              "occurrence": "2021-02-25",
+              "actorOrganisation": [
+                "Organization\/af7e98a2-9fc0-44f5-85b0-1002d15c215e"
+              ],
+              "actorPractitioner": [],
+              "location": "TODO Immunization Location not present.",
+              "nextOccurrence": "TODO yyyy-mm-dd"
+            }
+          ],
+          "certificate": {
+            "issuingAuthority": "NL",
+            "issuer": "CN=nl.samensterk.en.rsa,OU=IT,O=Ministerie van VWS,L=Den Haag,ST=Zuid-Holland,C=NL",
+            "validStart": "2020-06-18T09:44:19",
+            "validEnd": "2021-06-18T09:44:19",
+            "version": "v3",
+            "identifier": "7cc37e17fa0a1f678fb5b2b98930c39204ee22bfa926680bd920ddff9025d6e4"
+          }
+        },
+        {
+          "name": "M.Rossi",
+          "personId": "a person Id TBA",
+          "sex": "female",
+          "dateOfBirth": "1997-07-28",
+          "immunizations": [
+            {
+              "targetDisease": [
+                {
+                  "system": "http:\/\/hl7.org\/fhir\/sid\/icd-10",
+                  "code": "J12.82"
+                }
+              ],
+              "vaccineCode": [
+                {
+                  "system": "http:\/\/snomed.info\/sct",
+                  "code": "1119349007"
+                },
+                {
+                  "system": "https:\/\/www.aifa.gov.it\/aic",
+                  "code": "049283"
+                }
+              ],
+              "medicalProduct": [],
+              "manufacturer": "MODERNA BIOTECH SPAIN, S.L.",
+              "seriesNumber": "TODO Series Number not present.",
+              "seriesCount": "TODO Series Count not present.",
+              "occurrence": "2021-01-10",
+              "actorOrganisation": [
+                "Organization\/d65f4c46-4382-4cb4-94ea-4728f492405e"
+              ],
+              "actorPractitioner": [
+                "Practitioner\/0734d175-6dbd-4749-bfa2-e373430c1e8c"
+              ],
+              "location": "IT",
+              "nextOccurrence": "TODO yyyy-mm-dd"
+            },
+            {
+              "targetDisease": [],
+              "vaccineCode": [
+                {
+                  "system": "http:\/\/snomed.info\/sct",
+                  "code": "1119349007"
+                }
+              ],
+              "medicalProduct": [],
+              "manufacturer": "TODO AuthorisationHolder not present.",
+              "seriesNumber": "TODO Series Number not present.",
+              "seriesCount": "TODO Series Count not present.",
+              "occurrence": "2021-02-07",
+              "actorOrganisation": [
+                "Organization\/d65f4c46-4382-4cb4-94ea-4728f492405e"
+              ],
+              "actorPractitioner": [
+                "Practitioner\/0734d175-6dbd-4749-bfa2-e373430c1e8c"
+              ],
+              "location": "TODO Immunization Location not present.",
+              "nextOccurrence": "TODO yyyy-mm-dd"
+            }
+          ],
+          "certificate": {
+            "issuingAuthority": "NL",
+            "issuer": "CN=nl.samensterk.en.rsa,OU=IT,O=Ministerie van VWS,L=Den Haag,ST=Zuid-Holland,C=NL",
+            "validStart": "2020-06-18T09:44:19",
+            "validEnd": "2021-06-18T09:44:19",
+            "version": "v3",
+            "identifier": "7cc37e17fa0a1f678fb5b2b98930c39204ee22bfa926680bd920ddff9025d6e4"
+          }
+        },
+        {
+          "name": "M.Rossi",
+          "personId": "a person Id TBA",
+          "sex": "female",
+          "dateOfBirth": "1997-07-28",
+          "immunizations": [
+            {
+              "targetDisease": [
+                {
+                  "system": "http:\/\/hl7.org\/fhir\/sid\/icd-10",
+                  "code": "J12.82"
+                }
+              ],
+              "vaccineCode": [
+                {
+                  "system": "http:\/\/snomed.info\/sct",
+                  "code": "1119349007"
+                },
+                {
+                  "system": "https:\/\/www.aifa.gov.it\/aic",
+                  "code": "049283"
+                }
+              ],
+              "medicalProduct": [],
+              "manufacturer": "MODERNA BIOTECH SPAIN, S.L.",
+              "seriesNumber": "TODO Series Number not present.",
+              "seriesCount": "TODO Series Count not present.",
+              "occurrence": "2021-01-10",
+              "actorOrganisation": [
+                "Organization\/9550e16f-9764-43f0-8cb0-0a17d90a3649"
+              ],
+              "actorPractitioner": [
+                "Practitioner\/50b8f022-d480-4d51-9777-1848163a7cc9"
+              ],
+              "location": "IT",
+              "nextOccurrence": "TODO yyyy-mm-dd"
+            }
+          ],
+          "certificate": {
+            "issuingAuthority": "NL",
+            "issuer": "CN=nl.samensterk.en.rsa,OU=IT,O=Ministerie van VWS,L=Den Haag,ST=Zuid-Holland,C=NL",
+            "validStart": "2020-06-18T09:44:19",
+            "validEnd": "2021-06-18T09:44:19",
+            "version": "v3",
+            "identifier": "7cc37e17fa0a1f678fb5b2b98930c39204ee22bfa926680bd920ddff9025d6e4"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,8 +1,10 @@
 from disclosure_level import DisclosureLevel
+from fhir_info_collector import FhirInfoCollector
+from json_parser import JsonParser
+from patient_immunization_direct_builder import PatientImmunizationDirectBuilder
 
 
 class VaccEntryParser:
-
     """VaccEntryParser
 
     An "entry" corresponds to an instance of the FHIR Immunization model v4.x given at
@@ -42,10 +44,10 @@ class VaccEntryParser:
         :type qry_res: dict
         """
         self.__qry_res: dict = qry_res
+        collector = FhirInfoCollector()
+        self.__fhir_info = collector.execute(qry_res["entry"])
 
-    def resolve_entry(
-        self, entry: dict, disclosure_level: DisclosureLevel
-    ) -> dict:
+    def resolve_entry(self, entry: dict, disclosure_level: DisclosureLevel) -> dict:
         """
         :param entry: one specific entry in the FHIR results to be resolved
         for entry:
@@ -75,43 +77,14 @@ class VaccEntryParser:
         )
         return is_immu_entry
 
-    def __extract_entry(
-        self, entry: dict, disclosure_level: DisclosureLevel
-    ) -> dict:
-        ret = {}
-        dat: str = VaccEntryParser.__get_dat(entry=entry)
-        patient: dict = self.__resolve_patient(entry=entry)
-
-        if (
-            disclosure_level == DisclosureLevel.PV
-            or disclosure_level == DisclosureLevel.BC
-            or disclosure_level == DisclosureLevel.MD
-        ):
-            # no validation checking for the following lines accessing "patient", allow exceptions to propagate
-            # e.g. it is _expected_ that "name" is present in patient, if not it is an error
-            # it is also expected that the name parts "given" and "family" are at least 1 character, etc
-            # We take first entry for "name" as this is the "default" name if multiple present
-            patient_name: dict = patient["nam"][0]
-            ret.update(
-                {
-                    "nam": f'{patient_name["given"][0][0]}.{patient_name["family"][0]}.',
-                    "dat": dat,
-                    "gen": patient["gen"],
-                }
-            )
-
-        if (
-            disclosure_level == DisclosureLevel.BC
-            or disclosure_level == DisclosureLevel.MD
-        ):
-            pass
-
-        if disclosure_level == DisclosureLevel.MD:
-            pass
-
-        # vaccine cert
-        # # TODO: this is the more difficult one: no standardized IIS interface for the information
-        return ret
+    def __extract_entry(self, entry: dict, disclosure_level: DisclosureLevel) -> dict:
+        # patient: dict = self.__resolve_patient(entry=entry)
+        patient_id = JsonParser.find_path(entry, ["resource", "patient", "reference"])[
+            8:
+        ]
+        return PatientImmunizationDirectBuilder.build(
+            self.__fhir_info, patient_id, disclosure_level
+        )
 
     def __resolve_patient(self, entry: dict) -> dict:
         # patient as per https://build.fhir.org/ig/hl7-eu/dgc/StructureDefinition-Patient-dgc.html
@@ -160,4 +133,6 @@ class VaccEntryParser:
                 return entry["resource"]
         # data error if we cannot find the resource_relative_url *somewhere* in the
         # JSON received from FHIR with _include=*
-        raise ValueError(f"Cannot find fullUrl {resource_relative_url} in FHIR response entries")
+        raise ValueError(
+            f"Cannot find fullUrl {resource_relative_url} in FHIR response entries"
+        )
