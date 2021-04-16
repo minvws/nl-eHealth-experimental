@@ -5,6 +5,7 @@ import cbor2
 import segno as qr
 import zlib
 
+import ujson
 from base45 import b45encode
 from cose.algorithms import Es256
 from cose.curves import P256
@@ -28,9 +29,12 @@ from flask import (
 from werkzeug.routing import BaseConverter
 
 from disclosure_level import DisclosureLevel
+from fhir_info_collector import FhirInfoCollector
+from fhir_info_reader import FhirInfoReader
 from fhir_query import FhirQuery
 from json_ld_formatter import JsonLdFormatter
 from min_data_set import MinDataSetFactory, MinDataSet
+from patient_immunization_direct_builder import PatientImmunizationDirectBuilder
 
 CERTIFICATE_FILE = "dsc-worker.pem"
 
@@ -96,11 +100,21 @@ def clear_all_fields():
 @app.route("/query_fhir_server", methods=["POST", "GET"])
 def query_fhir_server():
     fhir_server = request.form["fhir_server"] if "fhir_server" in request.form else None
-    _page_state["qry_res"] = FhirQuery(fhir_server=fhir_server).find()
+    _page_state["patients"] = None
+    qry_res = FhirQuery(fhir_server=fhir_server).find()
+    info = FhirInfoCollector().execute(qry_res["entry"])
+    reader = FhirInfoReader(info)
+    patients = []
+    for i in info.immunized_patients:
+        name = f'{reader.get_patient_name(i)} - {i}'
+        patients.append({"name": name, "id": i})
+
+    _page_state["fhir_info"] = info
+    _page_state["patients"] = patients
+    _page_state["qry_res"] = qry_res
+    # TODO focus people selector
     _page_state["focus_btn"] = "btn_fhir_2_json"
-
     return render_template("index.html", page_state=_page_state)
-
 
 # Was
 # @app.route("/fhir2json", methods=["POST", "GET"])
@@ -117,13 +131,19 @@ def query_fhir_server():
 @app.route("/fhir2json", methods=["POST", "GET"])
 def fhir2json():
     # pre-cond: /query_fhir_server called prior in order to set: _page_state["qry_res"]
-    min_data_set: MinDataSet = MinDataSetFactory.create(DisclosureLevel.PrivateVenue)
-    qry_res = _page_state["qry_res"]
-    min_data_set.parse(qry_res)
-    _page_state["min_data_set"] = min_data_set.as_json()
+    # patient = request.form["myform"]
+    # fhir_server = request.form["fhir_server"] if "fhir_server" in request.form else None
+    disclosure_level = DisclosureLevel.from_string(request.form["dl"])
+    patient_id = request.form["patient"]
+    info = _page_state["fhir_info"]
+    # min_data_set: MinDataSet = MinDataSetFactory.create(DisclosureLevel.PrivateVenue)
+    min_data_set = PatientImmunizationDirectBuilder().build(info, patient_id, disclosure_level)
+    # qry_res = _page_state["qry_res"]
+    # min_data_set.parse(qry_res)
+    json = ujson.dumps(min_data_set)
+    _page_state["min_data_set"] = json
     _page_state["focus_btn"] = "btn_fhir_2_jsonld"
     return render_template("index.html", page_state=_page_state)
-
 
 @app.route("/fhir2jsonld", methods=["POST", "GET"])
 def fhir2jsonld():
@@ -131,6 +151,7 @@ def fhir2jsonld():
     min_data_set: MinDataSet = MinDataSetFactory.create(DisclosureLevel.PrivateVenue)
     qry_res = _page_state["qry_res"]
     min_data_set.parse(qry_res)
+
     _page_state["min_data_set_jsonld"] = JsonLdFormatter().map_json_to_ld(
         min_data_set.as_dict_array()[0]
     )  # TODO select

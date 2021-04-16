@@ -4,25 +4,25 @@
       "@id": "https://schema.org/Name"
     },
     "pid": {
-      "@id": "https://github.com/ehn-digital-green-development/personIdentifier"
+      "@id": "https://github.com/ehn-digital-green-development/schemas/v1/personIdentifier"
     },
     "dob": {
       "@id": "https://schema.org/birthDate"
     },
     "sex": {
-      "@id": "https://https://github.com/ehn-digital-green-development/sex"
+      "@id": "https://https://github.com/ehn-digital-green-development/schemas/v1/sex"
     },
     "is": {
-      "@id": "https://github.com/ehn-digital-green-development/uvci/issuer"
+      "@id": "https://github.com/ehn-digital-green-development/schemas/v1/uvci/issuer"
     },
     "ia": {
-      "@id": "https://github.com/ehn-digital-green-development/uvci/issuingAuthority"
+      "@id": "https://github.com/ehn-digital-green-development/schemas/v1/uvci/issuingAuthority"
     },
     "id": {
-      "@id": "https://github.com/ehn-digital-green-development/uvci"
+      "@id": "https://github.com/ehn-digital-green-development/schemas/v1/uvci"
     },
     "c": {
-      "@id": "https://github.com/ehn-digital-green-development/uvci/metadata"
+      "@id": "https://github.com/ehn-digital-green-development/schemas/v1/uvci/metadata"
     },
     "st": {
       "@id": "https://schema.org/startDate"
@@ -34,40 +34,40 @@
       "@id": "https://schema.org/version"
     },
     "tg": {
-      "@id": "https://github.com/ehn-digital-green-development/targetDiseases"
+      "@id": "https://github.com/ehn-digital-green-development/schemas/v1/targetDiseases"
     },
     "cd": {
-      "@id": "https://github.com/ehn-digital-green-development/vaccineCode"
+      "@id": "https://github.com/ehn-digital-green-development/schemas/v1/vaccineCode"
     },
     "mp": {
-      "@id": "https://github.com/ehn-digital-green-development/medicalProduct"
+      "@id": "https://github.com/ehn-digital-green-development/schemas/v1/medicalProduct"
     },
     "ah": {
-      "@id": "https://github.com/ehn-digital-green-development/authorizationHolder"
+      "@id": "https://github.com/ehn-digital-green-development/schemas/v1/authorizationHolder"
     },
     "sn": {
-      "@id": "https://github.com/ehn-digital-green-development/seriesCount"
+      "@id": "https://github.com/ehn-digital-green-development/schemas/v1/seriesCount"
     },
     "lt": {
-      "@id": "https://github.com/ehn-digital-green-development/lotNumber"
+      "@id": "https://github.com/ehn-digital-green-development/schemas/v1/lotNumber"
     },
     "oc": {
-      "@id": "https://github.com/ehn-digital-green-development/occurrence"
+      "@id": "https://github.com/ehn-digital-green-development/schemas/v1/occurrence"
     },
     "ao": {
-      "@id": "https://github.com/ehn-digital-green-development/ao"
+      "@id": "https://github.com/ehn-digital-green-development/schemas/v1/ao"
     },
     "ap": {
-      "@id": "https://github.com/ehn-digital-green-development/ap"
+      "@id": "https://github.com/ehn-digital-green-development/schemas/v1/ap"
     },
     "lo": {
       "@id": "https://schema.org/location"
     },
     "nx": {
-      "@id": "https://github.com/ehn-digital-green-development/nextOccurrence"
+      "@id": "https://github.com/ehn-digital-green-development/schemas/v1/nextOccurrence"
     },
     "v": {
-      "@id": "https://github.com/ehn-digital-green-development/vaccinations"
+      "@id": "https://github.com/ehn-digital-green-development/schemas/v1/vaccinations"
     }
   },
   "c": {

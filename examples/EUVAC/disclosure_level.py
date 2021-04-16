@@ -11,3 +11,14 @@ class DisclosureLevel(Enum):
     PrivateVenue = auto()
     BorderControl = auto()
     Medical = auto()
+
+    @staticmethod
+    def from_string(value: str):
+        if value == "privatevenue":
+            return DisclosureLevel.PrivateVenue
+        if value == "bordercontrol":
+            return DisclosureLevel.BorderControl
+        if value == "medical":
+            return DisclosureLevel.Medical
+
+        raise ValueError("String not recognised as DisclosureLevel.")
